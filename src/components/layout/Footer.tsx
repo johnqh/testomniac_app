@@ -1,17 +1,9 @@
 import { useTranslation } from 'react-i18next';
-import {
-  AppFooter,
-  AppFooterForHomePage,
-  type FooterLinkSection,
-} from '@sudobility/building_blocks';
+import { type FooterConfig, type FooterLinkSection } from '@sudobility/building_blocks';
 import { CONSTANTS } from '../../config/constants';
 import LocalizedLink from './LocalizedLink';
 
-interface FooterProps {
-  variant?: 'full' | 'compact';
-}
-
-const LinkWrapper = ({
+const linkWrapper = ({
   href,
   children,
   className,
@@ -25,25 +17,24 @@ const LinkWrapper = ({
   </LocalizedLink>
 );
 
-export default function Footer({ variant = 'compact' }: FooterProps) {
+export function useFooterConfig(variant: 'full' | 'compact'): FooterConfig {
   const { t } = useTranslation();
   const currentYear = String(new Date().getFullYear());
 
   if (variant === 'compact') {
-    return (
-      <AppFooter
-        version={__APP_VERSION__}
-        copyrightYear={currentYear}
-        companyName={CONSTANTS.COMPANY_NAME}
-        companyUrl="/"
-        links={[
-          { label: t('nav.docs'), href: '/docs' },
-          { label: t('nav.sitemap'), href: '/sitemap' },
-        ]}
-        LinkComponent={LinkWrapper}
-        sticky
-      />
-    );
+    return {
+      variant: 'compact',
+      version: __APP_VERSION__,
+      copyrightYear: currentYear,
+      companyName: CONSTANTS.COMPANY_NAME,
+      companyUrl: '/',
+      links: [
+        { label: t('nav.docs'), href: '/docs' },
+        { label: t('nav.sitemap'), href: '/sitemap' },
+      ],
+      LinkComponent: linkWrapper,
+      sticky: true,
+    };
   }
 
   const linkSections: FooterLinkSection[] = [
@@ -61,19 +52,18 @@ export default function Footer({ variant = 'compact' }: FooterProps) {
     },
   ];
 
-  return (
-    <AppFooterForHomePage
-      logo={{
-        appName: t('app.name'),
-      }}
-      linkSections={linkSections}
-      version={__APP_VERSION__}
-      copyrightYear={currentYear}
-      companyName={CONSTANTS.COMPANY_NAME}
-      companyUrl="/"
-      description={t('app.tagline')}
-      LinkComponent={LinkWrapper}
-      gridColumns={3}
-    />
-  );
+  return {
+    variant: 'full',
+    logo: {
+      appName: t('app.name'),
+    },
+    linkSections,
+    version: __APP_VERSION__,
+    copyrightYear: currentYear,
+    companyName: CONSTANTS.COMPANY_NAME,
+    companyUrl: '/',
+    description: t('app.tagline'),
+    LinkComponent: linkWrapper,
+    gridColumns: 3,
+  };
 }

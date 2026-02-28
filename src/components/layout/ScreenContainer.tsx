@@ -1,8 +1,8 @@
 import type { ReactNode } from 'react';
 import { useLocation } from 'react-router-dom';
 import { AppPageLayout } from '@sudobility/building_blocks';
-import TopBar from './TopBar';
-import Footer from './Footer';
+import { useTopBarConfig } from './TopBar';
+import { useFooterConfig } from './Footer';
 import { useBreadcrumbs } from '../../hooks/useBreadcrumbs';
 
 interface ScreenContainerProps {
@@ -22,9 +22,12 @@ export default function ScreenContainer({ children }: ScreenContainerProps) {
   const pathParts = location.pathname.split('/').filter(Boolean);
   const isHomePage = pathParts.length <= 1;
 
+  const topBarConfig = useTopBarConfig();
+  const footerConfig = useFooterConfig(isHomePage ? 'full' : 'compact');
+
   return (
     <AppPageLayout
-      topBar={<TopBar />}
+      topBar={topBarConfig}
       breadcrumbs={
         !isHomePage
           ? {
@@ -32,9 +35,8 @@ export default function ScreenContainer({ children }: ScreenContainerProps) {
             }
           : undefined
       }
-      footer={<Footer variant={isHomePage ? 'full' : 'compact'} />}
-      maxWidth="full"
-      contentPadding="none"
+      footer={footerConfig}
+      page={{ maxWidth: 'full', contentPadding: 'none' }}
     >
       {children}
     </AppPageLayout>

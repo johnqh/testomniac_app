@@ -1,9 +1,9 @@
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
-  AppTopBarWithFirebaseAuth,
   type MenuItemConfig,
   type AuthActionProps,
+  type TopBarConfig,
 } from '@sudobility/building_blocks';
 import { AuthAction } from '@sudobility/auth-components';
 import type { ComponentType } from 'react';
@@ -31,7 +31,7 @@ const LANGUAGE_INFO: Record<string, { name: string; flag: string }> = {
   'zh-hant': { name: '繁體中文', flag: '🇹🇼' },
 };
 
-const LinkWrapper = ({
+const linkWrapper = ({
   href,
   children,
   className,
@@ -46,11 +46,9 @@ const LinkWrapper = ({
 );
 
 /**
- * Top navigation bar with links to main pages, language switcher,
- * and authentication controls. Delegates rendering to the shared
- * `AppTopBarWithFirebaseAuth` component from building_blocks.
+ * Hook returning TopBar configuration for AppPageLayout.
  */
-export default function TopBar() {
+export function useTopBarConfig(): TopBarConfig {
   const { t } = useTranslation('common');
   const { navigate, switchLanguage, currentLanguage } = useLocalizedNavigate();
 
@@ -94,22 +92,21 @@ export default function TopBar() {
     }
   };
 
-  return (
-    <AppTopBarWithFirebaseAuth
-      logo={{
-        src: '/logo.png',
-        appName: CONSTANTS.APP_NAME,
-        onClick: () => navigate('/'),
-      }}
-      menuItems={menuItems}
-      languages={languages}
-      currentLanguage={currentLanguage}
-      onLanguageChange={handleLanguageChange}
-      LinkComponent={LinkWrapper}
-      AuthActionComponent={AuthAction as ComponentType<AuthActionProps>}
-      onLoginClick={() => navigate('/login')}
-      authenticatedMenuItems={[]}
-      sticky
-    />
-  );
+  return {
+    variant: 'firebase',
+    logo: {
+      src: '/logo.png',
+      appName: CONSTANTS.APP_NAME,
+      onClick: () => navigate('/'),
+    },
+    menuItems,
+    languages,
+    currentLanguage,
+    onLanguageChange: handleLanguageChange,
+    LinkComponent: linkWrapper,
+    AuthActionComponent: AuthAction as ComponentType<AuthActionProps>,
+    onLoginClick: () => navigate('/login'),
+    authenticatedMenuItems: [],
+    sticky: true,
+  };
 }
