@@ -121,10 +121,7 @@ Uses `@sudobility/building_blocks` for shared shell components (TopBar, LoginPag
 - Firebase configuration requires all `VITE_FIREBASE_*` environment variables to be set; missing any will break authentication
 - `@sudobility/building_blocks` provides shared UI components -- check there before creating duplicate components
 
-## Testing
+## Testing Notes
 
-- Run type checking: `bun run typecheck`
-- There is no test suite currently -- the project relies on TypeScript type checking and manual testing
-- Linting: `bun run lint`
-- Format checking: `bun run format`
+- No test suite currently -- relies on TypeScript type checking and manual testing
 - Full verification: `bun run verify` (runs typecheck + lint + format:check)
