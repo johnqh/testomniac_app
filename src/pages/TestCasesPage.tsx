@@ -1,6 +1,5 @@
 import { createColumnHelper } from '@tanstack/react-table';
 import { DataTable } from '../components/data/DataTable';
-import { JsonViewer } from '../components/data/JsonViewer';
 import { StatusBadge } from '../components/scanner/StatusBadge';
 
 interface TestCaseRow {
@@ -72,15 +71,6 @@ export default function TestCasesPage() {
       <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-6">Test Cases</h1>
 
       <DataTable data={testCases} columns={columns as never} isLoading={isLoading} />
-
-      {expandedId !== null && (
-        <div className="mt-4 p-4 border border-gray-200 dark:border-gray-700 rounded-lg">
-          <h3 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-            Action Sequence
-          </h3>
-          <JsonViewer data={testCases.find(tc => tc.id === expandedId)?.actionsJson || []} />
-        </div>
-      )}
     </div>
   );
 }

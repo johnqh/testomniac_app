@@ -1,4 +1,3 @@
-
 interface ComponentCard {
   id: number;
   name: string;

@@ -49,7 +49,7 @@ export function useEventSource(config: UseEventSourceConfig): UseEventSourceRetu
         setError(null);
       };
 
-      es.onmessage = (event) => {
+      es.onmessage = event => {
         try {
           const data = JSON.parse(event.data) as RunStreamEvent;
           onEvent(data);
