@@ -1,7 +1,89 @@
+import { useState } from 'react';
+import { useParams } from 'react-router-dom';
+import { createColumnHelper } from '@tanstack/react-table';
+import { DataTable } from '../components/data/DataTable';
+import { JsonViewer } from '../components/data/JsonViewer';
+import { StatusBadge } from '../components/scanner/StatusBadge';
+
+interface TestCaseRow {
+  id: number;
+  name: string;
+  testType: string;
+  sizeClass: string;
+  priority: string;
+  suiteTags: string[];
+  actionsJson: unknown[];
+}
+
+const columnHelper = createColumnHelper<TestCaseRow>();
+
+const columns = [
+  columnHelper.accessor('name', {
+    header: 'Name',
+    cell: info => (
+      <span className="font-medium text-gray-900 dark:text-gray-100">{info.getValue()}</span>
+    ),
+  }),
+  columnHelper.accessor('testType', {
+    header: 'Type',
+    cell: info => <StatusBadge status={info.getValue()} />,
+  }),
+  columnHelper.accessor('priority', {
+    header: 'Priority',
+    cell: info => (
+      <span
+        className={
+          info.getValue() === 'high'
+            ? 'text-red-600 font-medium'
+            : 'text-gray-600 dark:text-gray-400'
+        }
+      >
+        {info.getValue()}
+      </span>
+    ),
+  }),
+  columnHelper.accessor('suiteTags', {
+    header: 'Tags',
+    cell: info => (
+      <div className="flex gap-1 flex-wrap">
+        {info.getValue().map(tag => (
+          <span
+            key={tag}
+            className="px-1.5 py-0.5 text-xs rounded bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400"
+          >
+            {tag}
+          </span>
+        ))}
+      </div>
+    ),
+  }),
+  columnHelper.accessor('sizeClass', {
+    header: 'Device',
+  }),
+];
+
 export default function TestCasesPage() {
+  const { runId: _runId } = useParams<{ runId: string }>();
+  const [expandedId, _setExpandedId] = useState<number | null>(null);
+
+  // TODO: Replace with useRunTestCases hook when API is live
+  const testCases: TestCaseRow[] = [];
+  const isLoading = false;
+
   return (
     <div className="p-6">
-      <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">Test Cases</h1>
+      <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-6">Test Cases</h1>
+
+      <DataTable data={testCases} columns={columns as any} isLoading={isLoading} />
+
+      {expandedId !== null && (
+        <div className="mt-4 p-4 border border-gray-200 dark:border-gray-700 rounded-lg">
+          <h3 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+            Action Sequence
+          </h3>
+          <JsonViewer data={testCases.find(tc => tc.id === expandedId)?.actionsJson || []} />
+        </div>
+      )}
     </div>
   );
 }
