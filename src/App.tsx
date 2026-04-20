@@ -18,6 +18,19 @@ const SitemapPage = lazy(() => import('./pages/SitemapPage'));
 const WorkspacesPage = lazy(() => import('./pages/WorkspacesPage'));
 const MembersPage = lazy(() => import('./pages/MembersPage'));
 const InvitationsPage = lazy(() => import('./pages/InvitationsPage'));
+const DashboardPage = lazy(() => import('./pages/DashboardPage'));
+const DashboardOverview = lazy(() => import('./pages/DashboardOverview'));
+const StartScanPage = lazy(() => import('./pages/StartScanPage'));
+const ScanProgressPage = lazy(() => import('./pages/ScanProgressPage'));
+const PublicScanProgressPage = lazy(() => import('./pages/PublicScanProgressPage'));
+const RunDetailsPage = lazy(() => import('./pages/RunDetailsPage'));
+const TestCasesPage = lazy(() => import('./pages/TestCasesPage'));
+const TestRunsPage = lazy(() => import('./pages/TestRunsPage'));
+const IssuesPage = lazy(() => import('./pages/IssuesPage'));
+const PagesPage = lazy(() => import('./pages/PagesPage'));
+const MapPage = lazy(() => import('./pages/MapPage'));
+const ComponentsPage = lazy(() => import('./pages/ComponentsPage'));
+const PersonasPage = lazy(() => import('./pages/PersonasPage'));
 const LanguageRedirect = lazy(() => import('./components/layout/LanguageRedirect'));
 const EntityRedirect = lazy(() => import('./components/layout/EntityRedirect'));
 const ProtectedRoute = lazy(() => import('./components/layout/ProtectedRoute'));
@@ -83,6 +96,8 @@ function AppRoutes() {
               <Route element={<ScreenContainerLayout />}>
                 <Route index element={<HomePage />} />
                 <Route path="docs" element={<DocsPage />} />
+                <Route path="sitemap" element={<SitemapPage />} />
+                <Route path="scan/:runId/progress" element={<PublicScanProgressPage />} />
                 <Route
                   path="dashboard"
                   element={
@@ -91,41 +106,30 @@ function AppRoutes() {
                     </ProtectedRoute>
                   }
                 />
-                <Route path="dashboard/:entitySlug">
-                  <Route
-                    path="settings"
-                    element={
-                      <ProtectedRoute>
-                        <SettingsPage />
-                      </ProtectedRoute>
-                    }
-                  />
-                  <Route
-                    path="workspaces"
-                    element={
-                      <ProtectedRoute>
-                        <WorkspacesPage />
-                      </ProtectedRoute>
-                    }
-                  />
-                  <Route
-                    path="members"
-                    element={
-                      <ProtectedRoute>
-                        <MembersPage />
-                      </ProtectedRoute>
-                    }
-                  />
-                  <Route
-                    path="invitations"
-                    element={
-                      <ProtectedRoute>
-                        <InvitationsPage />
-                      </ProtectedRoute>
-                    }
-                  />
+                <Route
+                  path="dashboard/:entitySlug"
+                  element={
+                    <ProtectedRoute>
+                      <DashboardPage />
+                    </ProtectedRoute>
+                  }
+                >
+                  <Route index element={<DashboardOverview />} />
+                  <Route path="scan/new" element={<StartScanPage />} />
+                  <Route path="runs/:runId" element={<RunDetailsPage />} />
+                  <Route path="runs/:runId/progress" element={<ScanProgressPage />} />
+                  <Route path="runs/:runId/test-cases" element={<TestCasesPage />} />
+                  <Route path="runs/:runId/test-runs" element={<TestRunsPage />} />
+                  <Route path="runs/:runId/issues" element={<IssuesPage />} />
+                  <Route path="runs/:runId/pages" element={<PagesPage />} />
+                  <Route path="runs/:runId/map" element={<MapPage />} />
+                  <Route path="runs/:runId/components" element={<ComponentsPage />} />
+                  <Route path="runs/:runId/personas" element={<PersonasPage />} />
+                  <Route path="settings" element={<SettingsPage />} />
+                  <Route path="workspaces" element={<WorkspacesPage />} />
+                  <Route path="members" element={<MembersPage />} />
+                  <Route path="invitations" element={<InvitationsPage />} />
                 </Route>
-                <Route path="sitemap" element={<SitemapPage />} />
               </Route>
               <Route path="login" element={<LoginPage />} />
               <Route path="*" element={<Navigate to="." replace />} />
