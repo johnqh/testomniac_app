@@ -19,9 +19,9 @@
         "@sudobility/seo_lib": "^0.0.10",
         "@sudobility/subscription-components": "^1.0.31",
         "@sudobility/subscription_lib": "^0.0.40",
-        "@sudobility/testomniac_client": "^0.0.22",
-        "@sudobility/testomniac_lib": "^0.0.21",
-        "@sudobility/testomniac_types": "^0.0.20",
+        "@sudobility/testomniac_client": "^0.0.23",
+        "@sudobility/testomniac_lib": "^0.0.22",
+        "@sudobility/testomniac_types": "^0.0.21",
         "@sudobility/types": "^1.9.61",
         "@tanstack/react-query": "^5.90.5",
         "class-variance-authority": "^0.7.1",
@@ -465,11 +465,11 @@
 
     "@sudobility/subscription_lib": ["@sudobility/subscription_lib@0.0.40", "", { "peerDependencies": { "@revenuecat/purchases-js": "^1.0.0", "@sudobility/types": "^1.9.61", "@tanstack/react-query": "^5.0.0", "react": "^18.0.0 || ^19.0.0", "react-native-purchases": ">=7.0.0" }, "optionalPeers": ["@revenuecat/purchases-js", "@tanstack/react-query", "react-native-purchases"] }, "sha512-Qe1F5UFrBrKZCAQyD87VtXZ4LZG7Zj1Wff4oWL6OGTpRQSZ13txx4ZIY92+gVMpOitl3YDU2vl/A14AYn9NL5w=="],
 
-    "@sudobility/testomniac_client": ["@sudobility/testomniac_client@0.0.22", "", { "peerDependencies": { "@sudobility/types": "^1.9.61", "@tanstack/react-query": ">=5.0.0", "react": ">=18.0.0" } }, "sha512-POJc7Px9FukDHOoMnEp749s0DreN2JQLKDeioOqLjIE8XD0A2GXZ226HVgS79TlDnzQumXQkNBzHm+6qjETeBg=="],
+    "@sudobility/testomniac_client": ["@sudobility/testomniac_client@0.0.23", "", { "peerDependencies": { "@sudobility/types": "^1.9.61", "@tanstack/react-query": ">=5.0.0", "react": ">=18.0.0" } }, "sha512-gDMVLVB0W55V8Ywlv5b2pt/QPrhU1D5+7Y9Jl92ysqXS7VdezOsG5/THE8pbBjvPA3GC3ie2BIp9zB4UoU3upg=="],
 
-    "@sudobility/testomniac_lib": ["@sudobility/testomniac_lib@0.0.21", "", { "peerDependencies": { "@sudobility/types": "^1.9.61", "@tanstack/react-query": ">=5.0.0", "react": ">=18.0.0", "zustand": ">=5.0.0" } }, "sha512-pdno6pB+rHhRtV+aNm6uxQkUpysI03HzDRt3uVZA25QUWR7XbmP1y/+EEZaor/uANZckynYeHoiozPjJtOyhWg=="],
+    "@sudobility/testomniac_lib": ["@sudobility/testomniac_lib@0.0.22", "", { "peerDependencies": { "@sudobility/types": "^1.9.61", "@tanstack/react-query": ">=5.0.0", "react": ">=18.0.0", "zustand": ">=5.0.0" } }, "sha512-X74ldHady5q0494JT6IQyt/mjJTmUsmnYPR/cXJM51w9XlYo5a7ITtoGJSaiVttli4g4PktmogQaYi+Ls4ITkg=="],
 
-    "@sudobility/testomniac_types": ["@sudobility/testomniac_types@0.0.20", "", { "peerDependencies": { "@sudobility/types": "^1.9.61" } }, "sha512-F+obXaJ2AyqsnYPUwVwmRwcbsJoMusJygPI3XNRnO2MWSjeinws55jcaDYLwYLnJlMCRU8iLdbhq2wrAX7vgXw=="],
+    "@sudobility/testomniac_types": ["@sudobility/testomniac_types@0.0.21", "", { "peerDependencies": { "@sudobility/types": "^1.9.61" } }, "sha512-1UcYybbl7QAivFk2rAGpn/9sKe/ZdhRhh5f2ZTvbyWThEA8RurH9cmY5zrPPQIeyrbHK33IbdBzMwTEO2TH60A=="],
 
     "@sudobility/types": ["@sudobility/types@1.9.61", "", {}, "sha512-SODGpstB/iKfK3H/4BvJx/FBcc1h3gutUjGotyxN19VnOfWyzaDoEmW7eyoxOAYhZyXMXagSiii+NIEZvuxKog=="],
 

@@ -13,8 +13,6 @@ import ScreenContainer from './components/layout/ScreenContainer';
 const HomePage = lazy(() => import('./pages/HomePage'));
 const LoginPage = lazy(() => import('./pages/LoginPage'));
 const DocsPage = lazy(() => import('./pages/DocsPage'));
-const HistoriesPage = lazy(() => import('./pages/HistoriesPage'));
-const HistoryDetailPage = lazy(() => import('./pages/HistoryDetailPage'));
 const SettingsPage = lazy(() => import('./pages/SettingsPage'));
 const SitemapPage = lazy(() => import('./pages/SitemapPage'));
 const WorkspacesPage = lazy(() => import('./pages/WorkspacesPage'));
@@ -94,36 +92,6 @@ function AppRoutes() {
                   }
                 />
                 <Route path="dashboard/:entitySlug">
-                  <Route
-                    index
-                    element={
-                      <ProtectedRoute>
-                        <ErrorBoundary>
-                          <HistoriesPage />
-                        </ErrorBoundary>
-                      </ProtectedRoute>
-                    }
-                  />
-                  <Route
-                    path="histories"
-                    element={
-                      <ProtectedRoute>
-                        <ErrorBoundary>
-                          <HistoriesPage />
-                        </ErrorBoundary>
-                      </ProtectedRoute>
-                    }
-                  />
-                  <Route
-                    path="histories/:historyId"
-                    element={
-                      <ProtectedRoute>
-                        <ErrorBoundary>
-                          <HistoryDetailPage />
-                        </ErrorBoundary>
-                      </ProtectedRoute>
-                    }
-                  />
                   <Route
                     path="settings"
                     element={
