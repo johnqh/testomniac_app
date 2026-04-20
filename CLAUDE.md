@@ -37,22 +37,54 @@ src/
 │   │   ├── ScreenContainer.tsx           # Page wrapper
 │   │   ├── ProtectedRoute.tsx            # Auth guard
 │   │   ├── LocalizedLink.tsx             # Language-aware links
-│   │   └── LanguageRedirect.tsx          # Auto-redirect to lang prefix
-│   └── providers/
-│       └── AuthProviderWrapper.tsx       # Firebase auth provider
+│   │   ├── LanguageRedirect.tsx          # Auto-redirect to lang prefix
+│   │   └── EntityRedirect.tsx            # Redirect to user's default entity
+│   ├── providers/
+│   │   └── AuthProviderWrapper.tsx       # Firebase auth provider
+│   ├── scanner/
+│   │   ├── EventLog.tsx                  # Real-time scan event stream
+│   │   ├── LiveCounters.tsx              # Live scan statistics
+│   │   ├── PhaseIndicator.tsx            # Current scan phase display
+│   │   ├── RunSummaryCard.tsx            # Run overview card
+│   │   ├── ScanForm.tsx                  # New scan submission form
+│   │   ├── ScanProgressPanel.tsx         # Scan progress visualization
+│   │   └── StatusBadge.tsx               # Run status indicator
+│   ├── data/
+│   │   ├── JsonViewer.tsx                # Collapsible JSON display
+│   │   └── DataTable.tsx                 # Reusable data table
+│   └── dashboard/
+│       └── DashboardSidebar.tsx          # Dashboard navigation sidebar
 ├── hooks/
 │   ├── useLocalizedNavigate.ts           # Navigate with lang prefix
-│   └── useDocumentLanguage.ts            # Set HTML lang attribute
+│   ├── useDocumentLanguage.ts            # Set HTML lang attribute
+│   ├── useBreadcrumbs.ts                 # Breadcrumb navigation
+│   ├── useBuildingBlocksAnalytics.ts     # Analytics integration
+│   ├── useEventSource.ts                 # SSE event stream hook
+│   └── usePageConfig.ts                  # Page title/meta configuration
 ├── utils/
 │   └── formatDateTime.ts                 # Locale-aware date/time formatting
 └── pages/
-    ├── HomePage.tsx
-    ├── LoginPage.tsx
-    ├── HistoriesPage.tsx
-    ├── HistoryDetailPage.tsx
-    ├── SettingsPage.tsx
-    ├── DocsPage.tsx
-    └── SitemapPage.tsx
+    ├── HomePage.tsx                      # Landing page
+    ├── LoginPage.tsx                     # Authentication page
+    ├── DocsPage.tsx                      # Documentation
+    ├── SitemapPage.tsx                   # Sitemap
+    ├── DashboardPage.tsx                 # Dashboard layout (with sidebar + Outlet)
+    ├── DashboardOverview.tsx             # Dashboard home / project overview
+    ├── StartScanPage.tsx                 # New scan form page
+    ├── ScanProgressPage.tsx              # Authenticated scan progress
+    ├── PublicScanProgressPage.tsx        # Public scan progress (no auth)
+    ├── RunDetailsPage.tsx                # Individual run details
+    ├── TestCasesPage.tsx                 # Generated test cases list
+    ├── TestRunsPage.tsx                  # Test execution results
+    ├── IssuesPage.tsx                    # Detected issues list
+    ├── PagesPage.tsx                     # Discovered pages list
+    ├── MapPage.tsx                       # Site map visualization
+    ├── ComponentsPage.tsx                # Detected UI components
+    ├── PersonasPage.tsx                  # AI-generated personas
+    ├── SettingsPage.tsx                  # User settings
+    ├── WorkspacesPage.tsx                # Workspace management
+    ├── MembersPage.tsx                   # Team members
+    └── InvitationsPage.tsx              # Pending invitations
 ```
 
 ## Commands
@@ -69,11 +101,35 @@ bun run verify         # Run typecheck + lint + format:check (no test suite; rel
 
 ## Routing
 
-Language-prefixed routes: `/:lang/*` (e.g., `/en/histories`, `/ja/settings`).
+Language-prefixed routes: `/:lang/*` (e.g., `/en/dashboard`, `/ja/settings`).
 
 16 supported languages: en, ar, de, es, fr, it, ja, ko, pt, ru, sv, th, uk, vi, zh, zh-hant.
 
 Pages are lazy-loaded with React Suspense.
+
+### Route Structure
+
+- `/:lang/` — Home
+- `/:lang/login` — Login
+- `/:lang/docs` — Documentation
+- `/:lang/sitemap` — Sitemap
+- `/:lang/scan/:runId/progress` — Public scan progress (no auth)
+- `/:lang/dashboard` — Redirects to default entity
+- `/:lang/dashboard/:entitySlug/` — Dashboard overview
+- `/:lang/dashboard/:entitySlug/scan/new` — Start new scan
+- `/:lang/dashboard/:entitySlug/runs/:runId` — Run details
+- `/:lang/dashboard/:entitySlug/runs/:runId/progress` — Scan progress
+- `/:lang/dashboard/:entitySlug/runs/:runId/test-cases` — Test cases
+- `/:lang/dashboard/:entitySlug/runs/:runId/test-runs` — Test runs
+- `/:lang/dashboard/:entitySlug/runs/:runId/issues` — Issues
+- `/:lang/dashboard/:entitySlug/runs/:runId/pages` — Pages
+- `/:lang/dashboard/:entitySlug/runs/:runId/map` — Site map
+- `/:lang/dashboard/:entitySlug/runs/:runId/components` — Components
+- `/:lang/dashboard/:entitySlug/runs/:runId/personas` — Personas
+- `/:lang/dashboard/:entitySlug/settings` — Settings
+- `/:lang/dashboard/:entitySlug/workspaces` — Workspaces
+- `/:lang/dashboard/:entitySlug/members` — Members
+- `/:lang/dashboard/:entitySlug/invitations` — Invitations
 
 ## Shared Components
 
@@ -98,7 +154,7 @@ Uses `@sudobility/building_blocks` for:
 
 - **entitytestomniac_types** — Shared type definitions; imported transitively via entitytestomniac_client
 - **entitytestomniac_client** — API client SDK with TanStack Query hooks; provides data fetching layer
-- **entitytestomniac_lib** — Business logic library with `useHistoriesManager` hook; primary integration point for this app
+- **entitytestomniac_lib** — Business logic library with `useScanManager`, `useDashboardManager`, `useRunManager` hooks; primary integration point for this app
 - **entitytestomniac_api** — Backend server that this app communicates with (web defaults to `localhost:8027`)
 - **entityentitytestomniac_app_rn** — React Native counterpart of this web app; shares entitytestomniac_client, entitytestomniac_lib, and entitytestomniac_types
 
@@ -106,7 +162,7 @@ Uses `@sudobility/building_blocks` for shared shell components (TopBar, LoginPag
 
 ## Coding Patterns
 
-- All routes are language-prefixed: `/:lang/*` (e.g., `/en/histories`, `/ja/settings`) -- never create routes without the language prefix
+- All routes are language-prefixed: `/:lang/*` (e.g., `/en/dashboard`, `/ja/settings`) -- never create routes without the language prefix
 - Pages are lazy-loaded with `React.lazy()` and wrapped in `<Suspense>` for code splitting
 - 16 languages are supported with RTL support (Arabic) -- use `LocalizedLink` and `useLocalizedNavigate` for navigation
 - `ThemeContext` provides light/dark theme switching throughout the app
