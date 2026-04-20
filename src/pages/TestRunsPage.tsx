@@ -1,4 +1,3 @@
-import { useParams } from 'react-router-dom';
 import { createColumnHelper } from '@tanstack/react-table';
 import { DataTable } from '../components/data/DataTable';
 import { StatusBadge } from '../components/scanner/StatusBadge';
@@ -54,7 +53,7 @@ const columns = [
 ];
 
 export default function TestRunsPage() {
-  const { runId: _runId } = useParams<{ runId: string }>();
+  // const { runId } = useParams<{ runId: string }>();
 
   // TODO: Replace with useRunTestRuns hook when API is live
   const testRuns: TestRunRow[] = [];
@@ -64,7 +63,7 @@ export default function TestRunsPage() {
     <div className="p-6">
       <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-6">Test Runs</h1>
 
-      <DataTable data={testRuns} columns={columns as any} isLoading={isLoading} />
+      <DataTable data={testRuns} columns={columns as never} isLoading={isLoading} />
     </div>
   );
 }

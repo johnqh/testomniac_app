@@ -1,4 +1,3 @@
-import { useParams } from 'react-router-dom';
 
 interface PageCard {
   id: number;
@@ -9,7 +8,7 @@ interface PageCard {
 }
 
 export default function PagesPage() {
-  const { runId: _runId } = useParams<{ runId: string }>();
+  // const { runId } = useParams<{ runId: string }>();
 
   // TODO: Replace with useRunPages hook when API is live
   const pages: PageCard[] = [];

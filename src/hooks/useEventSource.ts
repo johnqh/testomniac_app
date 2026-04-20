@@ -1,5 +1,4 @@
 /* eslint-disable react-hooks/set-state-in-effect */
-/* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useRef, useState, useCallback } from 'react';
 import type { RunStreamEvent } from '@sudobility/testomniac_types';
 
@@ -22,10 +21,6 @@ export function useEventSource(config: UseEventSourceConfig): UseEventSourceRetu
   const [error, setError] = useState<string | null>(null);
   const esRef = useRef<EventSource | null>(null);
   const reconnectTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const onEventRef = useRef(onEvent);
-  const onErrorRef = useRef(onError);
-  onEventRef.current = onEvent;
-  onErrorRef.current = onError;
 
   const disconnect = useCallback(() => {
     if (reconnectTimerRef.current) {
@@ -36,13 +31,13 @@ export function useEventSource(config: UseEventSourceConfig): UseEventSourceRetu
       esRef.current.close();
       esRef.current = null;
     }
-    setIsConnected(false);
   }, []);
 
   useEffect(() => {
     if (!url) {
       disconnect();
-      return;
+      setIsConnected(false);
+      return undefined;
     }
 
     function connect() {
@@ -54,10 +49,10 @@ export function useEventSource(config: UseEventSourceConfig): UseEventSourceRetu
         setError(null);
       };
 
-      es.onmessage = event => {
+      es.onmessage = (event) => {
         try {
           const data = JSON.parse(event.data) as RunStreamEvent;
-          onEventRef.current(data);
+          onEvent(data);
         } catch {
           // Ignore unparseable messages
         }
@@ -66,7 +61,7 @@ export function useEventSource(config: UseEventSourceConfig): UseEventSourceRetu
       es.onerror = () => {
         setIsConnected(false);
         setError('Connection lost');
-        onErrorRef.current?.('Connection lost');
+        onError?.('Connection lost');
         es.close();
         esRef.current = null;
         reconnectTimerRef.current = setTimeout(connect, reconnectIntervalMs);
@@ -77,8 +72,9 @@ export function useEventSource(config: UseEventSourceConfig): UseEventSourceRetu
 
     return () => {
       disconnect();
+      setIsConnected(false);
     };
-  }, [url, reconnectIntervalMs, disconnect]);
+  }, [url, reconnectIntervalMs, disconnect, onEvent, onError]);
 
   return { isConnected, error, disconnect };
 }

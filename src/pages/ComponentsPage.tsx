@@ -1,4 +1,3 @@
-import { useParams } from 'react-router-dom';
 
 interface ComponentCard {
   id: number;
@@ -10,7 +9,7 @@ interface ComponentCard {
 }
 
 export default function ComponentsPage() {
-  const { runId: _runId } = useParams<{ runId: string }>();
+  // const { runId } = useParams<{ runId: string }>();
 
   // TODO: Replace with useRunComponents hook when API is live
   const components: ComponentCard[] = [];

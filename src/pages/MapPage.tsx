@@ -1,5 +1,4 @@
 import { useMemo } from 'react';
-import { useParams } from 'react-router-dom';
 import {
   ReactFlow,
   Background,
@@ -13,7 +12,7 @@ import {
 import '@xyflow/react/dist/style.css';
 
 export default function MapPage() {
-  const { runId: _runId } = useParams<{ runId: string }>();
+  // const { runId } = useParams<{ runId: string }>();
 
   // TODO: Replace with useRunPages + useRunActions hooks when API is live
   // For now, show empty state

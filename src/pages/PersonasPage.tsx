@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { useParams } from 'react-router-dom';
 
 interface Persona {
   id: number;
@@ -13,7 +12,7 @@ interface Persona {
 }
 
 export default function PersonasPage() {
-  const { runId: _runId } = useParams<{ runId: string }>();
+  // const { runId } = useParams<{ runId: string }>();
   const [expandedId, setExpandedId] = useState<number | null>(null);
 
   // TODO: Replace with useRunPersonas hook when API is live

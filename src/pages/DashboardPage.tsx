@@ -6,9 +6,7 @@ import { useSetPageConfig } from '../hooks/usePageConfig';
 
 export default function DashboardPage() {
   const { entitySlug } = useParams<{ entitySlug: string }>();
-  const [mobileView, setMobileView] = useState<'navigation' | 'content'>(
-    'content',
-  );
+  const [mobileView, setMobileView] = useState<'navigation' | 'content'>('content');
 
   // Prevent outer layout from scrolling; constrain width
   useSetPageConfig({ scrollable: false, contentPadding: 'none', maxWidth: '7xl' });

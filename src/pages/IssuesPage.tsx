@@ -1,4 +1,3 @@
-import { useParams } from 'react-router-dom';
 import { createColumnHelper } from '@tanstack/react-table';
 import { DataTable } from '../components/data/DataTable';
 import { StatusBadge } from '../components/scanner/StatusBadge';
@@ -58,7 +57,7 @@ const columns = [
 ];
 
 export default function IssuesPage() {
-  const { runId: _runId } = useParams<{ runId: string }>();
+  // const { runId } = useParams<{ runId: string }>();
 
   // TODO: Replace with useRunIssues hook when API is live
   const issues: IssueRow[] = [];
@@ -68,7 +67,7 @@ export default function IssuesPage() {
     <div className="p-6">
       <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-6">Issues</h1>
 
-      <DataTable data={issues} columns={columns as any} isLoading={isLoading} />
+      <DataTable data={issues} columns={columns as never} isLoading={isLoading} />
     </div>
   );
 }
