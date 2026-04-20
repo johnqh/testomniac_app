@@ -169,7 +169,7 @@ tsconfig.json
 
 ---
 
-## Phase 1: Project Setup + Domain + DB
+## Phase 1: Project Setup + Domain + DB -- COMPLETED
 
 ### Task 1: Project Scaffolding
 
@@ -1285,7 +1285,7 @@ git commit -m "feat: database repositories"
 
 ---
 
-## Phase 2: Browser + Scanner Core
+## Phase 2: Browser + Scanner Core -- COMPLETED
 
 ### Task 6: Browser Manager
 
@@ -2261,7 +2261,7 @@ git commit -m "feat: mouse scanner (Phase 1a orchestrator)"
 
 ---
 
-## Phase 3: Auth + AI + Input Scanning
+## Phase 3: Auth + AI + Input Scanning -- COMPLETED
 
 ### Task 11: Form Identifier
 
@@ -3279,7 +3279,7 @@ git commit -m "feat: input scanner (Phase 1c — form filling + pairwise)"
 
 ---
 
-## Phase 4: Test Generation
+## Phase 4: Test Generation -- COMPLETED
 
 ### Task 16: Suite Tagger + Test Templates
 
@@ -3698,7 +3698,7 @@ git commit -m "feat: test generation templates and orchestrator"
 
 ---
 
-## Phase 5: Test Runner + API
+## Phase 5: Test Runner + API -- COMPLETED
 
 ### Task 17: Test Executor + Worker Pool
 
