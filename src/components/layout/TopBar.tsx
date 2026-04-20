@@ -8,7 +8,7 @@ import {
 import { AuthAction, useAuthStatus } from '@sudobility/auth-components';
 import { useCurrentEntityOptional } from '@sudobility/entity_client';
 import type { ComponentType } from 'react';
-import { DocumentTextIcon, ClockIcon, Cog6ToothIcon } from '@heroicons/react/24/outline';
+import { DocumentTextIcon, RectangleGroupIcon, Cog6ToothIcon } from '@heroicons/react/24/outline';
 import { useLocalizedNavigate } from '../../hooks/useLocalizedNavigate';
 import { CONSTANTS, SUPPORTED_LANGUAGES, isLanguageSupported } from '../../config/constants';
 import LocalizedLink from './LocalizedLink';
@@ -80,10 +80,10 @@ export function useTopBarConfig(): TopBarConfig {
     if (isAuthenticated) {
       items.push(
         {
-          id: 'histories',
-          label: t('nav.histories'),
-          icon: ClockIcon,
-          href: entitySlug ? `/dashboard/${entitySlug}/histories` : '/dashboard',
+          id: 'dashboard',
+          label: 'Dashboard',
+          icon: RectangleGroupIcon,
+          href: entitySlug ? `/dashboard/${entitySlug}` : '/dashboard',
         },
         {
           id: 'settings',
