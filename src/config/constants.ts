@@ -7,7 +7,7 @@ export const CONSTANTS = {
   SUPPORT_EMAIL: import.meta.env.VITE_SUPPORT_EMAIL || 'support@example.com',
 
   // API
-  API_URL: import.meta.env.VITE_API_URL || 'http://localhost:8022',
+  API_URL: import.meta.env.VITE_API_URL || 'http://localhost:8027',
 
   // Feature flags
   DEV_MODE: import.meta.env.VITE_DEV_MODE === 'true',

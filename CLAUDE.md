@@ -85,21 +85,21 @@ Uses `@sudobility/building_blocks` for:
 
 | Variable                    | Description          | Default                 |
 | --------------------------- | -------------------- | ----------------------- |
-| `VITE_API_URL`              | Backend API URL      | `http://localhost:8022` |
+| `VITE_API_URL`              | Backend API URL      | `http://localhost:8027` |
 | `VITE_FIREBASE_API_KEY`     | Firebase API key     | required                |
 | `VITE_FIREBASE_AUTH_DOMAIN` | Firebase auth domain | required                |
 | `VITE_FIREBASE_PROJECT_ID`  | Firebase project ID  | required                |
 | `VITE_APP_NAME`             | Application name     | `Testomniac`        |
 | `VITE_APP_DOMAIN`           | Application domain   | `localhost`             |
 
-**Note**: The default API URL in constants is `http://localhost:8022`, matching the API server's default port.
+**Note**: The default API URL in constants is `http://localhost:8027`, matching the API server's default port.
 
 ## Related Projects
 
 - **entitytestomniac_types** — Shared type definitions; imported transitively via entitytestomniac_client
 - **entitytestomniac_client** — API client SDK with TanStack Query hooks; provides data fetching layer
 - **entitytestomniac_lib** — Business logic library with `useHistoriesManager` hook; primary integration point for this app
-- **entitytestomniac_api** — Backend server that this app communicates with (both default to port 8022)
+- **entitytestomniac_api** — Backend server that this app communicates with (web defaults to `localhost:8027`)
 - **entityentitytestomniac_app_rn** — React Native counterpart of this web app; shares entitytestomniac_client, entitytestomniac_lib, and entitytestomniac_types
 
 Uses `@sudobility/building_blocks` for shared shell components (TopBar, LoginPage, SettingsPage, SudobilityAppWithFirebaseAuth).
@@ -116,7 +116,7 @@ Uses `@sudobility/building_blocks` for shared shell components (TopBar, LoginPag
 
 ## Gotchas
 
-- API URL: `.env` defaults to `localhost:8022` to match the API server (`entitytestomniac_api`) -- verify `VITE_API_URL` matches your running API if using a different port
+- API URL: `.env` defaults to `localhost:8027` to match the API server (`entitytestomniac_api`) -- verify `VITE_API_URL` matches your running API if using a different port
 - Vite deduplicates React and shared deps in its config -- if you add new shared dependencies, check if they need deduplication
 - All routes MUST be under the `/:lang/` prefix -- routes without the language prefix will not work correctly
 - Firebase configuration requires all `VITE_FIREBASE_*` environment variables to be set; missing any will break authentication

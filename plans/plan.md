@@ -8,7 +8,7 @@
 
 # 1. Purpose
 
-A Node.js system that discovers UI elements on web applications through action-driven scanning, augments discovery with AI-generated personas and use cases, generates JSON test sequences, and executes them via Puppeteer. Scanning is deterministic and exhaustive; AI is used to understand the site and generate meaningful input data, not to drive navigation.
+A Node.js system that discovers UI elements on web applications through action-driven scanning, augments discovery with AI-generated personas and use cases, generates JSON test sequences, and executes them via Puppeteer. Scanning is deterministic and exhaustive within explicit traversal limits; AI is used to understand the site and generate meaningful input data, not to drive navigation.
 
 ---
 
@@ -43,7 +43,176 @@ A Node.js system that discovers UI elements on web applications through action-d
 
 ---
 
-# 4. High-Level Architecture
+# 4. Design Clarifications
+
+These rules resolve the main ambiguities in the original design and are part of the approved plan.
+
+## 4.1 Service Boundaries
+
+- `testomniac_api` remains the existing `Hono` API service.
+- The scanner lives in its own project at `~/projects/testomniac_scanner`.
+- The scanner is a separate worker/service that polls PostgreSQL for pending runs.
+- The API does not launch Chromium or perform scanning work directly.
+- Real-time updates flow through PostgreSQL `LISTEN/NOTIFY` and are exposed by the API via SSE.
+
+## 4.1.1 Anonymous Project Creation And Claiming
+
+Projects may be created before login.
+
+Anonymous entry flow:
+- On the home page, the user enters a URL to scan
+- The user may optionally enter an email address
+- The system normalizes the URL and checks whether a project for that URL already exists
+
+Email rule:
+- If an email is supplied, its domain must match the registrable domain of the submitted URL
+- If the domain does not match, reject the request with a validation error
+
+Project creation rule:
+- If the URL has not been seen before, create a new project and app for that URL and immediately start scanning
+- The new project may exist without being tied to an entity
+
+Duplicate URL rule:
+- If a project already exists for the URL and it belongs to an entity:
+  - do not create a new project
+  - tell the user to ask the owner's email to invite them or let them join the organization
+- If a project already exists for the URL and it does not belong to an entity:
+  - do not create a new project
+  - tell the user to create an account with an email on that domain to claim the project
+
+Anonymous progress rule:
+- If the user started a scan without logging in, the UI still shows live scan progress
+- At minimum show phase/status, progress bar, and the latest screenshot of the page currently being scanned
+
+Admin rule:
+- Site admins can view all projects that are not tied to an entity
+- Site admins may use this view to audit, moderate, or manually assist with project claiming
+
+## 4.1.2 Shared Type Ownership
+
+Shared domain and API contract types must live in `testomniac_types`.
+
+Rules:
+- `testomniac_api`, `testomniac_scanner`, and `testomniac_client` all consume shared types from `testomniac_types`
+- Do not duplicate source-of-truth request/response/domain models across those projects
+- Scanner-only internal helper types may live in the scanner project, but persisted models and API-facing contracts belong in `testomniac_types`
+
+## 4.2 State Identity Contract
+
+A `Page` is a route-level location. A `Page State` is a materially distinct interactive state within that page.
+
+Page identity:
+- Same-origin URL, normalized by removing hash fragments and known tracking query params (`utm_*`, `gclid`, etc.)
+- Query params that materially change content remain part of the Page identity
+
+Page State identity:
+- Computed from a tuple of:
+  - normalized page URL
+  - normalized HTML hash
+  - actionable item hash
+  - visible modal/drawer/menu fingerprint
+- Ignore transient differences:
+  - timestamps
+  - CSRF tokens and nonce-like values
+  - randomized element IDs/classes when detectable
+  - analytics/debug script content
+  - caret/focus/hover-only styling with no new actionable items
+
+A new `Page State` is created only when the post-action result is materially different for future traversal or testing.
+
+## 4.3 Traversal Boundaries And Stop Conditions
+
+Scanning is bounded. “Exhaustive” means exhaustive within the allowed state space for a single run.
+
+Traversal boundaries:
+- Same origin only by default
+- Skip explicit logout links/buttons
+- Skip obviously destructive actions unless explicitly enabled later:
+  - delete
+  - remove account
+  - cancel subscription
+  - irreversible admin actions
+- Skip file uploads, payments, captcha, and third-party embedded flows
+
+Required stop conditions:
+- action signature deduplication per run
+- state hash deduplication per SizeClass
+- max actions per page state
+- max repeated visits to the same page state
+- max total actions per run
+- max traversal depth from a root navigate action
+- max idle retries when an action yields no new state
+
+## 4.4 What Counts As An Actionable Item
+
+An actionable item is any visible, enabled element that a normal user can interact with and that may affect navigation, state, or submitted data.
+
+Include:
+- links
+- buttons
+- menu triggers
+- tabs
+- accordions
+- inputs
+- selects
+- textareas
+- checkboxes
+- radios
+- switches/toggles
+- elements with `role=button`, `role=link`, or click handlers
+
+Exclude:
+- hidden or disabled controls
+- duplicate elements with the same stable fingerprint inside the same state
+- purely decorative elements
+- container elements whose only purpose is layout
+
+## 4.5 Authentication And Sign-Up Precedence
+
+Authentication flow order:
+1. If user credentials are provided, use login flow first.
+2. If login is unavailable but sign-up is detected and auto-registration is allowed, use Signic registration.
+3. If both fail, mark authenticated scanning as skipped and record an issue.
+
+Scope rules:
+- Support one interactive 2FA step only
+- Support email verification via Signic inbox polling
+- Do not attempt CAPTCHA bypass
+- Credentials are stored encrypted per run/persona and reused by the scanner and runner
+
+## 4.6 Pairwise Scope
+
+Pairwise generation applies only to discrete controls within a single form and a single reachable starting page state.
+
+Rules:
+- Free-text fields are filled from AI-generated values before pairwise combinations are applied
+- Pairwise covers checkboxes, radios, toggles, and selects
+- Do not compute pairwise across multiple forms or across unrelated page states
+- If the combination count still exceeds configured caps, trim by priority and log the truncation
+
+## 4.7 Test Generation Prioritization
+
+Generated test cases are prioritized into tiers:
+
+1. Smoke:
+   - route renders
+   - primary navigation
+   - auth entry points
+2. Core interaction:
+   - click paths that produced new states
+   - major modal/menu/tab state changes
+3. Form coverage:
+   - one positive path per form/persona/use case
+   - pairwise discrete combinations
+   - negative validation cases
+4. Extended E2E:
+   - longer multi-step paths with highest user value
+
+Execution always runs higher-priority tiers first if budgets are limited.
+
+---
+
+# 5. High-Level Architecture
 
 ```
 Node.js
@@ -127,17 +296,25 @@ testomniac_app (React web) / testomniac_app_rn (React Native)
 ```
 
 **Data flow for a scan:**
-1. User fills Start Scan form in frontend
-2. Frontend calls `testomniac_api` → inserts `runs` row (status: `pending`) with encrypted credentials
-3. Scanner polls DB, picks up pending run, sets status: `running`
-4. Scanner emits progress via `NOTIFY run_events` on PostgreSQL
-5. API's SSE endpoint `LISTEN`s on `run_events` channel, streams to frontend
-6. Scanner completes → sets status: `completed`
-7. Frontend shows results by querying API
+1. User enters a URL on the home page, with optional email
+2. Frontend calls `testomniac_api`
+3. API normalizes the URL and checks for an existing project
+4. If duplicate project exists:
+   - if tied to an entity, return claim/join guidance
+   - if unclaimed, return claim guidance
+5. If no project exists:
+   - create project + app
+   - optionally record contact email if domain matches
+   - insert `runs` row with status `pending`
+6. Scanner polls DB, picks up pending run, sets status `running`
+7. Scanner emits progress via `NOTIFY run_events` on PostgreSQL
+8. API's SSE endpoint `LISTEN`s on `run_events` channel, streams to frontend
+9. Scanner completes and sets status `completed`
+10. Frontend shows live progress and final results
 
 ---
 
-# 5. Technology Stack
+# 6. Technology Stack
 
 | Component | Technology |
 |-----------|-----------|
@@ -168,11 +345,11 @@ testomniac_app (React web) / testomniac_app_rn (React Native)
 
 ---
 
-# 6. Core Concepts
+# 7. Core Concepts
 
 | Concept | Definition |
 |---------|-----------|
-| Project | A container belonging to an entity (from entity_service). An entity can have multiple Projects. Each Project has one App |
+| Project | A container for a scanned application. A Project may belong to an entity or may be temporarily unclaimed. Each Project has one App |
 | App | Target web application (URL + name). Belongs to a Project |
 | Page | A distinct route, identified by URL |
 | Page State | A specific DOM state within a Page. One Page can have multiple Page States (e.g., menu open vs. closed). Detected via HTML change hashing |
@@ -199,6 +376,9 @@ Entity (from entity_service)
             └── Page (1:many)
                  └── Page State (1:many)
                       └── Action (many, as startingPageState)
+
+Unclaimed Project
+  └── App (1:1)
 
 Component
   ├── app → App
@@ -248,9 +428,11 @@ Issue
 
 ---
 
-# 7. Functional Requirements
+# 8. Functional Requirements
 
-## 7.1 Authentication
+## 8.1 Authentication
+
+Authentication is optional for initial project creation and public scanning. Login is only required later for claiming projects, joining organizations, or accessing organization-scoped data.
 
 ### Login Detection
 
@@ -339,7 +521,7 @@ These test cases are created during Phase 1c (Input Scanning) when processing si
 - Login session preserved across scanning phases
 - If session expires mid-scan, re-authenticate using stored credentials
 
-## 7.2 Phase 1a: Mouse-Only Scanning (Public)
+## 8.2 Phase 1a: Mouse-Only Scanning (Public)
 
 Discovers all publicly reachable Pages and Page States using only navigate, mouseover, and click. No text input, no form submission.
 
@@ -448,7 +630,7 @@ type ActionableItem = {
 - Page State hashes for change detection
 - Screenshots and console/network logs per Page State
 
-## 7.3 Phase 1a.5: Reusable Component Detection
+## 8.3 Phase 1a.5: Reusable Component Detection
 
 After mouse-only scanning discovers all pages and page states, detect reusable components (nav bars, footers, sidebars) to avoid duplicate testing.
 
@@ -494,7 +676,7 @@ On mobile SizeClass, the scanner detects hamburger menus via:
 
 The hamburger menu and its expanded content are treated as a component. If the expanded menu HTML is identical across pages, it's tested once.
 
-## 7.4 Phase 1b: AI Analysis
+## 8.4 Phase 1b: AI Analysis
 
 After mouse-only scanning completes, send all page content to OpenAI:
 
@@ -505,7 +687,7 @@ After mouse-only scanning completes, send all page content to OpenAI:
 
 Personas, Use Cases, and input values are persisted to the DB for use in Phase 1c and test generation.
 
-## 7.5 Phase 1c: Input Scanning (Public)
+## 8.5 Phase 1c: Input Scanning (Public)
 
 Process all deferred input actions, informed by Personas and Use Cases.
 
@@ -545,7 +727,7 @@ for each form:
       if new state → scan for new Actions
 ```
 
-## 7.6 Phase 1d: Re-Verify Public Pages
+## 8.6 Phase 1d: Re-Verify Public Pages
 
 After Phases 1a-1c complete, re-verify all public pages to detect login requirements. During earlier phases, some pages may not have been tested for auth (they were reached via click, not direct navigation).
 
@@ -555,7 +737,7 @@ After Phases 1a-1c complete, re-verify all public pages to detect login requirem
 4. If the page loads normally: compare hashes against the most recent Page State to detect any content changes since initial scan
 5. This categorizes all pages into public vs. login-required, which drives Phase 2
 
-## 7.7 Phase 2: Login-Required Scanning
+## 8.7 Phase 2: Login-Required Scanning
 
 After public scanning + re-verification:
 
@@ -569,7 +751,7 @@ After public scanning + re-verification:
 3. New authenticated Pages, Page States, and Actions are discovered and persisted
 4. If session expires mid-scan, re-authenticate using stored credentials and resume
 
-## 7.8 State Management
+## 8.8 State Management
 
 The scanner tracks the current browser state (current Page + Page State). When picking the next open Action:
 
@@ -581,7 +763,7 @@ The scanner tracks the current browser state (current Page + Page State). When p
   4. Replay the mouseover chain in order to reach the target Page State
   5. This chain is typically: navigate → mouseover (produces intermediate state) → mouseover (produces target state)
 
-## 7.9 SizeClass Scanning
+## 8.9 SizeClass Scanning
 
 The full scanning process (Phases 1a through 2) runs **once per SizeClass**:
 
@@ -592,7 +774,7 @@ Each may discover different elements (hamburger menus, mobile nav, responsive la
 
 Test cases specify which SizeClass they belong to. During test execution, the runner selects which SizeClass and Screen resolutions to test.
 
-## 7.10 Issue Detection
+## 8.10 Issue Detection
 
 Issues are created automatically during scanning when the scanner detects problems. All issues are severity `error` (warning-level issues are a future addition).
 
@@ -625,7 +807,7 @@ Issues are detected and created in real-time during scanning (all phases):
 
 A single action can produce multiple issues (e.g., a click that returns a 500 AND shows an error message AND logs a console error = 3 separate issues, all sharing the same reproduction steps).
 
-## 7.11 Email Detection and Checking
+## 8.11 Email Detection and Checking
 
 The scanner detects when an action will trigger an email, and automatically creates a `check_email` action to verify it arrives and act on its content.
 
@@ -679,7 +861,7 @@ When an email arrives, the scanner examines its content:
 |-----------|---------|-----------|
 | `email_not_received` | `check_email` action timed out waiting for email | Signic inbox polled for 60s with no matching email |
 
-## 7.12 JavaScript Dialog Handling
+## 8.12 JavaScript Dialog Handling
 
 The scanner auto-handles JavaScript dialogs to prevent blocking:
 - `alert()` → auto-dismiss
@@ -689,11 +871,11 @@ The scanner auto-handles JavaScript dialogs to prevent blocking:
 
 Puppeteer's `page.on('dialog')` handler is registered at page creation. All dialogs are logged in the action's console log.
 
-## 7.13 Scroll Handling
+## 8.13 Scroll Handling
 
 Puppeteer's `el.hover()` and `el.click()` auto-scroll elements into view. The scanner does not need explicit scroll actions during discovery. However, some elements may only appear after scrolling (lazy-loaded content). After initial page state extraction, the scanner scrolls to bottom in increments, checking for new elements at each step. New elements found after scroll create additional mouseover actions.
 
-## 7.14 Infinite Loop Protection
+## 8.14 Infinite Loop Protection
 
 The scanning algorithm can encounter cycles (Page State A → click → Page State B → click → Page State A). Protection mechanisms:
 
@@ -702,7 +884,7 @@ The scanning algorithm can encounter cycles (Page State A → click → Page Sta
 - **Max total actions per run**: Default 5000. Configurable. Scanner stops when reached.
 - **Max pages per run**: Default 100. Configurable.
 
-## 7.15 Page Change Detection
+## 8.15 Page Change Detection
 
 | Hash | Purpose |
 |------|---------|
@@ -713,7 +895,7 @@ The scanning algorithm can encounter cycles (Page State A → click → Page Sta
 
 A new Page State is created if ANY hash differs from the current state. URL change creates a new Page.
 
-## 7.16 Artifact Capture
+## 8.16 Artifact Capture
 
 Per Page State (during scanning):
 - Screenshot (JPEG, quality 72)
@@ -746,7 +928,7 @@ artifacts/
 
 ---
 
-# 8. Test Case Generation (Phase 3)
+# 9. Test Case Generation (Phase 3)
 
 Test cases are generated from the scanning data. Template-based, no AI. Each test case is a JSON action sequence.
 
@@ -947,7 +1129,7 @@ Multi-hop journeys via DFS path enumeration (acyclic paths, length >= 3, max dep
 
 ---
 
-# 9. Test Execution (Phase 4)
+# 10. Test Execution (Phase 4)
 
 Custom runner interprets JSON action sequences using Puppeteer. Each execution of a Test Case creates a **Test Run** record.
 
@@ -994,7 +1176,7 @@ step             → no-op, label in results
 
 ---
 
-# 10. Email Reporting
+# 11. Email Reporting
 
 After test execution:
 1. Compute summary: total, passed, failed, skipped, duration
@@ -1005,15 +1187,18 @@ After test execution:
 
 ---
 
-# 11. Database Schema
+# 12. Database Schema
 
 ```sql
--- Projects belonging to entities (from entity_service)
+-- Projects may belong to an entity or remain unclaimed until later
 create table projects (
   id bigserial primary key,
-  entity_id uuid not null,
+  entity_id uuid,
   name text not null,
   description text,
+  contact_email text,
+  claimed_by_user_id uuid,
+  claimed_at timestamptz,
   created_at timestamptz default now(),
   updated_at timestamptz default now()
 );
@@ -1024,6 +1209,7 @@ create table apps (
   project_id bigint references projects(id) not null,
   name text not null,
   base_url text,
+  normalized_base_url text not null unique,
   created_at timestamptz default now()
 );
 
@@ -1280,10 +1466,13 @@ create table report_emails (
 
 ---
 
-# 12. API Endpoints
+# 13. API Endpoints
 
 | Method | Path | Purpose |
 |--------|------|---------|
+| POST | `/api/public/scan` | Anonymous URL submission. Creates project + pending run, or returns duplicate/claim guidance |
+| GET | `/api/public/runs/:runId` | Anonymous read-only run progress and latest screenshot metadata |
+| GET | `/api/public/runs/:runId/stream` | Anonymous SSE stream for live scan progress |
 | POST | `/api/scan` | Start full run (all phases) |
 | POST | `/api/scan/stream` | SSE streaming with real-time events |
 | GET | `/api/projects` | List projects for an entity (query: `entityId`) |
@@ -1295,6 +1484,19 @@ create table report_emails (
 | GET | `/api/runs/:runId/issues` | List issues for a run (filter: `type`) |
 | GET | `/api/runs/:runId/ai-usage` | Get AI token usage for a run |
 | GET | `/api/results/:token` | Resolve deep link, return full results |
+
+**Anonymous scan request behavior**
+- Input: `url`, optional `email`
+- If `email` is present, validate that it matches the submitted site's registrable domain
+- If no project exists for the normalized URL:
+  - create unclaimed project + app
+  - optionally store `contact_email`
+  - create pending run
+  - return `runId`, `projectId`, and stream URL
+- If a project exists and `entity_id` is not null:
+  - return `duplicate_owned` with guidance to contact the organization owner/admin
+- If a project exists and `entity_id` is null:
+  - return `duplicate_unclaimed` with guidance to sign up using an email on that domain to claim it
 
 **SSE events (streaming):**
 
@@ -1315,9 +1517,9 @@ create table report_emails (
 
 ---
 
-# 13. Frontend
+# 14. Frontend
 
-## 13.1 Multi-Project Architecture
+## 14.1 Multi-Project Architecture
 
 The frontend spans multiple published packages following the existing `@sudobility` pattern:
 
@@ -1331,9 +1533,19 @@ The frontend spans multiple published packages following the existing `@sudobili
 
 **Existing History types, client hooks, lib stores, API routes, and UI pages will be deleted** and replaced with the new domain objects.
 
-## 13.2 Pages (11 total)
+## 14.2 Pages (12 total)
 
 All pages exist in both web and mobile with full parity.
+
+### Home
+- Public landing page
+- Form: URL input, optional email
+- Inline validation: if email is provided, it must match the submitted site's registrable domain
+- Submit behavior:
+  - if URL is new, create unclaimed project and start scan
+  - if URL is already claimed by an entity, show claim/join guidance
+  - if URL exists but is unclaimed, show claim guidance
+- Redirect anonymous users to the public Scan Progress page when a new scan starts
 
 ### Dashboard
 - Overview after selecting a project
@@ -1342,6 +1554,7 @@ All pages exist in both web and mobile with full parity.
 - Charts: pass/fail trends over runs (if multiple runs exist)
 
 ### Start Scan
+- Authenticated/organization-scoped scan form
 - Form: URL input, app name (auto-derived from URL)
 - SizeClass selection: desktop, mobile, or both
 - Credentials (optional): email/username, password, 2FA code
@@ -1352,8 +1565,16 @@ All pages exist in both web and mobile with full parity.
 - Real-time updates via SSE (PostgreSQL LISTEN/NOTIFY → API → SSE → frontend)
 - Phase indicator: shows current phase (mouse scanning → component detection → AI analysis → input scanning → auth scanning → plugins → test generation → test execution)
 - Live counters: pages discovered, page states, actions completed/remaining, issues found
+- Current screenshot panel: latest screenshot from the page currently being scanned
 - Event log: scrolling list of events (page discovered, action completed, issue detected)
 - Auto-transitions to Run Details when scan completes
+
+### Public Scan Progress
+- Available without login for anonymously started runs
+- Same progress bar / phase indicator as Scan Progress
+- Shows latest scanner screenshot and current page URL if available
+- Read-only: no organization data, no admin controls, no credential editing
+- If the run becomes associated with a claimed project later, redirect future access through normal authenticated flows
 
 ### Run Details
 - Run metadata: status, SizeClass, start/end time, total duration
@@ -1408,7 +1629,7 @@ All pages exist in both web and mobile with full parity.
 - Expand → list of use cases for this persona
 - Each use case shows: name, description, generated input values per form field
 
-## 13.3 SSE Real-Time Architecture
+## 14.3 SSE Real-Time Architecture
 
 **Scanner service → PostgreSQL → API → Frontend:**
 
@@ -1439,7 +1660,7 @@ All pages exist in both web and mobile with full parity.
 
 **Mobile SSE:** React Native uses `react-native-sse` or a fetch-based SSE polyfill. Same event format.
 
-## 13.4 Credential Handling in Frontend
+## 14.4 Credential Handling in Frontend
 
 Credentials entered on the Start Scan form are:
 1. Sent to `testomniac_api` via HTTPS POST
@@ -1449,11 +1670,23 @@ Credentials entered on the Start Scan form are:
 5. Credentials are deleted from DB after the scan completes (or after 24h TTL)
 6. Frontend never stores credentials locally
 
+Anonymous home-page submissions without credentials still create a project and run, but no `scan_credentials` row is created.
+
+## 14.5 Admin View For Unclaimed Projects
+
+Site admins can view all projects where `entity_id` is null.
+
+Admin capabilities:
+- list unclaimed projects
+- inspect URL, contact email, latest run status, and creation time
+- inspect anonymous scan progress/results
+- manually assist with claim workflows if needed
+
 ---
 
-# 14. Multi-Project Structure
+# 15. Multi-Project Structure
 
-## Scanner Service (testomniac_app/scanner or standalone repo)
+## Scanner Service (`~/projects/testomniac_scanner`)
 
 ```
 src/
@@ -1513,7 +1746,11 @@ src/
   db/                     # Shared schema + connection (same DB as API)
   config/                 # Env config + constants
   orchestrator.ts         # Wire all phases, poll for pending runs
+Dockerfile               # Container image for scanner deployment
+.dockerignore            # Docker build exclusions
 ```
+
+The scanner project must include a Docker container definition compatible with deployment via `~/projects/sudobility_dockerized`.
 
 ## API (testomniac_api — existing Hono project)
 
@@ -1558,6 +1795,11 @@ src/
   responses/
     index.ts              # API response wrappers (successResponse, errorResponse)
 ```
+
+`testomniac_types` is the source of truth for shared contracts used by:
+- `testomniac_api`
+- `testomniac_scanner`
+- `testomniac_client`
 
 ## Client (testomniac_client)
 
@@ -1665,7 +1907,19 @@ src/
 
 ---
 
-# 15. Implementation Phases
+# 16. Implementation Phases
+
+## 16.1 Development Workflow Requirements
+
+These instructions apply during implementation of any phase:
+
+1. Whenever a library project is modified and is ready to be consumed by an upper-level library or app, run `/testomniac_app/scripts/push_all.sh`.
+   - This deploys the lower-level package and updates dependencies in upper libraries and the app.
+2. After each implementation phase, verify that `bun run dev` works with no errors in both:
+   - `/testomniac_api`
+   - `/testomniac_app`
+
+Phase completion is not considered done until both verification checks pass.
 
 ## Phase 1: Browser + Mouse-Only Scanning
 - Chromium manager with persistent profile
@@ -1718,7 +1972,7 @@ src/
 
 ## Phase 7: Types + Client + Lib (Frontend Shared Packages)
 - Delete existing History types/hooks/stores
-- Define new types in testomniac_types (Run, Page, Action, TestCase, Issue, etc.)
+- Define new shared types in testomniac_types (Run, Page, Action, TestCase, Issue, API contracts, scan requests/responses, SSE events, etc.)
 - Implement API client hooks in testomniac_client (TanStack Query)
 - Implement SSE hook for real-time scan progress
 - Implement business logic hooks/stores in testomniac_lib (Zustand)
@@ -1747,7 +2001,7 @@ src/
 
 ---
 
-# 16. Plugin Architecture
+# 17. Plugin Architecture
 
 Add-on checks run as opt-in plugins. The user specifies which plugins to enable when starting a scan (e.g., `plugins: ["seo", "security"]`). Plugins execute after scanning completes (after Phase 2) and before test generation (Phase 3). Each plugin analyzes the discovered pages and page states and produces issues.
 
@@ -1838,7 +2092,7 @@ alter table issues add column severity text default 'error';  -- error | warning
 
 ---
 
-# 17. Add-On Plugins
+# 18. Add-On Plugins
 
 ## 16.1 SEO Check Plugin
 
@@ -1953,7 +2207,7 @@ const STYLE_TARGETS = {
 
 ---
 
-# 18. Key Design Decisions
+# 19. Key Design Decisions
 
 | Decision | Rationale |
 |----------|-----------|
@@ -1973,7 +2227,7 @@ const STYLE_TARGETS = {
 | Single Node.js runtime | One language, one deployment, one toolchain |
 | Persistent browser profile | Session reuse, manual login bootstrap |
 | Plugin architecture for add-ons | SEO, security, content, UI consistency checks run as opt-in plugins after scanning |
-| Project → Entity integration | Projects belong to entities (from entity_service), enabling multi-tenant organization support |
+| Project → Entity integration | Projects may start unclaimed, then later be claimed by an entity, enabling both anonymous intake and multi-tenant organization support |
 | Three-level time tracking | Wall-clock (total run), per-phase, and per-action durations for full observability |
 | Test Run per execution | Each Test Case × Screen creates a Test Run record, enabling per-execution issue tracking |
 | AI token tracking | Every OpenAI call records prompt/completion tokens for cost visibility |

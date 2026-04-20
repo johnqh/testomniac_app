@@ -2,7 +2,7 @@
   "name": "@sudobility/testomniac_app",
   "private": true,
   "license": "BUSL-1.1",
-  "version": "1.0.66",
+  "version": "1.0.67",
   "type": "module",
   "scripts": {
     "dev": "bun run process:static && vite",

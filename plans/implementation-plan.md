@@ -4,22 +4,88 @@
 
 **Goal:** Build a Node.js system that discovers web app UI elements via action-driven scanning, generates AI-informed test cases, and executes them via Puppeteer.
 
-**Architecture:** Action queue drives exhaustive mouseover → click traversal of all pages. AI generates personas and input values after mouse scanning. Template-based test generation produces JSON action sequences executed by a custom Puppeteer runner.
+**Architecture:** The scanner lives in its own project at `~/projects/testomniac_scanner`. It runs as a separate worker that polls PostgreSQL for pending runs and drives exhaustive mouseover → click traversal within configured traversal limits. AI generates personas and input values after mouse scanning. Template-based test generation produces JSON action sequences executed by a custom Puppeteer runner. The existing `testomniac_api` service remains the HTTP/SSE boundary for frontend clients.
 
-**Tech Stack:** Node.js, TypeScript, Puppeteer-core, PostgreSQL, Drizzle ORM, OpenAI SDK, Fastify, Pino, Vitest, @sudobility/entity_service, @sudobility/signic_sdk
+**Tech Stack:** Node.js, TypeScript, Puppeteer-core, PostgreSQL, Drizzle ORM, OpenAI SDK, Hono, Pino, Vitest, @sudobility/entity_service, @sudobility/signic_sdk
+
+## Planning Corrections
+
+These changes supersede earlier parts of this implementation plan where they conflict.
+
+1. API/runtime boundary
+   - Keep `testomniac_api` as the existing `Hono` service.
+   - Build the scanner in the separate `~/projects/testomniac_scanner` project as its own worker/service.
+   - Do not embed Chromium orchestration in the API server.
+2. State identity
+   - A page state is identified by normalized URL + normalized HTML hash + actionable-item hash + visible overlay fingerprint.
+   - Ignore transient values such as timestamps, CSRF/nonces, randomized IDs when detectable, and analytics/debug script noise.
+3. Traversal guardrails
+   - Same-origin only by default.
+   - Skip logout links and obviously destructive actions.
+   - Enforce caps for max actions per state, max repeated visits per state, max total actions per run, and max traversal depth.
+4. Auth precedence
+   - Use provided credentials first.
+   - Fall back to Signic auto-registration only when sign-up is detected and permitted.
+   - On failure, skip authenticated scanning and record an issue rather than blocking the run.
+5. Pairwise scope
+   - Apply pairwise only within one form and one starting page state.
+   - Do not combine controls across unrelated forms or page states.
+6. Prioritization
+   - Deliver core scan/generate/execute flow before add-on plugins.
+   - Phase 6 is optional and should not block MVP delivery.
+7. Project creation model
+   - A project may exist before login and may have `entityId = null`.
+   - Anonymous home-page submissions create unclaimed projects and start scans.
+   - Submitted optional email must match the registrable domain of the URL.
+8. Duplicate URL handling
+   - If normalized URL already exists on a claimed project, return claim/join guidance instead of creating a second project.
+   - If normalized URL already exists on an unclaimed project, return claim guidance instead of creating a second project.
+9. Anonymous progress UX
+   - Anonymous runs must expose a read-only status/progress experience, including latest screenshot metadata.
+10. Admin visibility
+   - Site admins in `testomniac_api` must be able to list all unclaimed projects.
+11. Shared type ownership
+   - `testomniac_api`, `testomniac_scanner`, and `testomniac_client` must share domain and API contract types through `testomniac_types`.
+   - Do not create duplicate source-of-truth models for persisted entities or API payloads inside those projects.
+
+## Execution Rules
+
+These rules apply across all tasks and phases:
+
+1. Library publication/update rule
+   - Whenever a library project is modified and is ready to be consumed by an upper-level library or app, run `/testomniac_app/scripts/push_all.sh`.
+   - This deploys the lower-level package and updates dependencies in upper libraries and the app.
+2. End-of-phase verification rule
+   - After each phase, verify that `bun run dev` starts without errors in both:
+     - `/testomniac_api`
+     - `/testomniac_app`
+   - A phase is not complete until both checks pass.
+3. Project boundary rule
+   - Scanner implementation work belongs in `~/projects/testomniac_scanner`.
+   - API integration work belongs in `/testomniac_api`.
+   - Frontend integration work belongs in `/testomniac_app`.
+4. Shared-contract rule
+   - When a type is used across scanner, API, and client boundaries, define it in `testomniac_types` first and consume it from there.
+5. Deployment compatibility rule
+   - `testomniac_scanner` must include a Docker container setup compatible with deployment from `~/projects/sudobility_dockerized`.
+6. Phase completion tracking rule
+   - After completing all tasks in a phase and passing verification, update this plan file to mark the phase as completed (e.g., change `## Phase N:` to `## Phase N: ✅ COMPLETED`) and check off all task/step checkboxes within that phase.
+   - This keeps the plan file as the single source of truth for progress across sessions.
 
 ---
 
 ## File Map
 
+This file map is for the `~/projects/testomniac_scanner` project unless noted otherwise.
+
 ```
 src/
-  domain/types.ts                  — All shared types and enums
+  domain/types.ts                  — Scanner-internal helper types only; shared contracts belong in testomniac_types
   config/index.ts                  — Env config loader
   config/constants.ts              — Defaults, timeouts, screen definitions, email patterns
   db/schema.ts                     — Drizzle table definitions (projects, apps, ai_usage, test_runs, etc.)
   db/connection.ts                 — DB connection pool
-  db/repositories/projects.ts      — projects table queries
+  db/repositories/projects.ts      — projects table queries, duplicate URL lookup, claimability checks
   db/repositories/apps.ts          — apps table queries
   db/repositories/pages.ts         — pages table queries
   db/repositories/page-states.ts   — page_states table queries
@@ -73,11 +139,9 @@ src/
   email/templates.ts               — HTML + text email
   email/sender.ts                  — Postmark client
   email/deep-link.ts               — Token sign/verify
-  api/server.ts                    — Fastify setup
-  api/routes/scan.ts               — POST /api/scan, /api/scan/stream
-  api/routes/projects.ts           — GET /api/projects, /api/projects/:id
-  api/routes/runs.ts               — GET /api/runs/:id, test-cases, test-runs, issues, ai-usage
-  api/routes/results.ts            — GET /api/results/:token (deep link)
+  api/contract.ts                  — Scanner-local wrappers/re-exports around shared contract types from testomniac_types
+  domain/url-ownership.ts          — URL normalization, registrable-domain matching, ownership decision helpers
+  worker/index.ts                  — Scanner worker entrypoint; polls pending runs and orchestrates phases
   plugins/types.ts                 — Plugin interface, PluginContext, PluginResult
   plugins/registry.ts              — Plugin registration and lookup
   plugins/seo/index.ts             — SEO check plugin
@@ -92,7 +156,7 @@ src/
   plugins/ui-consistency/index.ts  — UI consistency check plugin
   plugins/ui-consistency/style-extractor.ts — Extract computed styles per page
   plugins/ui-consistency/comparator.ts — Cross-page style deviation detection
-  orchestrator.ts                  — Wire all phases together (with phase timing + plugins)
+  orchestrator.ts                  — Wire all phases together (with phase timing; plugins optional)
 tests/
   (mirrors src/ structure with .test.ts suffix)
 drizzle/
@@ -114,19 +178,21 @@ tsconfig.json
 - Create: `tsconfig.json`
 - Create: `.env.example`
 - Create: `drizzle.config.ts`
+- Create: `Dockerfile`
+- Create: `.dockerignore`
 
 - [ ] **Step 1: Initialize project**
 
 ```bash
-mkdir -p ~/projects/testomniac && cd ~/projects/testomniac
-npm init -y
+mkdir -p ~/projects/testomniac_scanner && cd ~/projects/testomniac_scanner
+bun init -y
 ```
 
 - [ ] **Step 2: Install dependencies**
 
 ```bash
-npm install puppeteer-core typescript drizzle-orm postgres pino fastify openai jose postmark @sudobility/signic_sdk @sudobility/entity_service
-npm install -D vitest @types/node drizzle-kit tsx
+bun add puppeteer-core typescript drizzle-orm postgres pino hono openai jose postmark @sudobility/signic_sdk @sudobility/entity_service
+bun add -D vitest @types/node drizzle-kit tsx
 ```
 
 - [ ] **Step 3: Create tsconfig.json**
@@ -191,25 +257,38 @@ Add to `scripts`:
   "test:watch": "vitest",
   "db:generate": "drizzle-kit generate",
   "db:migrate": "drizzle-kit migrate",
-  "dev": "tsx src/api/server.ts"
+  "dev": "tsx src/worker/index.ts"
 }
 ```
 
 - [ ] **Step 7: Commit**
 
+- [ ] **Step 7a: Add Docker container support**
+
+Create `Dockerfile` and `.dockerignore` in `testomniac_scanner`.
+
+Requirements:
+- compatible with deployment from `~/projects/sudobility_dockerized`
+- supports private NPM installs through `NPM_TOKEN`
+- exposes a health endpoint for container health checks
+- runs the scanner service with Bun in production
+
+- [ ] **Step 8: Commit**
+
 ```bash
 git init
-git add package.json tsconfig.json .env.example drizzle.config.ts
+git add package.json tsconfig.json .env.example drizzle.config.ts Dockerfile .dockerignore
 git commit -m "chore: project scaffolding"
 ```
 
 ---
 
-### Task 2: Domain Types
+### Task 2: Shared Domain Types
 
 **Files:**
-- Create: `src/domain/types.ts`
-- Test: `tests/domain/types.test.ts`
+- Create/Modify in `testomniac_types`: shared domain models and enums
+- Create local scanner wrappers only if needed
+- Test: shared type exports in `testomniac_types`
 
 - [ ] **Step 1: Write the test**
 
@@ -269,13 +348,13 @@ describe('domain types', () => {
 
 - [ ] **Step 2: Run test to verify it fails**
 
-Run: `npx vitest run tests/domain/types.test.ts`
+Run: `bunx vitest run tests/domain/types.test.ts`
 Expected: FAIL — module not found
 
-- [ ] **Step 3: Implement domain types**
+- [ ] **Step 3: Implement shared domain types in `testomniac_types`**
 
 ```ts
-// src/domain/types.ts
+// testomniac_types/src/models + enums
 
 // --- Enums ---
 
@@ -426,16 +505,18 @@ export interface Credentials {
 }
 ```
 
+The scanner should import these from `testomniac_types` rather than owning the source-of-truth definitions locally.
+
 - [ ] **Step 4: Run test to verify it passes**
 
-Run: `npx vitest run tests/domain/types.test.ts`
+Run: `bunx vitest run tests/domain/types.test.ts`
 Expected: PASS
 
 - [ ] **Step 5: Commit**
 
 ```bash
-git add src/domain/types.ts tests/domain/types.test.ts
-git commit -m "feat: domain types and enums"
+git add tests/domain/types.test.ts
+git commit -m "feat: shared domain types and enums in testomniac_types"
 ```
 
 ---
@@ -476,7 +557,7 @@ describe('config', () => {
 
 - [ ] **Step 2: Run test to verify it fails**
 
-Run: `npx vitest run tests/config/index.test.ts`
+Run: `bunx vitest run tests/config/index.test.ts`
 Expected: FAIL
 
 - [ ] **Step 3: Implement config**
@@ -582,7 +663,7 @@ export const EMAIL_CHECK_INTERVAL_MS = 2_000;
 
 - [ ] **Step 4: Run test to verify it passes**
 
-Run: `npx vitest run tests/config/index.test.ts`
+Run: `bunx vitest run tests/config/index.test.ts`
 Expected: PASS
 
 - [ ] **Step 5: Commit**
@@ -608,9 +689,12 @@ import { pgTable, bigserial, text, boolean, doublePrecision, integer, jsonb, tim
 
 export const projects = pgTable('projects', {
   id: bigserial('id', { mode: 'number' }).primaryKey(),
-  entityId: text('entity_id').notNull(),
+  entityId: text('entity_id'),
   name: text('name').notNull(),
   description: text('description'),
+  contactEmail: text('contact_email'),
+  claimedByUserId: text('claimed_by_user_id'),
+  claimedAt: timestamp('claimed_at', { withTimezone: true }),
   createdAt: timestamp('created_at', { withTimezone: true }).defaultNow(),
   updatedAt: timestamp('updated_at', { withTimezone: true }).defaultNow(),
 });
@@ -620,6 +704,7 @@ export const apps = pgTable('apps', {
   projectId: bigserial('project_id', { mode: 'number' }).references(() => projects.id).notNull(),
   name: text('name').notNull(),
   baseUrl: text('base_url'),
+  normalizedBaseUrl: text('normalized_base_url').notNull(),
   createdAt: timestamp('created_at', { withTimezone: true }).defaultNow(),
 });
 
@@ -855,7 +940,7 @@ export function getDb() {
 
 - [ ] **Step 2: Generate migration**
 
-Run: `npx drizzle-kit generate`
+Run: `bunx drizzle-kit generate`
 Expected: Migration SQL file created in `drizzle/`
 
 - [ ] **Step 3: Commit**
@@ -904,7 +989,7 @@ describe('actions repository helpers', () => {
 
 - [ ] **Step 2: Run test to verify it fails**
 
-Run: `npx vitest run tests/db/repositories/actions.test.ts`
+Run: `bunx vitest run tests/db/repositories/actions.test.ts`
 Expected: FAIL
 
 - [ ] **Step 3: Implement repositories**
@@ -1188,7 +1273,7 @@ export async function getRun(runId: number) {
 
 - [ ] **Step 4: Run test to verify it passes**
 
-Run: `npx vitest run tests/db/repositories/actions.test.ts`
+Run: `bunx vitest run tests/db/repositories/actions.test.ts`
 Expected: PASS
 
 - [ ] **Step 5: Commit**
@@ -1241,7 +1326,7 @@ describe('page-utils', () => {
 
 - [ ] **Step 2: Run test to verify it fails**
 
-Run: `npx vitest run tests/browser/page-utils.test.ts`
+Run: `bunx vitest run tests/browser/page-utils.test.ts`
 Expected: FAIL
 
 - [ ] **Step 3: Implement browser modules**
@@ -1334,7 +1419,7 @@ export class ChromiumManager {
 
 - [ ] **Step 4: Run test to verify it passes**
 
-Run: `npx vitest run tests/browser/page-utils.test.ts`
+Run: `bunx vitest run tests/browser/page-utils.test.ts`
 Expected: PASS
 
 - [ ] **Step 5: Commit**
@@ -1382,7 +1467,7 @@ describe('extractor', () => {
 
 - [ ] **Step 2: Run test to verify it fails**
 
-Run: `npx vitest run tests/scanner/extractor.test.ts`
+Run: `bunx vitest run tests/scanner/extractor.test.ts`
 Expected: FAIL
 
 - [ ] **Step 3: Implement extractor**
@@ -1525,7 +1610,7 @@ export async function extractVisibleText(page: Page): Promise<string> {
 
 - [ ] **Step 4: Run test to verify it passes**
 
-Run: `npx vitest run tests/scanner/extractor.test.ts`
+Run: `bunx vitest run tests/scanner/extractor.test.ts`
 Expected: PASS
 
 - [ ] **Step 5: Commit**
@@ -1622,7 +1707,7 @@ describe('issue-detector', () => {
 
 - [ ] **Step 2: Run test to verify it fails**
 
-Run: `npx vitest run tests/scanner/issue-detector.test.ts`
+Run: `bunx vitest run tests/scanner/issue-detector.test.ts`
 Expected: FAIL
 
 - [ ] **Step 3: Implement issue detector**
@@ -1709,7 +1794,7 @@ export function detectNetworkErrors(
 
 - [ ] **Step 4: Run test to verify it passes**
 
-Run: `npx vitest run tests/scanner/issue-detector.test.ts`
+Run: `bunx vitest run tests/scanner/issue-detector.test.ts`
 Expected: PASS
 
 - [ ] **Step 5: Commit**
@@ -1769,7 +1854,7 @@ describe('ActionQueue', () => {
 
 - [ ] **Step 2: Run test to verify it fails**
 
-Run: `npx vitest run tests/scanner/action-queue.test.ts`
+Run: `bunx vitest run tests/scanner/action-queue.test.ts`
 Expected: FAIL
 
 - [ ] **Step 3: Implement action queue and state manager**
@@ -1852,7 +1937,7 @@ export class StateManager {
 
 - [ ] **Step 4: Run test to verify it passes**
 
-Run: `npx vitest run tests/scanner/action-queue.test.ts`
+Run: `bunx vitest run tests/scanner/action-queue.test.ts`
 Expected: PASS
 
 - [ ] **Step 5: Commit**
@@ -2248,7 +2333,7 @@ describe('form-identifier', () => {
 
 - [ ] **Step 2: Run test to verify it fails**
 
-Run: `npx vitest run tests/auth/form-identifier.test.ts`
+Run: `bunx vitest run tests/auth/form-identifier.test.ts`
 Expected: FAIL
 
 - [ ] **Step 3: Implement form identifier**
@@ -2308,7 +2393,7 @@ export function identifyFormType(form: FormInfo, pageUrl: string): FormType {
 
 - [ ] **Step 4: Run test to verify it passes**
 
-Run: `npx vitest run tests/auth/form-identifier.test.ts`
+Run: `bunx vitest run tests/auth/form-identifier.test.ts`
 Expected: PASS
 
 - [ ] **Step 5: Commit**
@@ -2652,7 +2737,7 @@ describe('pairwise', () => {
 
 - [ ] **Step 2: Run test to verify it fails**
 
-Run: `npx vitest run tests/scanner/pairwise.test.ts`
+Run: `bunx vitest run tests/scanner/pairwise.test.ts`
 Expected: FAIL
 
 - [ ] **Step 3: Implement pairwise generator**
@@ -2751,7 +2836,7 @@ export function generatePairwiseCombinations(factors: Factor[]): Combination[] {
 
 - [ ] **Step 4: Run test to verify it passes**
 
-Run: `npx vitest run tests/scanner/pairwise.test.ts`
+Run: `bunx vitest run tests/scanner/pairwise.test.ts`
 Expected: PASS
 
 - [ ] **Step 5: Commit**
@@ -3276,7 +3361,7 @@ describe('render template', () => {
 
 - [ ] **Step 2: Run tests to verify they fail**
 
-Run: `npx vitest run tests/generation/`
+Run: `bunx vitest run tests/generation/`
 Expected: FAIL
 
 - [ ] **Step 3: Implement suite tagger and templates**
@@ -3601,7 +3686,7 @@ export async function generateTestCases(options: GeneratorOptions): Promise<Test
 
 - [ ] **Step 4: Run tests to verify they pass**
 
-Run: `npx vitest run tests/generation/`
+Run: `bunx vitest run tests/generation/`
 Expected: PASS
 
 - [ ] **Step 5: Commit**
@@ -3661,7 +3746,7 @@ describe('executor', () => {
 
 - [ ] **Step 2: Run test to verify it fails**
 
-Run: `npx vitest run tests/runner/executor.test.ts`
+Run: `bunx vitest run tests/runner/executor.test.ts`
 Expected: FAIL
 
 - [ ] **Step 3: Implement executor, worker pool, reporter**
@@ -3918,13 +4003,13 @@ export function computeSummary(results: Array<{ passed: boolean; durationMs: num
 
 - [ ] **Step 4: Run test to verify it passes**
 
-Run: `npx vitest run tests/runner/executor.test.ts`
+Run: `bunx vitest run tests/runner/executor.test.ts`
 Expected: PASS
 
 - [ ] **Step 5: Commit**
 
 ```bash
-git add src/runner/ src/db/repositories/test-cases.ts src/db/repositories/test-results.ts tests/runner/
+git add src/runner/ src/db/repositories/test-cases.ts src/db/repositories/test-runs.ts tests/runner/
 git commit -m "feat: test executor, worker pool, and reporter"
 ```
 
@@ -3964,7 +4049,7 @@ describe('deep-link', () => {
 
 - [ ] **Step 2: Run test to verify it fails**
 
-Run: `npx vitest run tests/email/deep-link.test.ts`
+Run: `bunx vitest run tests/email/deep-link.test.ts`
 Expected: FAIL
 
 - [ ] **Step 3: Implement email modules**
@@ -4072,7 +4157,7 @@ export async function createReportEmail(runId: number, userEmail: string, deepLi
 
 - [ ] **Step 4: Run test to verify it passes**
 
-Run: `npx vitest run tests/email/deep-link.test.ts`
+Run: `bunx vitest run tests/email/deep-link.test.ts`
 Expected: PASS
 
 - [ ] **Step 5: Commit**
@@ -4084,15 +4169,15 @@ git commit -m "feat: email reporting with deep link tokens"
 
 ---
 
-### Task 19: API Server + Routes
+### Task 19: API Contract + Worker Integration
+
+This task replaces the earlier standalone API-server idea. The API remains in the existing `testomniac_api` Hono project. The scanner worker implementation lives in `~/projects/testomniac_scanner`; shared contract types live in `testomniac_types`; this project integrates against those contracts.
 
 **Files:**
-- Create: `src/api/server.ts`
-- Create: `src/api/routes/scan.ts`
-- Create: `src/api/routes/results.ts`
+- Create: `src/worker/index.ts`
 - Create: `src/db/repositories/issues.ts`
 - Create: `src/db/repositories/test-cases.ts`
-- Create: `src/db/repositories/test-results.ts`
+- Create: `src/db/repositories/test-runs.ts`
 
 - [ ] **Step 1: Implement repositories**
 
@@ -4200,108 +4285,67 @@ export async function getTestRunsByRun(runId: number) {
 }
 ```
 
-- [ ] **Step 2: Implement API routes**
+- [ ] **Step 2: Define API contract**
 
 ```ts
-// src/api/routes/results.ts
-import type { FastifyInstance } from 'fastify';
-import { verifyToken } from '../../email/deep-link.js';
-import { loadConfig } from '../../config/index.js';
-import * as runsRepo from '../../db/repositories/runs.js';
-import * as testRunsRepo from '../../db/repositories/test-runs.js';
-import * as issuesRepo from '../../db/repositories/issues.js';
+// testomniac_types/src/models/api.ts
+export interface CreateScanRequest {
+  url: string;
+  email?: string;
+  sizeClass?: 'desktop' | 'mobile';
+  credentials?: {
+    username?: string;
+    email?: string;
+    password: string;
+    twoFactorCode?: string;
+  };
+  reportEmail?: string;
+  plugins?: string[];
+}
 
-export async function resultsRoutes(app: FastifyInstance): Promise<void> {
-  app.get('/api/runs/:runId', async (request, reply) => {
-    const { runId } = request.params as { runId: string };
-    const run = await runsRepo.getRun(parseInt(runId));
-    if (!run) return reply.status(404).send({ error: 'Run not found' });
-    return run;
-  });
+export interface CreateScanResponse {
+  status: 'pending' | 'duplicate_owned' | 'duplicate_unclaimed' | 'validation_error';
+  runId?: number;
+  projectId?: number;
+  message?: string;
+  streamPath?: string;
+  suggestedNextStep?: 'watch_progress' | 'contact_owner' | 'claim_project';
+}
 
-  app.get('/api/results/:token', async (request, reply) => {
-    const { token } = request.params as { token: string };
-    const config = loadConfig();
-    try {
-      const runId = await verifyToken(token, config.deepLinkSecret);
-      const run = await runsRepo.getRun(runId);
-      if (!run) return reply.status(404).send({ error: 'Run not found' });
-      const testRuns = await testRunsRepo.getTestRunsByRun(runId);
-      const runIssues = await issuesRepo.getIssuesByRun(runId);
-      return { ...run, testRuns, issues: runIssues };
-    } catch {
-      return reply.status(401).send({ error: 'Invalid token' });
-    }
-  });
+export interface RunStreamEvent {
+  runId: number;
+  type:
+    | 'run_started'
+    | 'phase_changed'
+    | 'page_discovered'
+    | 'page_state_created'
+    | 'action_completed'
+    | 'issue_detected'
+    | 'run_completed'
+    | 'run_failed';
+  payload: Record<string, unknown>;
+  createdAt: string;
 }
 ```
 
-```ts
-// src/api/routes/scan.ts
-import type { FastifyInstance } from 'fastify';
-// TODO: wire to orchestrator when complete
+The scanner and API may re-export these locally for convenience, but `testomniac_types` is the source of truth.
 
-export async function scanRoutes(app: FastifyInstance): Promise<void> {
-  app.post('/api/scan', async (request, reply) => {
-    const { url, credentials, email, sizeClass } = request.body as any;
-    // TODO: start full run via orchestrator
-    return { status: 'started', runId: 0 };
-  });
+- [ ] **Step 3: Implement worker entrypoint**
 
-  app.post('/api/scan/stream', async (request, reply) => {
-    // TODO: SSE streaming
-    reply.header('Content-Type', 'text/event-stream');
-    reply.header('Cache-Control', 'no-cache');
-    reply.header('Connection', 'keep-alive');
-    return reply.send('data: {"event":"started"}\n\n');
-  });
-}
-```
+`src/worker/index.ts` should:
+- poll the `runs` table for `pending` work
+- atomically claim a run and mark it `running`
+- invoke the orchestrator
+- write progress events with PostgreSQL `NOTIFY`
+- mark the run `completed` or `failed`
 
-```ts
-// src/api/server.ts
-import Fastify from 'fastify';
-import pino from 'pino';
-import { scanRoutes } from './routes/scan.js';
-import { resultsRoutes } from './routes/results.js';
+The worker must be restart-safe and independent from API process lifetime.
 
-const logger = pino({ name: 'api' });
-
-export async function createServer() {
-  const app = Fastify({ logger: true });
-
-  // CORS
-  app.addHook('onRequest', async (request, reply) => {
-    reply.header('Access-Control-Allow-Origin', '*');
-    reply.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
-    reply.header('Access-Control-Allow-Headers', 'Content-Type');
-    if (request.method === 'OPTIONS') {
-      return reply.status(204).send();
-    }
-  });
-
-  await app.register(scanRoutes);
-  await app.register(resultsRoutes);
-
-  return app;
-}
-
-// Start server when run directly
-const app = await createServer();
-app.listen({ port: 3000, host: '0.0.0.0' }, (err) => {
-  if (err) {
-    logger.error(err);
-    process.exit(1);
-  }
-  logger.info('Server running on http://localhost:3000');
-});
-```
-
-- [ ] **Step 3: Commit**
+- [ ] **Step 4: Commit**
 
 ```bash
-git add src/api/ src/db/repositories/issues.ts src/db/repositories/test-cases.ts src/db/repositories/test-results.ts
-git commit -m "feat: API server with scan and results routes"
+git add src/worker/index.ts src/db/repositories/issues.ts src/db/repositories/test-cases.ts src/db/repositories/test-runs.ts
+git commit -m "feat: worker integration against shared API contracts"
 ```
 
 ---
@@ -4340,7 +4384,7 @@ function elapsed(start: number): number {
 }
 
 export interface RunOptions {
-  entityId: string;
+  entityId?: string;
   projectName?: string;
   url: string;
   appName?: string;
@@ -4358,9 +4402,22 @@ export async function runFullScan(options: RunOptions): Promise<number> {
 
   const runStart = Date.now();
 
-  // Create project and app
-  const project = await projectsRepo.createProject(entityId, projectName);
-  const app = await appsRepo.createApp(project.id, appName, url);
+  // Create or reuse project and app based on normalized URL ownership rules
+  const normalizedUrl = normalizeBaseUrl(url);
+  const existing = await projectsRepo.findProjectByNormalizedUrl(normalizedUrl);
+  if (existing?.entityId) {
+    throw new Error('duplicate_owned_project');
+  }
+  if (existing && !existing.entityId) {
+    throw new Error('duplicate_unclaimed_project');
+  }
+
+  const project = await projectsRepo.createProject({
+    entityId: entityId ?? null,
+    name: projectName,
+    contactEmail: userEmail,
+  });
+  const app = await appsRepo.createApp(project.id, appName, url, normalizedUrl);
   const chromium = new ChromiumManager(config);
   const browser = await chromium.launch();
 
@@ -4480,18 +4537,29 @@ git commit -m "feat: orchestrator wiring all phases together"
 - Create: `src/db/repositories/projects.ts`
 - Create: `src/db/repositories/ai-usage.ts`
 - Create: `src/ai/token-tracker.ts`
+- Create: `src/domain/url-ownership.ts`
 
 - [ ] **Step 1: Implement projects repository**
 
 ```ts
 // src/db/repositories/projects.ts
-import { eq } from 'drizzle-orm';
+import { eq, isNull } from 'drizzle-orm';
 import { getDb } from '../connection.js';
 import { projects } from '../schema.js';
 
-export async function createProject(entityId: string, name: string, description?: string) {
+export async function createProject(input: {
+  entityId?: string | null;
+  name: string;
+  description?: string;
+  contactEmail?: string;
+}) {
   const db = getDb();
-  const [project] = await db.insert(projects).values({ entityId, name, description }).returning();
+  const [project] = await db.insert(projects).values({
+    entityId: input.entityId ?? null,
+    name: input.name,
+    description: input.description,
+    contactEmail: input.contactEmail,
+  }).returning();
   return project;
 }
 
@@ -4504,9 +4572,25 @@ export async function getProject(id: number) {
   const db = getDb();
   return db.query.projects.findFirst({ where: eq(projects.id, id) });
 }
+
+export async function getUnclaimedProjects() {
+  const db = getDb();
+  return db.query.projects.findMany({ where: isNull(projects.entityId) });
+}
 ```
 
-- [ ] **Step 2: Implement AI usage repository**
+- [ ] **Step 2: Implement URL ownership helpers**
+
+`src/domain/url-ownership.ts` should provide:
+- `normalizeBaseUrl(url)` for duplicate detection
+- `getRegistrableDomain(url)` for domain matching
+- `emailMatchesUrlDomain(email, url)` validation
+- `classifyProjectOwnership(existingProject)` returning:
+  - `new_project`
+  - `duplicate_owned`
+  - `duplicate_unclaimed`
+
+- [ ] **Step 3: Implement AI usage repository**
 
 ```ts
 // src/db/repositories/ai-usage.ts
@@ -4543,7 +4627,7 @@ export async function getTotalTokensByRun(runId: number): Promise<{ promptTokens
 }
 ```
 
-- [ ] **Step 3: Implement token tracker wrapper**
+- [ ] **Step 4: Implement token tracker wrapper**
 
 ```ts
 // src/ai/token-tracker.ts
@@ -4573,18 +4657,18 @@ export async function trackOpenAiCall(
 }
 ```
 
-- [ ] **Step 4: Update apps repository to accept projectId**
+- [ ] **Step 5: Update apps repository to accept projectId + normalizedBaseUrl**
 
 ```ts
 // src/db/repositories/apps.ts — update createApp
-export async function createApp(projectId: number, name: string, baseUrl: string) {
+export async function createApp(projectId: number, name: string, baseUrl: string, normalizedBaseUrl: string) {
   const db = getDb();
-  const [app] = await db.insert(apps).values({ projectId, name, baseUrl }).returning();
+  const [app] = await db.insert(apps).values({ projectId, name, baseUrl, normalizedBaseUrl }).returning();
   return app;
 }
 ```
 
-- [ ] **Step 5: Update runs repository to support phase duration updates**
+- [ ] **Step 6: Update runs repository to support phase duration updates**
 
 Add to `src/db/repositories/runs.ts`:
 
@@ -4605,11 +4689,11 @@ export async function completeRun(runId: number, aiSummary?: string, totalDurati
 }
 ```
 
-- [ ] **Step 6: Commit**
+- [ ] **Step 7: Commit**
 
 ```bash
-git add src/db/repositories/projects.ts src/db/repositories/ai-usage.ts src/ai/token-tracker.ts
-git commit -m "feat: projects repo, AI token tracking, phase duration updates"
+git add src/db/repositories/projects.ts src/db/repositories/ai-usage.ts src/ai/token-tracker.ts src/domain/url-ownership.ts
+git commit -m "feat: project ownership rules, URL normalization, and AI token tracking"
 ```
 
 ---
@@ -4660,7 +4744,7 @@ describe('email-detector', () => {
 
 - [ ] **Step 2: Run test to verify it fails**
 
-Run: `npx vitest run tests/scanner/email-detector.test.ts`
+Run: `bunx vitest run tests/scanner/email-detector.test.ts`
 Expected: FAIL
 
 - [ ] **Step 3: Implement email detector**
@@ -4770,7 +4854,7 @@ export async function actOnEmail(
 
 - [ ] **Step 5: Run test to verify it passes**
 
-Run: `npx vitest run tests/scanner/email-detector.test.ts`
+Run: `bunx vitest run tests/scanner/email-detector.test.ts`
 Expected: PASS
 
 - [ ] **Step 6: Commit**
@@ -4827,7 +4911,7 @@ describe('PhaseTimer', () => {
 
 - [ ] **Step 2: Run test to verify it fails**
 
-Run: `npx vitest run tests/scanner/phase-timer.test.ts`
+Run: `bunx vitest run tests/scanner/phase-timer.test.ts`
 Expected: FAIL
 
 - [ ] **Step 3: Implement phase timer**
@@ -4868,7 +4952,7 @@ export class PhaseTimer {
 
 - [ ] **Step 4: Run test to verify it passes**
 
-Run: `npx vitest run tests/scanner/phase-timer.test.ts`
+Run: `bunx vitest run tests/scanner/phase-timer.test.ts`
 Expected: PASS
 
 - [ ] **Step 5: Commit**
@@ -4950,7 +5034,7 @@ describe('password-detector', () => {
 
 - [ ] **Step 2: Run test to verify it fails**
 
-Run: `npx vitest run tests/auth/password-detector.test.ts`
+Run: `bunx vitest run tests/auth/password-detector.test.ts`
 Expected: FAIL
 
 - [ ] **Step 3: Implement password detector**
@@ -5072,7 +5156,7 @@ export function generatePasswordTestCases(reqs: PasswordRequirements): PasswordT
 
 - [ ] **Step 4: Run test to verify it passes**
 
-Run: `npx vitest run tests/auth/password-detector.test.ts`
+Run: `bunx vitest run tests/auth/password-detector.test.ts`
 Expected: PASS
 
 - [ ] **Step 5: Commit**
@@ -5135,7 +5219,7 @@ describe('LoopGuard', () => {
 
 - [ ] **Step 2: Run test to verify it fails**
 
-Run: `npx vitest run tests/scanner/loop-guard.test.ts`
+Run: `bunx vitest run tests/scanner/loop-guard.test.ts`
 Expected: FAIL
 
 - [ ] **Step 3: Implement loop guard**
@@ -5239,7 +5323,7 @@ page.on('dialog', async (dialog) => {
 
 - [ ] **Step 6: Run test to verify it passes**
 
-Run: `npx vitest run tests/scanner/loop-guard.test.ts`
+Run: `bunx vitest run tests/scanner/loop-guard.test.ts`
 Expected: PASS
 
 - [ ] **Step 7: Commit**
@@ -5311,7 +5395,7 @@ describe('form-negative template', () => {
 
 - [ ] **Step 2: Run test to verify it fails**
 
-Run: `npx vitest run tests/generation/form-negative.test.ts`
+Run: `bunx vitest run tests/generation/form-negative.test.ts`
 Expected: FAIL
 
 - [ ] **Step 3: Implement form negative template**
@@ -5370,7 +5454,7 @@ export function generateFormNegativeTests(input: FormNegativeInput): TestCase[] 
 
 - [ ] **Step 4: Run test to verify it passes**
 
-Run: `npx vitest run tests/generation/form-negative.test.ts`
+Run: `bunx vitest run tests/generation/form-negative.test.ts`
 Expected: PASS
 
 - [ ] **Step 5: Commit**
@@ -5425,7 +5509,7 @@ describe('password template', () => {
 
 - [ ] **Step 2: Run test to verify it fails**
 
-Run: `npx vitest run tests/generation/password.test.ts`
+Run: `bunx vitest run tests/generation/password.test.ts`
 Expected: FAIL
 
 - [ ] **Step 3: Implement password test template**
@@ -5489,7 +5573,7 @@ export function generatePasswordTests(input: PasswordTestInput): TestCase[] {
 
 - [ ] **Step 4: Run test to verify it passes**
 
-Run: `npx vitest run tests/generation/password.test.ts`
+Run: `bunx vitest run tests/generation/password.test.ts`
 Expected: PASS
 
 - [ ] **Step 5: Commit**
@@ -5501,13 +5585,13 @@ git commit -m "feat: password test template"
 
 ---
 
-### Task 28: CRUD API Routes (Projects, Runs, Test Cases, Issues)
+### Task 28: API Integration Notes For Existing Hono Service
+
+This task documents the repository and contract surface the existing `testomniac_api` service should consume. Route handlers live in that API project, not here.
 
 **Files:**
-- Create: `src/api/routes/projects.ts`
-- Create: `src/api/routes/runs.ts`
-- Modify: `src/api/server.ts` — register new routes
 - Create: `src/db/repositories/forms.ts`
+- Modify shared read-model contracts in `testomniac_types`
 
 - [ ] **Step 1: Implement forms repository**
 
@@ -5539,105 +5623,55 @@ export async function getFormsByPageState(pageStateId: number) {
 }
 ```
 
-- [ ] **Step 2: Implement projects route**
+- [ ] **Step 2: Extend contract types for read APIs**
 
 ```ts
-// src/api/routes/projects.ts
-import type { FastifyInstance } from 'fastify';
-import * as projectsRepo from '../../db/repositories/projects.js';
-import * as appsRepo from '../../db/repositories/apps.js';
-import * as runsRepo from '../../db/repositories/runs.js';
+// testomniac_types/src/models/api.ts
+export interface ProjectSummaryResponse {
+  id: number;
+  name: string;
+  entityId: string;
+}
 
-export async function projectsRoutes(app: FastifyInstance): Promise<void> {
-  app.get('/api/projects', async (request) => {
-    const { entityId } = request.query as { entityId: string };
-    return projectsRepo.getProjectsByEntity(entityId);
-  });
-
-  app.get('/api/projects/:projectId', async (request, reply) => {
-    const { projectId } = request.params as { projectId: string };
-    const project = await projectsRepo.getProject(parseInt(projectId));
-    if (!project) return reply.status(404).send({ error: 'Project not found' });
-    return project;
-  });
-
-  app.get('/api/projects/:projectId/runs', async (request) => {
-    const { projectId } = request.params as { projectId: string };
-    // TODO: query runs via app_id for this project
-    return [];
-  });
+export interface RunDetailResponse {
+  id: number;
+  status: string;
+  phase: string | null;
+  startedAt: string | null;
+  completedAt: string | null;
 }
 ```
 
-- [ ] **Step 3: Implement runs route**
+- [ ] **Step 3: Document API ownership**
 
-```ts
-// src/api/routes/runs.ts
-import type { FastifyInstance } from 'fastify';
-import * as runsRepo from '../../db/repositories/runs.js';
-import * as testCasesRepo from '../../db/repositories/test-cases.js';
-import * as testRunsRepo from '../../db/repositories/test-runs.js';
-import * as issuesRepo from '../../db/repositories/issues.js';
-import * as aiUsageRepo from '../../db/repositories/ai-usage.js';
+- The existing `testomniac_api` Hono project is responsible for:
+  - `POST /api/public/scan`
+  - `GET /api/public/runs/:runId`
+  - `GET /api/public/runs/:runId/stream`
+  - `POST /api/scan`
+  - `GET /api/runs/:runId`
+  - `GET /api/runs/:runId/test-cases`
+  - `GET /api/runs/:runId/test-runs`
+  - `GET /api/runs/:runId/issues`
+  - `GET /api/runs/:runId/ai-usage`
+  - `GET /api/runs/:runId/stream`
+- The API must also expose an admin-only listing for projects where `entity_id` is null.
+- This package is responsible for repositories, orchestration, and event payload definitions.
 
-export async function runsRoutes(app: FastifyInstance): Promise<void> {
-  app.get('/api/runs/:runId', async (request, reply) => {
-    const { runId } = request.params as { runId: string };
-    const run = await runsRepo.getRun(parseInt(runId));
-    if (!run) return reply.status(404).send({ error: 'Run not found' });
-    return run;
-  });
-
-  app.get('/api/runs/:runId/test-cases', async (request) => {
-    const { runId } = request.params as { runId: string };
-    return testCasesRepo.getTestCasesByRun(parseInt(runId));
-  });
-
-  app.get('/api/runs/:runId/test-runs', async (request) => {
-    const { runId } = request.params as { runId: string };
-    return testRunsRepo.getTestRunsByRun(parseInt(runId));
-  });
-
-  app.get('/api/runs/:runId/issues', async (request) => {
-    const { runId } = request.params as { runId: string };
-    return issuesRepo.getIssuesByRun(parseInt(runId));
-  });
-
-  app.get('/api/runs/:runId/ai-usage', async (request) => {
-    const { runId } = request.params as { runId: string };
-    const usage = await aiUsageRepo.getAiUsageByRun(parseInt(runId));
-    const totals = await aiUsageRepo.getTotalTokensByRun(parseInt(runId));
-    return { usage, totals };
-  });
-}
-```
-
-- [ ] **Step 4: Register new routes in server.ts**
-
-Add to `src/api/server.ts`:
-```ts
-import { projectsRoutes } from './routes/projects.js';
-import { runsRoutes } from './routes/runs.js';
-
-// In createServer():
-await app.register(projectsRoutes);
-await app.register(runsRoutes);
-```
-
-- [ ] **Step 5: Commit**
+- [ ] **Step 4: Commit**
 
 ```bash
-git add src/api/routes/projects.ts src/api/routes/runs.ts src/db/repositories/forms.ts
-git commit -m "feat: CRUD API routes for projects, runs, test cases, issues, AI usage"
+git add src/db/repositories/forms.ts
+git commit -m "feat: document API integration surface for existing Hono service"
 ```
 
 ---
 
-### Task 29: Add Rate Limiting Constants + Update Domain Types
+### Task 29: Add Rate Limiting Constants + Update Shared Types
 
 **Files:**
 - Modify: `src/config/constants.ts`
-- Modify: `src/domain/types.ts`
+- Modify shared types in `testomniac_types`
 
 - [ ] **Step 1: Add rate limiting and loop guard constants**
 
@@ -5649,9 +5683,9 @@ export const MAX_TOTAL_ACTIONS = 5000;
 export const MAX_PAGES_PER_RUN = 100;
 ```
 
-- [ ] **Step 2: Add missing types to domain/types.ts**
+- [ ] **Step 2: Add missing types to shared types in `testomniac_types`**
 
-Add to `src/domain/types.ts`:
+Add to `testomniac_types`:
 ```ts
 export const TestType = {
   Render: 'render',
@@ -5667,17 +5701,21 @@ export const TestType = {
 - [ ] **Step 3: Commit**
 
 ```bash
-git add src/config/constants.ts src/domain/types.ts
-git commit -m "feat: rate limiting constants, loop guard limits, form_negative and password test types"
+git add src/config/constants.ts
+git commit -m "feat: rate limiting constants and shared test type updates"
 ```
 
 ---
 
 ## Summary
 
+Phase gate for every phase:
+- run `/testomniac_app/scripts/push_all.sh` whenever a lower-level library change is ready for consumption upstream
+- verify `bun run dev` succeeds in both `/testomniac_api` and `/testomniac_app` before marking the phase complete
+
 ---
 
-## Phase 6: Plugin Architecture + Add-Ons
+## Phase 6: Optional Plugins + Add-Ons
 
 ### Task 30: Plugin Architecture (Types, Registry, Orchestrator Integration)
 
@@ -5723,7 +5761,7 @@ describe('plugin registry', () => {
 
 - [ ] **Step 2: Run test to verify it fails**
 
-Run: `npx vitest run tests/plugins/registry.test.ts`
+Run: `bunx vitest run tests/plugins/registry.test.ts`
 Expected: FAIL
 
 - [ ] **Step 3: Implement plugin types and registry**
@@ -5793,7 +5831,7 @@ export function getAllPluginNames(): string[] {
 
 - [ ] **Step 4: Run test to verify it passes**
 
-Run: `npx vitest run tests/plugins/registry.test.ts`
+Run: `bunx vitest run tests/plugins/registry.test.ts`
 Expected: PASS
 
 - [ ] **Step 5: Wire plugin phase into orchestrator**
@@ -5925,7 +5963,7 @@ describe('SEO checks', () => {
 
 - [ ] **Step 2: Run test to verify it fails**
 
-Run: `npx vitest run tests/plugins/seo/checks.test.ts`
+Run: `bunx vitest run tests/plugins/seo/checks.test.ts`
 Expected: FAIL
 
 - [ ] **Step 3: Implement SEO checks**
@@ -6095,7 +6133,7 @@ export default seoPlugin;
 
 - [ ] **Step 4: Run test to verify it passes**
 
-Run: `npx vitest run tests/plugins/seo/checks.test.ts`
+Run: `bunx vitest run tests/plugins/seo/checks.test.ts`
 Expected: PASS
 
 - [ ] **Step 5: Commit**
@@ -6162,7 +6200,7 @@ describe('security network checks', () => {
 
 - [ ] **Step 2: Run test to verify it fails**
 
-Run: `npx vitest run tests/plugins/security/network-checks.test.ts`
+Run: `bunx vitest run tests/plugins/security/network-checks.test.ts`
 Expected: FAIL
 
 - [ ] **Step 3: Implement security checks**
@@ -6406,7 +6444,7 @@ export default securityPlugin;
 
 - [ ] **Step 4: Run test to verify it passes**
 
-Run: `npx vitest run tests/plugins/security/network-checks.test.ts`
+Run: `bunx vitest run tests/plugins/security/network-checks.test.ts`
 Expected: PASS
 
 - [ ] **Step 5: Commit**
@@ -6466,7 +6504,7 @@ describe('content checks', () => {
 
 - [ ] **Step 2: Run test to verify it fails**
 
-Run: `npx vitest run tests/plugins/content/checks.test.ts`
+Run: `bunx vitest run tests/plugins/content/checks.test.ts`
 Expected: FAIL
 
 - [ ] **Step 3: Implement content checks**
@@ -6644,7 +6682,7 @@ export default contentPlugin;
 
 - [ ] **Step 4: Run test to verify it passes**
 
-Run: `npx vitest run tests/plugins/content/checks.test.ts`
+Run: `bunx vitest run tests/plugins/content/checks.test.ts`
 Expected: PASS
 
 - [ ] **Step 5: Commit**
@@ -6708,7 +6746,7 @@ describe('UI consistency comparator', () => {
 
 - [ ] **Step 2: Run test to verify it fails**
 
-Run: `npx vitest run tests/plugins/ui-consistency/comparator.test.ts`
+Run: `bunx vitest run tests/plugins/ui-consistency/comparator.test.ts`
 Expected: FAIL
 
 - [ ] **Step 3: Implement style extractor and comparator**
@@ -6883,7 +6921,7 @@ export default uiConsistencyPlugin;
 
 - [ ] **Step 4: Run test to verify it passes**
 
-Run: `npx vitest run tests/plugins/ui-consistency/comparator.test.ts`
+Run: `bunx vitest run tests/plugins/ui-consistency/comparator.test.ts`
 Expected: PASS
 
 - [ ] **Step 5: Commit**
@@ -6953,7 +6991,7 @@ describe('component-detector', () => {
 
 - [ ] **Step 2: Run test to verify it fails**
 
-Run: `npx vitest run tests/scanner/component-detector.test.ts`
+Run: `bunx vitest run tests/scanner/component-detector.test.ts`
 Expected: FAIL
 
 - [ ] **Step 3: Implement component detector**
@@ -7140,7 +7178,7 @@ export async function getCanonicalPageStateIds(appId: number): Promise<Set<numbe
 
 - [ ] **Step 5: Run test to verify it passes**
 
-Run: `npx vitest run tests/scanner/component-detector.test.ts`
+Run: `bunx vitest run tests/scanner/component-detector.test.ts`
 Expected: PASS
 
 - [ ] **Step 6: Commit**
@@ -7154,6 +7192,10 @@ git commit -m "feat: reusable component detection across pages"
 
 ## Summary
 
+Final phase gate reminder:
+- publish/update lower-level libraries with `/testomniac_app/scripts/push_all.sh` before relying on them upstream
+- after each phase, confirm `bun run dev` works in both `/testomniac_api` and `/testomniac_app`
+
 **35 tasks, 6 phases:**
 
 | Phase | Tasks | What's Built |
@@ -7162,7 +7204,7 @@ git commit -m "feat: reusable component detection across pages"
 | 2: Browser + Scanner | Tasks 6-10 | Chromium manager, extractor, issue detector, action queue, mouse scanner |
 | 3: Auth + AI + Input | Tasks 11-15 | Form identifier, login/Signic, pairwise generator, AI analyzer, input scanner |
 | 4: Test Generation | Task 16 | Templates (render, interaction, form, navigation, e2e), suite tagger |
-| 5: Runner + API + Integration | Tasks 17-29 | Executor, worker pool (Test Runs), email, API routes (CRUD), orchestrator (phase timing), projects repo, AI token tracker, email detector/checker, phase timer, password testing, loop guard, scroll scanner, dialog handler, form negative tests, password template, CRUD routes, rate limiting |
-| 6: Plugins + Components | Tasks 30-35 | Plugin architecture, SEO check, Security check (network traffic API key detection), Content check (AI), UI Consistency check (cross-page style comparison), Reusable component detection |
+| 5: Runner + API + Integration | Tasks 17-29 | Executor, worker pool (Test Runs), email, API contract + worker integration, orchestrator (phase timing), projects repo, AI token tracker, email detector/checker, phase timer, password testing, loop guard, scroll scanner, dialog handler, form negative tests, password template, CRUD routes, rate limiting |
+| 6: Optional Plugins + Components | Tasks 30-35 | Plugin architecture, SEO check, Security check (network traffic API key detection), Content check (AI), UI Consistency check (cross-page style comparison), Reusable component detection |
 
-Each task is independently committable and testable. Phases 1-5 build the core system. Phase 6 plugins and component detection are independently implementable.
+Each task is independently committable and testable. Phases 1-5 build the core system and should ship first. Phase 6 is optional follow-on scope and must not block MVP delivery.

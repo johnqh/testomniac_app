@@ -13,7 +13,7 @@ cp .env.example .env   # Configure environment variables
 
 | Variable                    | Description          | Default                 |
 | --------------------------- | -------------------- | ----------------------- |
-| `VITE_API_URL`              | Backend API URL      | `http://localhost:8022` |
+| `VITE_API_URL`              | Backend API URL      | `http://localhost:8027` |
 | `VITE_FIREBASE_API_KEY`     | Firebase API key     | required                |
 | `VITE_FIREBASE_AUTH_DOMAIN` | Firebase auth domain | required                |
 | `VITE_FIREBASE_PROJECT_ID`  | Firebase project ID  | required                |
@@ -57,7 +57,7 @@ bun run verify         # typecheck + lint + format:check
 - **starter_types** -- Shared type definitions
 - **starter_client** -- API client SDK with TanStack Query hooks
 - **starter_lib** -- Business logic library (`useHistoriesManager`)
-- **starter_api** -- Backend server (default port 8022)
+- **starter_api** -- Backend server (default port 8027)
 - **starter_app_rn** -- React Native counterpart of this web app
 
 ## License
