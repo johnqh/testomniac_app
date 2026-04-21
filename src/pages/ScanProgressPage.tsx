@@ -42,6 +42,7 @@ export default function ScanProgressPage() {
         isConnected={isConnected}
         isComplete={store.isComplete}
         latestScreenshotUrl={store.latestScreenshotUrl}
+        currentPageUrl={store.currentPageUrl}
       />
     </div>
   );

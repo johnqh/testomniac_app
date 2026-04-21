@@ -13,6 +13,7 @@ interface ScanProgressPanelProps {
   isConnected: boolean;
   isComplete: boolean;
   latestScreenshotUrl?: string | null;
+  currentPageUrl?: string | null;
 }
 
 export function ScanProgressPanel({
@@ -25,6 +26,7 @@ export function ScanProgressPanel({
   isConnected,
   isComplete,
   latestScreenshotUrl,
+  currentPageUrl,
 }: ScanProgressPanelProps) {
   return (
     <div className="space-y-6">
@@ -48,14 +50,21 @@ export function ScanProgressPanel({
         issuesFound={issuesFound}
       />
 
-      {latestScreenshotUrl && (
+      {(latestScreenshotUrl || currentPageUrl) && (
         <div className="rounded-lg border border-gray-200 dark:border-gray-700 overflow-hidden">
-          <div className="bg-gray-50 dark:bg-gray-800 px-3 py-2 border-b border-gray-200 dark:border-gray-700">
+          <div className="bg-gray-50 dark:bg-gray-800 px-3 py-2 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between">
             <span className="text-xs font-medium text-gray-500 dark:text-gray-400">
               Current Page
             </span>
+            {currentPageUrl && (
+              <span className="text-xs font-mono text-gray-400 dark:text-gray-500 truncate ml-2 max-w-[300px]">
+                {currentPageUrl}
+              </span>
+            )}
           </div>
-          <img src={latestScreenshotUrl} alt="Current scan page" className="w-full h-auto" />
+          {latestScreenshotUrl && (
+            <img src={latestScreenshotUrl} alt="Current scan page" className="w-full h-auto" />
+          )}
         </div>
       )}
 

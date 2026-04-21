@@ -31,6 +31,7 @@ export default function PublicScanProgressPage() {
         isConnected={isConnected}
         isComplete={store.isComplete}
         latestScreenshotUrl={store.latestScreenshotUrl}
+        currentPageUrl={store.currentPageUrl}
       />
 
       {store.isComplete && (
