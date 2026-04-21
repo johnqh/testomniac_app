@@ -55,11 +55,7 @@ export function ScanProgressPanel({
               Current Page
             </span>
           </div>
-          <img
-            src={latestScreenshotUrl}
-            alt="Current scan page"
-            className="w-full h-auto"
-          />
+          <img src={latestScreenshotUrl} alt="Current scan page" className="w-full h-auto" />
         </div>
       )}
 
