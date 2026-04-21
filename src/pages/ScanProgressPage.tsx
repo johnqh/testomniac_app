@@ -39,6 +39,7 @@ export default function ScanProgressPage() {
         events={store.events}
         isConnected={isConnected}
         isComplete={store.isComplete}
+        latestScreenshotUrl={store.latestScreenshotUrl}
       />
     </div>
   );

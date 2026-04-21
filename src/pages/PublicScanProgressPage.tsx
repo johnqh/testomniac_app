@@ -27,6 +27,7 @@ export default function PublicScanProgressPage() {
         events={store.events}
         isConnected={isConnected}
         isComplete={store.isComplete}
+        latestScreenshotUrl={store.latestScreenshotUrl}
       />
 
       {store.isComplete && (

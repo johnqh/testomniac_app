@@ -12,6 +12,7 @@ interface ScanProgressPanelProps {
   events: RunStreamEvent[];
   isConnected: boolean;
   isComplete: boolean;
+  latestScreenshotUrl?: string | null;
 }
 
 export function ScanProgressPanel({
@@ -23,6 +24,7 @@ export function ScanProgressPanel({
   events,
   isConnected,
   isComplete,
+  latestScreenshotUrl,
 }: ScanProgressPanelProps) {
   return (
     <div className="space-y-6">
@@ -45,6 +47,21 @@ export function ScanProgressPanel({
         actionsCompleted={actionsCompleted}
         issuesFound={issuesFound}
       />
+
+      {latestScreenshotUrl && (
+        <div className="rounded-lg border border-gray-200 dark:border-gray-700 overflow-hidden">
+          <div className="bg-gray-50 dark:bg-gray-800 px-3 py-2 border-b border-gray-200 dark:border-gray-700">
+            <span className="text-xs font-medium text-gray-500 dark:text-gray-400">
+              Current Page
+            </span>
+          </div>
+          <img
+            src={latestScreenshotUrl}
+            alt="Current scan page"
+            className="w-full h-auto"
+          />
+        </div>
+      )}
 
       <EventLog events={events} />
     </div>
