@@ -9,8 +9,11 @@ export default function PublicScanProgressPage() {
   const { runId } = useParams<{ runId: string }>();
   const store = useScanProgressStore();
 
+  // Stop SSE once scan is complete to prevent reconnection loop
+  const sseUrl = runId && !store.isComplete ? `${API_URL}/api/v1/runs/${runId}/stream` : null;
+
   const { isConnected } = useEventSource({
-    url: runId ? `${API_URL}/api/v1/runs/${runId}/stream` : null,
+    url: sseUrl,
     onEvent: store.handleEvent,
   });
 

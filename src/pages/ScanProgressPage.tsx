@@ -11,8 +11,10 @@ export default function ScanProgressPage() {
   const store = useScanProgressStore();
   const { navigate } = useLocalizedNavigate();
 
+  const sseUrl = runId && !store.isComplete ? `${API_URL}/api/v1/runs/${runId}/stream` : null;
+
   const { isConnected } = useEventSource({
-    url: runId ? `${API_URL}/api/v1/runs/${runId}/stream` : null,
+    url: sseUrl,
     onEvent: store.handleEvent,
   });
 
