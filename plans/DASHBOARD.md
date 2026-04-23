@@ -327,7 +327,7 @@ cd testomniac_app && bun run typecheck
 
 ---
 
-## Phase 9: Cleanup
+## Phase 9: Cleanup -- DONE (i18n deferred)
 
 - Remove unused run-centric route definitions
 - Add i18n keys for sidebar labels across all 16 languages
