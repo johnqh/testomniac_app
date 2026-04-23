@@ -29,7 +29,12 @@ export default function StartScanPage() {
       });
       const data = await response.json();
 
-      if (data.success && data.data?.runId) {
+      if (data.success && data.data?.scanId && data.data?.appId) {
+        navigate(
+          `/dashboard/${entitySlug}/apps/${data.data.appId}/scans/${data.data.scanId}/progress`
+        );
+      } else if (data.success && data.data?.runId) {
+        // Fallback for older API responses without appId
         navigate(`/dashboard/${entitySlug}/runs/${data.data.runId}/progress`);
       } else {
         setError(data.error || data.data?.message || 'Failed to start scan');

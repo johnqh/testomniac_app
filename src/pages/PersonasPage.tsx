@@ -1,28 +1,65 @@
 import { useState } from 'react';
+import { useParams } from 'react-router-dom';
+import { useApi } from '@sudobility/building_blocks/firebase';
+import { useAppPersonas, usePersonaUseCases } from '@sudobility/testomniac_client';
+import { CONSTANTS } from '../config/constants';
 
-interface Persona {
-  id: number;
-  name: string;
-  description: string;
-  useCases: Array<{
-    id: number;
-    name: string;
-    description: string;
-  }>;
+function PersonaUseCases({ personaId }: { personaId: number }) {
+  const { networkClient, token } = useApi();
+  const { useCases, isLoading } = usePersonaUseCases({
+    networkClient,
+    baseUrl: CONSTANTS.API_URL,
+    personaId,
+    token: token ?? '',
+  });
+
+  if (isLoading) {
+    return <div className="text-xs text-gray-400 py-2">Loading use cases...</div>;
+  }
+
+  if (useCases.length === 0) {
+    return <div className="text-xs text-gray-400 py-2">No use cases.</div>;
+  }
+
+  return (
+    <div className="space-y-2">
+      {useCases.map(uc => (
+        <div key={uc.id} className="text-sm">
+          <span className="font-medium text-gray-800 dark:text-gray-200">{uc.name}</span>
+          {uc.description && (
+            <span className="text-gray-500 dark:text-gray-400"> — {uc.description}</span>
+          )}
+        </div>
+      ))}
+    </div>
+  );
 }
 
 export default function PersonasPage() {
-  // const { runId } = useParams<{ runId: string }>();
+  const { appId } = useParams<{ appId: string }>();
+  const { networkClient, token } = useApi();
   const [expandedId, setExpandedId] = useState<number | null>(null);
 
-  // TODO: Replace with useRunPersonas hook when API is live
-  const personas: Persona[] = [];
-  const isLoading = false;
+  const { personas, isLoading, error } = useAppPersonas({
+    networkClient,
+    baseUrl: CONSTANTS.API_URL,
+    appId: Number(appId),
+    token: token ?? '',
+    enabled: !!appId && !!token,
+  });
 
   if (isLoading) {
     return (
       <div className="p-6">
         <div className="text-center text-gray-500 dark:text-gray-400 py-8">Loading...</div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="p-6">
+        <div className="text-center text-red-600 dark:text-red-400 py-8">Error: {error}</div>
       </div>
     );
   }
@@ -52,9 +89,6 @@ export default function PersonasPage() {
                 <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
                   {persona.description}
                 </p>
-                <div className="text-xs text-blue-600 dark:text-blue-400 mt-2">
-                  {persona.useCases.length} use cases
-                </div>
               </button>
 
               {expandedId === persona.id && (
@@ -62,21 +96,7 @@ export default function PersonasPage() {
                   <h4 className="text-xs font-medium text-gray-600 dark:text-gray-400 uppercase tracking-wide mb-2">
                     Use Cases
                   </h4>
-                  <div className="space-y-2">
-                    {persona.useCases.map(uc => (
-                      <div key={uc.id} className="text-sm">
-                        <span className="font-medium text-gray-800 dark:text-gray-200">
-                          {uc.name}
-                        </span>
-                        {uc.description && (
-                          <span className="text-gray-500 dark:text-gray-400">
-                            {' '}
-                            — {uc.description}
-                          </span>
-                        )}
-                      </div>
-                    ))}
-                  </div>
+                  <PersonaUseCases personaId={persona.id} />
                 </div>
               )}
             </div>

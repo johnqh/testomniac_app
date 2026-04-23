@@ -1,23 +1,32 @@
-interface ComponentCard {
-  id: number;
-  name: string;
-  selector: string;
-  instanceCount: number;
-  identicalCount: number;
-  variantCount: number;
-}
+import { useParams } from 'react-router-dom';
+import { useApi } from '@sudobility/building_blocks/firebase';
+import { useAppComponents } from '@sudobility/testomniac_client';
+import { CONSTANTS } from '../config/constants';
 
 export default function ComponentsPage() {
-  // const { runId } = useParams<{ runId: string }>();
+  const { appId } = useParams<{ appId: string }>();
+  const { networkClient, token } = useApi();
 
-  // TODO: Replace with useRunComponents hook when API is live
-  const components: ComponentCard[] = [];
-  const isLoading = false;
+  const { components, isLoading, error } = useAppComponents({
+    networkClient,
+    baseUrl: CONSTANTS.API_URL,
+    appId: Number(appId),
+    token: token ?? '',
+    enabled: !!appId && !!token,
+  });
 
   if (isLoading) {
     return (
       <div className="p-6">
         <div className="text-center text-gray-500 dark:text-gray-400 py-8">Loading...</div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="p-6">
+        <div className="text-center text-red-600 dark:text-red-400 py-8">Error: {error}</div>
       </div>
     );
   }
@@ -40,19 +49,17 @@ export default function ComponentsPage() {
               <div className="flex items-center justify-between">
                 <div>
                   <div className="text-sm font-medium text-gray-900 dark:text-gray-100">
-                    {comp.name}
+                    {comp.type}
                   </div>
                   <div className="text-xs font-mono text-gray-500 dark:text-gray-400 mt-0.5">
-                    {comp.selector}
+                    Element #{comp.htmlElementId}
                   </div>
                 </div>
-                <div className="flex gap-3 text-xs text-gray-500">
-                  <span>{comp.instanceCount} instances</span>
-                  <span className="text-green-600">{comp.identicalCount} identical</span>
-                  {comp.variantCount > 0 && (
-                    <span className="text-yellow-600">{comp.variantCount} variants</span>
-                  )}
-                </div>
+                {comp.htmlHash && (
+                  <div className="text-xs font-mono text-gray-400 dark:text-gray-500">
+                    {comp.htmlHash.slice(0, 8)}
+                  </div>
+                )}
               </div>
             </div>
           ))}

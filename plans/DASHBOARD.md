@@ -17,7 +17,7 @@ This plan covers full-stack changes across testomniac_types, testomniac_api, tes
 
 ---
 
-## Phase 1: Types Foundation
+## Phase 1: Types Foundation -- DONE
 
 Pure additive type changes. No breaking changes.
 
@@ -44,7 +44,7 @@ cd testomniac_client && bun run typecheck
 
 ---
 
-## Phase 2: API Endpoints
+## Phase 2: API Endpoints -- DONE
 
 Keep existing run-scoped endpoints. Add app-scoped endpoints alongside.
 
@@ -97,7 +97,7 @@ cd testomniac_api && bun run typecheck
 
 ---
 
-## Phase 3: Client Hooks
+## Phase 3: Client Hooks -- DONE
 
 ### Modify: `testomniac_client/src/network/TestomniacClient.ts`
 
@@ -128,7 +128,7 @@ cd testomniac_client && bun run typecheck
 
 ---
 
-## Phase 4: Routes + Sidebar
+## Phase 4: Routes + Sidebar -- DONE
 
 ### Modify: `testomniac_app/src/App.tsx`
 
@@ -213,7 +213,7 @@ cd testomniac_app && bun run dev
 
 ---
 
-## Phase 5: Data Pages (App-Scoped)
+## Phase 5: Data Pages (App-Scoped) -- DONE
 
 Wire placeholder pages to real data. All get `appId` from route params.
 
@@ -241,7 +241,7 @@ cd testomniac_app && bun run dev
 
 ---
 
-## Phase 6: Page Detail + Page State Detail
+## Phase 6: Page Detail + Page State Detail -- DONE
 
 ### New: `testomniac_app/src/pages/PageDetailPage.tsx`
 
@@ -270,7 +270,7 @@ Three sections:
 
 ---
 
-## Phase 7: Graph Pages (ReactFlow)
+## Phase 7: Graph Pages (ReactFlow) -- DONE
 
 ### New: `testomniac_app/src/pages/AppGraphPage.tsx`
 
@@ -312,7 +312,7 @@ cd testomniac_app && bun run typecheck
 
 ---
 
-## Phase 8: Scan Flow Integration
+## Phase 8: Scan Flow Integration -- DONE
 
 ### Modify: `testomniac_app/src/pages/StartScanPage.tsx`
 

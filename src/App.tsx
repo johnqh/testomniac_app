@@ -23,14 +23,18 @@ const DashboardOverview = lazy(() => import('./pages/DashboardOverview'));
 const StartScanPage = lazy(() => import('./pages/StartScanPage'));
 const ScanProgressPage = lazy(() => import('./pages/ScanProgressPage'));
 const PublicScanProgressPage = lazy(() => import('./pages/PublicScanProgressPage'));
-const RunDetailsPage = lazy(() => import('./pages/RunDetailsPage'));
 const TestCasesPage = lazy(() => import('./pages/TestCasesPage'));
 const TestRunsPage = lazy(() => import('./pages/TestRunsPage'));
 const IssuesPage = lazy(() => import('./pages/IssuesPage'));
 const PagesPage = lazy(() => import('./pages/PagesPage'));
-const MapPage = lazy(() => import('./pages/MapPage'));
 const ComponentsPage = lazy(() => import('./pages/ComponentsPage'));
 const PersonasPage = lazy(() => import('./pages/PersonasPage'));
+const ScansPage = lazy(() => import('./pages/ScansPage'));
+const PageDetailPage = lazy(() => import('./pages/PageDetailPage'));
+const PageStateDetailPage = lazy(() => import('./pages/PageStateDetailPage'));
+const AppGraphPage = lazy(() => import('./pages/AppGraphPage'));
+const PageGraphPage = lazy(() => import('./pages/PageGraphPage'));
+const RunRedirect = lazy(() => import('./pages/RunRedirect'));
 const LanguageRedirect = lazy(() => import('./components/layout/LanguageRedirect'));
 const EntityRedirect = lazy(() => import('./components/layout/EntityRedirect'));
 const ProtectedRoute = lazy(() => import('./components/layout/ProtectedRoute'));
@@ -116,15 +120,28 @@ function AppRoutes() {
                 >
                   <Route index element={<DashboardOverview />} />
                   <Route path="scan/new" element={<StartScanPage />} />
-                  <Route path="runs/:runId" element={<RunDetailsPage />} />
-                  <Route path="runs/:runId/progress" element={<ScanProgressPage />} />
-                  <Route path="runs/:runId/test-cases" element={<TestCasesPage />} />
-                  <Route path="runs/:runId/test-runs" element={<TestRunsPage />} />
-                  <Route path="runs/:runId/issues" element={<IssuesPage />} />
-                  <Route path="runs/:runId/pages" element={<PagesPage />} />
-                  <Route path="runs/:runId/map" element={<MapPage />} />
-                  <Route path="runs/:runId/components" element={<ComponentsPage />} />
-                  <Route path="runs/:runId/personas" element={<PersonasPage />} />
+
+                  {/* App-centric routes */}
+                  <Route path="apps/:appId/scans" element={<ScansPage />} />
+                  <Route path="apps/:appId/scans/:scanId/progress" element={<ScanProgressPage />} />
+                  <Route path="apps/:appId/test-cases" element={<TestCasesPage />} />
+                  <Route path="apps/:appId/test-runs" element={<TestRunsPage />} />
+                  <Route path="apps/:appId/issues" element={<IssuesPage />} />
+                  <Route path="apps/:appId/pages" element={<PagesPage />} />
+                  <Route path="apps/:appId/pages/:pageId" element={<PageDetailPage />} />
+                  <Route
+                    path="apps/:appId/pages/:pageId/states/:pageStateId"
+                    element={<PageStateDetailPage />}
+                  />
+                  <Route path="apps/:appId/graph" element={<AppGraphPage />} />
+                  <Route path="apps/:appId/pages/:pageId/graph" element={<PageGraphPage />} />
+                  <Route path="apps/:appId/components" element={<ComponentsPage />} />
+                  <Route path="apps/:appId/personas" element={<PersonasPage />} />
+
+                  {/* Legacy run routes — redirect to app-centric */}
+                  <Route path="runs/:runId" element={<RunRedirect />} />
+                  <Route path="runs/:runId/*" element={<RunRedirect />} />
+
                   <Route path="settings" element={<SettingsPage />} />
                   <Route path="workspaces" element={<WorkspacesPage />} />
                   <Route path="members" element={<MembersPage />} />

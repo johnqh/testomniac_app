@@ -1,4 +1,8 @@
+import { useParams } from 'react-router-dom';
 import { createColumnHelper } from '@tanstack/react-table';
+import { useApi } from '@sudobility/building_blocks/firebase';
+import { useAppTestCases } from '@sudobility/testomniac_client';
+import { CONSTANTS } from '../config/constants';
 import { DataTable } from '../components/data/DataTable';
 import { StatusBadge } from '../components/scanner/StatusBadge';
 
@@ -9,7 +13,6 @@ interface TestCaseRow {
   sizeClass: string;
   priority: string;
   suiteTags: string[];
-  actionsJson: unknown[];
 }
 
 const columnHelper = createColumnHelper<TestCaseRow>();
@@ -60,11 +63,24 @@ const columns = [
 ];
 
 export default function TestCasesPage() {
-  // const { runId } = useParams<{ runId: string }>();
+  const { appId } = useParams<{ appId: string }>();
+  const { networkClient, token } = useApi();
 
-  // TODO: Replace with useRunTestCases hook when API is live
-  const testCases: TestCaseRow[] = [];
-  const isLoading = false;
+  const { testCases, isLoading, error } = useAppTestCases({
+    networkClient,
+    baseUrl: CONSTANTS.API_URL,
+    appId: Number(appId),
+    token: token ?? '',
+    enabled: !!appId && !!token,
+  });
+
+  if (error) {
+    return (
+      <div className="p-6">
+        <div className="text-center text-red-600 dark:text-red-400 py-8">Error: {error}</div>
+      </div>
+    );
+  }
 
   return (
     <div className="p-6">

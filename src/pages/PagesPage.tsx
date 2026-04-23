@@ -1,22 +1,32 @@
-interface PageCard {
-  id: number;
-  url: string;
-  routeKey: string | null;
-  stateCount: number;
-  requiresLogin: boolean;
-}
+import { useParams } from 'react-router-dom';
+import { useApi } from '@sudobility/building_blocks/firebase';
+import { useAppPages } from '@sudobility/testomniac_client';
+import { CONSTANTS } from '../config/constants';
 
 export default function PagesPage() {
-  // const { runId } = useParams<{ runId: string }>();
+  const { appId } = useParams<{ appId: string }>();
+  const { networkClient, token } = useApi();
 
-  // TODO: Replace with useRunPages hook when API is live
-  const pages: PageCard[] = [];
-  const isLoading = false;
+  const { pages, isLoading, error } = useAppPages({
+    networkClient,
+    baseUrl: CONSTANTS.API_URL,
+    appId: Number(appId),
+    token: token ?? '',
+    enabled: !!appId && !!token,
+  });
 
   if (isLoading) {
     return (
       <div className="p-6">
         <div className="text-center text-gray-500 dark:text-gray-400 py-8">Loading...</div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="p-6">
+        <div className="text-center text-red-600 dark:text-red-400 py-8">Error: {error}</div>
       </div>
     );
   }
@@ -45,7 +55,6 @@ export default function PagesPage() {
                   {page.url}
                 </div>
                 <div className="flex items-center gap-2 mt-2">
-                  <span className="text-xs text-gray-500">{page.stateCount} states</span>
                   {page.requiresLogin && (
                     <span className="text-xs px-1.5 py-0.5 rounded bg-yellow-100 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-300">
                       Login

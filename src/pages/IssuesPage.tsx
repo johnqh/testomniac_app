@@ -1,14 +1,18 @@
+import { useParams } from 'react-router-dom';
 import { createColumnHelper } from '@tanstack/react-table';
+import { useApi } from '@sudobility/building_blocks/firebase';
+import { useAppIssues } from '@sudobility/testomniac_client';
+import { CONSTANTS } from '../config/constants';
 import { DataTable } from '../components/data/DataTable';
 import { StatusBadge } from '../components/scanner/StatusBadge';
 
 interface IssueRow {
   id: number;
-  type: string;
+  ruleName: string;
+  title: string;
   description: string;
-  pageUrl: string;
   severity: string;
-  source: string;
+  status: string;
 }
 
 const columnHelper = createColumnHelper<IssueRow>();
@@ -20,9 +24,21 @@ const SEVERITY_COLORS: Record<string, string> = {
 };
 
 const columns = [
-  columnHelper.accessor('type', {
-    header: 'Type',
-    cell: info => <StatusBadge status={info.getValue()} />,
+  columnHelper.accessor('severity', {
+    header: 'Severity',
+    cell: info => (
+      <span className={`text-sm font-medium ${SEVERITY_COLORS[info.getValue()] || ''}`}>
+        {info.getValue()}
+      </span>
+    ),
+  }),
+  columnHelper.accessor('title', {
+    header: 'Title',
+    cell: info => (
+      <span className="font-medium text-gray-900 dark:text-gray-100 max-w-[250px] truncate inline-block">
+        {info.getValue()}
+      </span>
+    ),
   }),
   columnHelper.accessor('description', {
     header: 'Description',
@@ -32,36 +48,37 @@ const columns = [
       </span>
     ),
   }),
-  columnHelper.accessor('pageUrl', {
-    header: 'Page',
+  columnHelper.accessor('ruleName', {
+    header: 'Rule',
     cell: info => (
-      <span className="text-xs font-mono text-gray-500 dark:text-gray-400 max-w-[150px] truncate inline-block">
-        {new URL(info.getValue()).pathname}
-      </span>
+      <span className="text-xs font-mono text-gray-500 dark:text-gray-400">{info.getValue()}</span>
     ),
   }),
-  columnHelper.accessor('severity', {
-    header: 'Severity',
-    cell: info => (
-      <span className={`text-sm font-medium ${SEVERITY_COLORS[info.getValue()] || ''}`}>
-        {info.getValue()}
-      </span>
-    ),
-  }),
-  columnHelper.accessor('source', {
-    header: 'Source',
-    cell: info => (
-      <span className="text-xs text-gray-500 dark:text-gray-400">{info.getValue()}</span>
-    ),
+  columnHelper.accessor('status', {
+    header: 'Status',
+    cell: info => <StatusBadge status={info.getValue()} />,
   }),
 ];
 
 export default function IssuesPage() {
-  // const { runId } = useParams<{ runId: string }>();
+  const { appId } = useParams<{ appId: string }>();
+  const { networkClient, token } = useApi();
 
-  // TODO: Replace with useRunIssues hook when API is live
-  const issues: IssueRow[] = [];
-  const isLoading = false;
+  const { issues, isLoading, error } = useAppIssues({
+    networkClient,
+    baseUrl: CONSTANTS.API_URL,
+    appId: Number(appId),
+    token: token ?? '',
+    enabled: !!appId && !!token,
+  });
+
+  if (error) {
+    return (
+      <div className="p-6">
+        <div className="text-center text-red-600 dark:text-red-400 py-8">Error: {error}</div>
+      </div>
+    );
+  }
 
   return (
     <div className="p-6">

@@ -1,10 +1,14 @@
+import { useParams } from 'react-router-dom';
 import { createColumnHelper } from '@tanstack/react-table';
+import { useApi } from '@sudobility/building_blocks/firebase';
+import { useAppTestRuns } from '@sudobility/testomniac_client';
+import { CONSTANTS } from '../config/constants';
 import { DataTable } from '../components/data/DataTable';
 import { StatusBadge } from '../components/scanner/StatusBadge';
 
 interface TestRunRow {
   id: number;
-  testCaseName: string;
+  testCaseId: number;
   screen: string;
   status: string;
   durationMs: number | null;
@@ -14,10 +18,10 @@ interface TestRunRow {
 const columnHelper = createColumnHelper<TestRunRow>();
 
 const columns = [
-  columnHelper.accessor('testCaseName', {
+  columnHelper.accessor('testCaseId', {
     header: 'Test Case',
     cell: info => (
-      <span className="font-medium text-gray-900 dark:text-gray-100">{info.getValue()}</span>
+      <span className="font-medium text-gray-900 dark:text-gray-100">#{info.getValue()}</span>
     ),
   }),
   columnHelper.accessor('screen', {
@@ -53,11 +57,24 @@ const columns = [
 ];
 
 export default function TestRunsPage() {
-  // const { runId } = useParams<{ runId: string }>();
+  const { appId } = useParams<{ appId: string }>();
+  const { networkClient, token } = useApi();
 
-  // TODO: Replace with useRunTestRuns hook when API is live
-  const testRuns: TestRunRow[] = [];
-  const isLoading = false;
+  const { testRuns, isLoading, error } = useAppTestRuns({
+    networkClient,
+    baseUrl: CONSTANTS.API_URL,
+    appId: Number(appId),
+    token: token ?? '',
+    enabled: !!appId && !!token,
+  });
+
+  if (error) {
+    return (
+      <div className="p-6">
+        <div className="text-center text-red-600 dark:text-red-400 py-8">Error: {error}</div>
+      </div>
+    );
+  }
 
   return (
     <div className="p-6">
