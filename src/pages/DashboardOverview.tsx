@@ -53,7 +53,7 @@ function AppCard({ app, basePath }: { app: AppResponse; basePath: string }) {
       {/* App header */}
       <div className="px-5 py-4 border-b border-gray-100 dark:border-gray-700">
         <h3 className="text-base font-semibold text-gray-900 dark:text-gray-100 truncate">
-          {app.name}
+          {app.title}
         </h3>
         {app.normalizedBaseUrl && (
           <p className="text-sm text-gray-500 dark:text-gray-400 mt-0.5 truncate">
@@ -98,7 +98,7 @@ function ProjectSection({
   return (
     <section>
       <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-3">
-        {project.name}
+        {project.title}
       </h2>
 
       {isLoading && (

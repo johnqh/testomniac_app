@@ -1,15 +1,15 @@
 interface LiveCountersProps {
   pagesFound: number;
   pageStatesFound: number;
-  actionsCompleted: number;
-  issuesFound: number;
+  testRunsCompleted: number;
+  findingsFound: number;
 }
 
 export function LiveCounters({
   pagesFound,
   pageStatesFound,
-  actionsCompleted,
-  issuesFound,
+  testRunsCompleted,
+  findingsFound,
 }: LiveCountersProps) {
   const counters = [
     {
@@ -23,13 +23,13 @@ export function LiveCounters({
       color: 'text-purple-600 dark:text-purple-400',
     },
     {
-      label: 'Actions',
-      value: actionsCompleted,
+      label: 'Test Runs',
+      value: testRunsCompleted,
       color: 'text-green-600 dark:text-green-400',
     },
     {
-      label: 'Issues',
-      value: issuesFound,
+      label: 'Findings',
+      value: findingsFound,
       color: 'text-red-600 dark:text-red-400',
     },
   ];

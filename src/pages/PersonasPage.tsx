@@ -25,7 +25,7 @@ function PersonaUseCases({ personaId }: { personaId: number }) {
     <div className="space-y-2">
       {useCases.map(uc => (
         <div key={uc.id} className="text-sm">
-          <span className="font-medium text-gray-800 dark:text-gray-200">{uc.name}</span>
+          <span className="font-medium text-gray-800 dark:text-gray-200">{uc.title}</span>
           {uc.description && (
             <span className="text-gray-500 dark:text-gray-400"> — {uc.description}</span>
           )}
@@ -84,7 +84,7 @@ export default function PersonasPage() {
                 className="w-full p-4 text-left hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors"
               >
                 <div className="text-sm font-semibold text-gray-900 dark:text-gray-100">
-                  {persona.name}
+                  {persona.title}
                 </div>
                 <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
                   {persona.description}

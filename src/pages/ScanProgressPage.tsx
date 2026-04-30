@@ -33,11 +33,10 @@ export default function ScanProgressPage() {
       </div>
 
       <ScanProgressPanel
-        phase={store.phase}
         pagesFound={store.pagesFound}
         pageStatesFound={store.pageStatesFound}
-        actionsCompleted={store.actionsCompleted}
-        issuesFound={store.issuesFound}
+        testRunsCompleted={store.testRunsCompleted}
+        findingsFound={store.findingsFound}
         events={store.events}
         isConnected={isConnected}
         isComplete={store.isComplete}

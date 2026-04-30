@@ -160,7 +160,7 @@ function PagesSection({
       {pages.map((page: PageResponse) => {
         const pageNodeId = `page-${page.id}`;
         const isExpanded = expandedNodes.has(pageNodeId);
-        const pathSegment = new URL(page.url, 'https://placeholder').pathname;
+        const pathSegment = page.relativePath;
 
         return (
           <div key={page.id}>
@@ -202,7 +202,7 @@ function AppNode({
   const pagesExpanded = expandedNodes.has(pagesNodeId);
 
   // Display the normalizedBaseUrl (domain), falling back to name
-  const displayName = app.normalizedBaseUrl || app.name;
+  const displayName = app.normalizedBaseUrl || app.title;
 
   return (
     <div>
@@ -526,7 +526,7 @@ export function DashboardSidebar({ entitySlug }: DashboardSidebarProps) {
             return (
               <div key={project.id}>
                 <TreeExpandable
-                  label={project.name}
+                  label={project.title}
                   isExpanded={isExpanded}
                   onToggle={() => toggleNode(projectNodeId)}
                   indent="pl-4"

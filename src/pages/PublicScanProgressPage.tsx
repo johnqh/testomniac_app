@@ -22,11 +22,10 @@ export default function PublicScanProgressPage() {
       <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-6">Scan Progress</h1>
 
       <ScanProgressPanel
-        phase={store.phase}
         pagesFound={store.pagesFound}
         pageStatesFound={store.pageStatesFound}
-        actionsCompleted={store.actionsCompleted}
-        issuesFound={store.issuesFound}
+        testRunsCompleted={store.testRunsCompleted}
+        findingsFound={store.findingsFound}
         events={store.events}
         isConnected={isConnected}
         isComplete={store.isComplete}

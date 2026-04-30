@@ -49,10 +49,10 @@ export default function PagesPage() {
               </div>
               <div className="p-3">
                 <div className="text-sm font-medium text-gray-900 dark:text-gray-100 truncate">
-                  {page.routeKey || new URL(page.url).pathname}
+                  {page.routeKey || page.relativePath}
                 </div>
                 <div className="text-xs text-gray-500 dark:text-gray-400 truncate mt-1">
-                  {page.url}
+                  {page.relativePath}
                 </div>
                 <div className="flex items-center gap-2 mt-2">
                   {page.requiresLogin && (

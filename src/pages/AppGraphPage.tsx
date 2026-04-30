@@ -112,9 +112,9 @@ export default function AppGraphPage() {
     const rawNodes: Node[] = pages.map(page => {
       let label: string;
       try {
-        label = page.routeKey || new URL(page.url).pathname;
+        label = page.routeKey || page.relativePath;
       } catch {
-        label = page.routeKey || page.url;
+        label = page.routeKey || page.relativePath;
       }
       return {
         id: String(page.id),

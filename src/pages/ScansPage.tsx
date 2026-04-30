@@ -10,7 +10,6 @@ import { StatusBadge } from '../components/scanner/StatusBadge';
 interface ScanRow {
   id: number;
   status: string;
-  phase: string | null;
   pagesFound: number | null;
   startedAt: string | null;
   endedAt: string | null;
@@ -64,12 +63,6 @@ export default function ScansPage() {
     columnHelper.accessor('status', {
       header: 'Status',
       cell: info => <StatusBadge status={info.getValue()} />,
-    }),
-    columnHelper.accessor('phase', {
-      header: 'Phase',
-      cell: info => (
-        <span className="text-sm text-gray-700 dark:text-gray-300">{info.getValue() ?? '-'}</span>
-      ),
     }),
     columnHelper.accessor('pagesFound', {
       header: 'Pages Found',

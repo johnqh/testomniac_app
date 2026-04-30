@@ -1,14 +1,12 @@
 import type { RunStreamEvent } from '@sudobility/testomniac_types';
-import { PhaseIndicator } from './PhaseIndicator';
 import { LiveCounters } from './LiveCounters';
 import { EventLog } from './EventLog';
 
 interface ScanProgressPanelProps {
-  phase: string;
   pagesFound: number;
   pageStatesFound: number;
-  actionsCompleted: number;
-  issuesFound: number;
+  testRunsCompleted: number;
+  findingsFound: number;
   events: RunStreamEvent[];
   isConnected: boolean;
   isComplete: boolean;
@@ -17,11 +15,10 @@ interface ScanProgressPanelProps {
 }
 
 export function ScanProgressPanel({
-  phase,
   pagesFound,
   pageStatesFound,
-  actionsCompleted,
-  issuesFound,
+  testRunsCompleted,
+  findingsFound,
   events,
   isConnected,
   isComplete,
@@ -31,7 +28,9 @@ export function ScanProgressPanel({
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <PhaseIndicator currentPhase={phase} />
+        <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
+          {isComplete ? 'Scan finished' : 'Scanning...'}
+        </span>
         <div className="flex items-center gap-2">
           {isComplete ? (
             <span className="text-sm text-green-600 dark:text-green-400 font-medium">Complete</span>
@@ -46,8 +45,8 @@ export function ScanProgressPanel({
       <LiveCounters
         pagesFound={pagesFound}
         pageStatesFound={pageStatesFound}
-        actionsCompleted={actionsCompleted}
-        issuesFound={issuesFound}
+        testRunsCompleted={testRunsCompleted}
+        findingsFound={findingsFound}
       />
 
       {(latestScreenshotUrl || currentPageUrl) && (
