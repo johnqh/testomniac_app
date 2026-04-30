@@ -38,14 +38,14 @@ function AppCard({ app, basePath }: { app: AppResponse; basePath: string }) {
   const appBasePath = `${basePath}/apps/${app.id}`;
 
   const sections = [
-    { label: 'Scans', description: 'View scan history', path: `${appBasePath}/scans` },
-    { label: 'Test Cases', description: 'Generated tests', path: `${appBasePath}/test-cases` },
+    {
+      label: 'Test Suites',
+      description: 'Test suite hierarchy',
+      path: `${appBasePath}/test-suites`,
+    },
     { label: 'Test Runs', description: 'Execution results', path: `${appBasePath}/test-runs` },
-    { label: 'Issues', description: 'Detected issues', path: `${appBasePath}/issues` },
-    { label: 'Pages', description: 'Discovered pages', path: `${appBasePath}/pages` },
-    { label: 'Graph', description: 'Site map view', path: `${appBasePath}/graph` },
-    { label: 'Components', description: 'UI components', path: `${appBasePath}/components` },
-    { label: 'Personas', description: 'AI-generated personas', path: `${appBasePath}/personas` },
+    { label: 'Findings', description: 'Errors and warnings', path: `${appBasePath}/findings` },
+    { label: 'Settings', description: 'App settings', path: `${appBasePath}/settings` },
   ];
 
   return (
