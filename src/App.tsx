@@ -35,6 +35,14 @@ const PageStateDetailPage = lazy(() => import('./pages/PageStateDetailPage'));
 const AppGraphPage = lazy(() => import('./pages/AppGraphPage'));
 const PageGraphPage = lazy(() => import('./pages/PageGraphPage'));
 const RunRedirect = lazy(() => import('./pages/RunRedirect'));
+const AppConsolePage = lazy(() => import('./pages/AppConsolePage'));
+const TestSuitesListPage = lazy(() => import('./pages/TestSuitesListPage'));
+const TestSuiteDetailPage = lazy(() => import('./pages/TestSuiteDetailPage'));
+const TestCaseDetailPage = lazy(() => import('./pages/TestCaseDetailPage'));
+const TestRunsListPage = lazy(() => import('./pages/TestRunsListPage'));
+const TestRunDetailPage = lazy(() => import('./pages/TestRunDetailPage'));
+const FindingsListPage = lazy(() => import('./pages/FindingsListPage'));
+const AppSettingsPage = lazy(() => import('./pages/AppSettingsPage'));
 const LanguageRedirect = lazy(() => import('./components/layout/LanguageRedirect'));
 const EntityRedirect = lazy(() => import('./components/layout/EntityRedirect'));
 const ProtectedRoute = lazy(() => import('./components/layout/ProtectedRoute'));
@@ -120,6 +128,18 @@ function AppRoutes() {
                 >
                   <Route index element={<DashboardOverview />} />
                   <Route path="scan/new" element={<StartScanPage />} />
+
+                  {/* App Console */}
+                  <Route path="apps/:appId" element={<AppConsolePage />}>
+                    <Route index element={<Navigate to="test-suites" replace />} />
+                    <Route path="test-suites" element={<TestSuitesListPage />} />
+                    <Route path="test-suites/:suiteId" element={<TestSuiteDetailPage />} />
+                    <Route path="test-cases/:caseId" element={<TestCaseDetailPage />} />
+                    <Route path="test-runs" element={<TestRunsListPage />} />
+                    <Route path="test-runs/:runId" element={<TestRunDetailPage />} />
+                    <Route path="findings" element={<FindingsListPage />} />
+                    <Route path="settings" element={<AppSettingsPage />} />
+                  </Route>
 
                   {/* App-centric routes */}
                   <Route path="apps/:appId/scans" element={<ScansPage />} />
