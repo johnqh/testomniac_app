@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useApi } from '@sudobility/building_blocks/firebase';
 import { useAppPersonas, usePersonaUseCases } from '@sudobility/testomniac_client';
+import SEOHead from '@/components/SEOHead';
 import { CONSTANTS } from '../config/constants';
 
 function PersonaUseCases({ personaId }: { personaId: number }) {
@@ -66,6 +67,7 @@ export default function PersonasPage() {
 
   return (
     <div className="p-6">
+      <SEOHead title="AI-Generated Personas" description="" noIndex />
       <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-6">
         AI-Generated Personas
       </h1>

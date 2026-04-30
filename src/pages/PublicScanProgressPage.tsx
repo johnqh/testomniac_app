@@ -1,5 +1,6 @@
 import { useParams } from 'react-router-dom';
 import { useScanProgressStore } from '@sudobility/testomniac_lib';
+import SEOHead from '@/components/SEOHead';
 import { ScanProgressPanel } from '../components/scanner/ScanProgressPanel';
 import { useEventSource } from '../hooks/useEventSource';
 
@@ -19,6 +20,7 @@ export default function PublicScanProgressPage() {
 
   return (
     <div className="max-w-2xl mx-auto px-4 py-8">
+      <SEOHead title="Scan Progress" description="" noIndex />
       <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-6">Scan Progress</h1>
 
       <ScanProgressPanel

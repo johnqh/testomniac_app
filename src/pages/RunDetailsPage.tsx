@@ -1,4 +1,5 @@
 import { useParams } from 'react-router-dom';
+import SEOHead from '@/components/SEOHead';
 import { useLocalizedNavigate } from '../hooks/useLocalizedNavigate';
 import { StatusBadge } from '../components/scanner/StatusBadge';
 
@@ -28,6 +29,7 @@ export default function RunDetailsPage() {
 
   return (
     <div className="p-6">
+      <SEOHead title={`Run #${runId}`} description="" noIndex />
       <div className="flex items-center gap-3 mb-6">
         <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">Run #{runId}</h1>
         <StatusBadge status={run.status} size="md" />

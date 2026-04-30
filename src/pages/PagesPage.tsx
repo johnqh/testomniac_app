@@ -1,6 +1,7 @@
 import { useParams } from 'react-router-dom';
 import { useApi } from '@sudobility/building_blocks/firebase';
 import { useAppPages } from '@sudobility/testomniac_client';
+import SEOHead from '@/components/SEOHead';
 import { CONSTANTS } from '../config/constants';
 
 export default function PagesPage() {
@@ -33,6 +34,7 @@ export default function PagesPage() {
 
   return (
     <div className="p-6">
+      <SEOHead title="Discovered Pages" description="" noIndex />
       <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-6">Discovered Pages</h1>
 
       {pages.length === 0 ? (

@@ -1,4 +1,5 @@
 import { useMemo } from 'react';
+import SEOHead from '@/components/SEOHead';
 import {
   ReactFlow,
   Background,
@@ -58,6 +59,7 @@ export default function MapPage() {
   if (!hasData) {
     return (
       <div className="p-6">
+        <SEOHead title="Site Map" description="" noIndex />
         <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-4">Site Map</h1>
         <div className="h-[500px] rounded-lg border border-gray-200 dark:border-gray-700 flex items-center justify-center bg-gray-50 dark:bg-gray-800">
           <p className="text-gray-500 dark:text-gray-400">
@@ -70,6 +72,7 @@ export default function MapPage() {
 
   return (
     <div className="p-6 h-full">
+      <SEOHead title="Site Map" description="" noIndex />
       <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-4">Site Map</h1>
       <div className="h-[600px] rounded-lg border border-gray-200 dark:border-gray-700 overflow-hidden">
         <ReactFlow

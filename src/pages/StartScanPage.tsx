@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useApi } from '@sudobility/building_blocks/firebase';
+import SEOHead from '@/components/SEOHead';
 import { useLocalizedNavigate } from '../hooks/useLocalizedNavigate';
 import { ScanForm } from '../components/scanner/ScanForm';
 
@@ -55,6 +56,7 @@ export default function StartScanPage() {
 
   return (
     <div className="p-6 max-w-lg">
+      <SEOHead title="Start New Scan" description="" noIndex />
       <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-6">Start New Scan</h1>
 
       <div className="space-y-6">

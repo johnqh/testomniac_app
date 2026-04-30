@@ -2,6 +2,7 @@ import { useParams } from 'react-router-dom';
 import { useApi } from '@sudobility/building_blocks/firebase';
 import { useEntityProjects, useProjectApps } from '@sudobility/testomniac_client';
 import type { ProjectSummaryResponse, AppResponse } from '@sudobility/testomniac_types';
+import SEOHead from '@/components/SEOHead';
 import { useLocalizedNavigate } from '../hooks/useLocalizedNavigate';
 import { CONSTANTS } from '../config/constants';
 
@@ -146,6 +147,7 @@ export default function DashboardOverview() {
 
   return (
     <div className="p-6 max-w-5xl">
+      <SEOHead title="Dashboard" description="" noIndex />
       <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-2">Dashboard</h1>
       <p className="text-gray-500 dark:text-gray-400 mb-8">
         Manage your web application tests and scan results.

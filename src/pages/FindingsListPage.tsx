@@ -3,6 +3,7 @@ import { useParams } from 'react-router-dom';
 import { useApi } from '@sudobility/building_blocks/firebase';
 import { useAppFindings } from '@sudobility/testomniac_client';
 import type { TestRunFindingResponse } from '@sudobility/testomniac_types';
+import SEOHead from '@/components/SEOHead';
 import { CONSTANTS } from '../config/constants';
 
 function FindingTypeBadge({ type }: { type: string }) {
@@ -52,6 +53,7 @@ export default function FindingsListPage() {
 
   return (
     <div className="p-6">
+      <SEOHead title="Findings" description="" noIndex />
       <div className="flex items-center justify-between mb-6">
         <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">Findings</h1>
 

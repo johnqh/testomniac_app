@@ -1,16 +1,17 @@
 import { useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { EntityListPage } from '@sudobility/entity_pages';
-import { SEO } from '@sudobility/seo_lib';
+import SEOHead from '@/components/SEOHead';
 import { useEntityClient } from '../config/entityClient';
 import { useLocalizedNavigate } from '../hooks/useLocalizedNavigate';
 import type { EntityWithRole } from '@sudobility/entity_client';
 import { useSetPageConfig } from '../hooks/usePageConfig';
-import { seoConfig } from '../config/seo';
 import { analyticsService } from '../config/analytics';
 
 const LAST_ENTITY_KEY = 'testomniac_last_entity';
 
 function WorkspacesPage() {
+  const { t } = useTranslation('common');
   const { navigate } = useLocalizedNavigate();
   const entityClient = useEntityClient();
 
@@ -28,7 +29,7 @@ function WorkspacesPage() {
 
   return (
     <>
-      <SEO config={seoConfig} title="Workspaces" noIndex />
+      <SEOHead title={t('breadcrumbs.home')} description="" noIndex />
       <EntityListPage client={entityClient} onSelectEntity={handleSelectEntity} />
     </>
   );

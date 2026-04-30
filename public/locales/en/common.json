@@ -91,5 +91,32 @@
   "resetEmailSentDesc": "Check your inbox for the password reset link.",
   "passwordMismatch": "Passwords do not match",
   "passwordTooShort": "Password must be at least 6 characters",
-  "loading": "Loading..."
+  "loading": "Loading...",
+  "seo": {
+    "home": {
+      "title": "Testomniac - AI-Powered Web App Testing | Sudobility",
+      "description": "Automated web application testing powered by AI. Discover pages, generate test cases, and find issues with Testomniac.",
+      "keywords": [
+        "web app testing",
+        "automated testing",
+        "AI testing",
+        "test generation",
+        "QA automation",
+        "web crawler",
+        "issue detection"
+      ]
+    },
+    "docs": {
+      "title": "Documentation - Testomniac | Sudobility",
+      "description": "Technical documentation for the Testomniac web application testing platform and its ecosystem of packages."
+    },
+    "sitemap": {
+      "title": "Sitemap - Testomniac | Sudobility",
+      "description": "Browse all pages and supported languages for Testomniac."
+    },
+    "login": {
+      "title": "Log In - Testomniac | Sudobility",
+      "description": "Sign in to Testomniac to manage your web application tests and scan results."
+    }
+  }
 }

@@ -1,6 +1,7 @@
 import { useParams } from 'react-router-dom';
 import { useApi } from '@sudobility/building_blocks/firebase';
 import { useAppComponents } from '@sudobility/testomniac_client';
+import SEOHead from '@/components/SEOHead';
 import { CONSTANTS } from '../config/constants';
 
 export default function ComponentsPage() {
@@ -33,6 +34,7 @@ export default function ComponentsPage() {
 
   return (
     <div className="p-6">
+      <SEOHead title="Reusable Components" description="" noIndex />
       <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-6">
         Reusable Components
       </h1>

@@ -2,6 +2,7 @@ import { useParams } from 'react-router-dom';
 import { createColumnHelper } from '@tanstack/react-table';
 import { useApi } from '@sudobility/building_blocks/firebase';
 import { useAppTestCases } from '@sudobility/testomniac_client';
+import SEOHead from '@/components/SEOHead';
 import { CONSTANTS } from '../config/constants';
 import { DataTable } from '../components/data/DataTable';
 import { StatusBadge } from '../components/scanner/StatusBadge';
@@ -84,6 +85,7 @@ export default function TestCasesPage() {
 
   return (
     <div className="p-6">
+      <SEOHead title="Test Cases" description="" noIndex />
       <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-6">Test Cases</h1>
 
       <DataTable data={testCases} columns={columns as never} isLoading={isLoading} />

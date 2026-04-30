@@ -76,7 +76,7 @@ export function initializeI18n(): void {
       lowerCaseLng: true,
       nonExplicitSupportedLngs: false,
       defaultNS: 'common',
-      ns: ['common'],
+      ns: ['common', 'howto'],
     });
 }
 

@@ -1,14 +1,15 @@
 import { useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { GlobalSettingsPage } from '@sudobility/building_blocks';
-import { SEO } from '@sudobility/seo_lib';
 import { useTheme } from '@sudobility/components';
+import SEOHead from '@/components/SEOHead';
 import { useSetPageConfig } from '../hooks/usePageConfig';
-import { seoConfig } from '../config/seo';
 import { analyticsService } from '../config/analytics';
 import { useBuildingBlocksAnalytics } from '../hooks/useBuildingBlocksAnalytics';
 
 /** User settings page for theme and font size preferences. */
 export default function SettingsPage() {
+  const { t } = useTranslation('common');
   const { theme, fontSize, setTheme, setFontSize } = useTheme();
   const onTrack = useBuildingBlocksAnalytics();
 
@@ -20,7 +21,7 @@ export default function SettingsPage() {
 
   return (
     <>
-      <SEO config={seoConfig} title="Settings" noIndex />
+      <SEOHead title={t('nav.settings')} description="" noIndex />
       <GlobalSettingsPage
         theme={theme}
         fontSize={fontSize}

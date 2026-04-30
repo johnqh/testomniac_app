@@ -1,5 +1,7 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import SEOHead from '@/components/SEOHead';
+import { buildHowToSchema } from '@/components/buildHowToSchema';
 import { ScanForm } from '../components/scanner/ScanForm';
 import { useLocalizedNavigate } from '../hooks/useLocalizedNavigate';
 
@@ -7,9 +9,20 @@ const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8027';
 
 export default function HomePage() {
   const { t } = useTranslation('common');
+  const { t: tHowTo } = useTranslation('howto');
   const { navigate } = useLocalizedNavigate();
   const [error, setError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const seoTitle = t('seo.home.title');
+  const seoDescription = t('seo.home.description');
+  const seoKeywords = t('seo.home.keywords', { returnObjects: true }) as string[];
+
+  const howToSchema = buildHowToSchema(
+    tHowTo('home.name'),
+    tHowTo('home.description'),
+    tHowTo('home.steps', { returnObjects: true }) as { name: string; text: string }[]
+  );
 
   async function handleSubmit(url: string, email?: string) {
     setError(null);
@@ -49,27 +62,35 @@ export default function HomePage() {
   }
 
   return (
-    <div className="min-h-[60vh] flex flex-col items-center justify-center px-4">
-      <div className="max-w-md w-full space-y-8">
-        <div className="text-center">
-          <h1 className="text-4xl font-bold text-gray-900 dark:text-gray-100">Testomniac</h1>
-          <p className="mt-3 text-lg text-gray-600 dark:text-gray-400">
-            {t('home.description', 'Automated web app testing powered by AI')}
-          </p>
-          <p className="mt-1 text-sm text-gray-500 dark:text-gray-500">
-            Enter your URL to discover pages, generate tests, and find issues
-          </p>
-        </div>
+    <>
+      <SEOHead
+        title={seoTitle}
+        description={seoDescription}
+        keywords={seoKeywords}
+        structuredData={howToSchema}
+      />
+      <div className="min-h-[60vh] flex flex-col items-center justify-center px-4">
+        <div className="max-w-md w-full space-y-8">
+          <div className="text-center">
+            <h1 className="text-4xl font-bold text-gray-900 dark:text-gray-100">Testomniac</h1>
+            <p className="mt-3 text-lg text-gray-600 dark:text-gray-400">
+              {t('home.description', 'Automated web app testing powered by AI')}
+            </p>
+            <p className="mt-1 text-sm text-gray-500 dark:text-gray-500">
+              Enter your URL to discover pages, generate tests, and find issues
+            </p>
+          </div>
 
-        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6">
-          <ScanForm
-            onSubmit={handleSubmit}
-            isSubmitting={isSubmitting}
-            error={error}
-            showEmail={true}
-          />
+          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6">
+            <ScanForm
+              onSubmit={handleSubmit}
+              isSubmitting={isSubmitting}
+              error={error}
+              showEmail={true}
+            />
+          </div>
         </div>
       </div>
-    </div>
+    </>
   );
 }

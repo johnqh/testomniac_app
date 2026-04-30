@@ -13,11 +13,7 @@ import {
 import '@xyflow/react/dist/style.css';
 import dagre from 'dagre';
 import { useApi } from '@sudobility/building_blocks/firebase';
-import {
-  usePageStates,
-  usePageActions,
-  useAppActionExecutions,
-} from '@sudobility/testomniac_client';
+import { usePageStates } from '@sudobility/testomniac_client';
 import { CONSTANTS } from '../config/constants';
 import { useLocalizedNavigate } from '../hooks/useLocalizedNavigate';
 
@@ -61,8 +57,6 @@ export default function PageGraphPage() {
   const { navigate } = useLocalizedNavigate();
 
   const numericPageId = Number(pageId);
-  const numericAppId = Number(appId);
-
   const { pageStates, isLoading: statesLoading } = usePageStates({
     networkClient,
     baseUrl: CONSTANTS.API_URL,
@@ -71,35 +65,10 @@ export default function PageGraphPage() {
     enabled: !!pageId && !!token,
   });
 
-  const { actions, isLoading: actionsLoading } = usePageActions({
-    networkClient,
-    baseUrl: CONSTANTS.API_URL,
-    pageId: numericPageId,
-    token: token ?? '',
-    enabled: !!pageId && !!token,
-  });
-
-  const { actionExecutions, isLoading: executionsLoading } = useAppActionExecutions({
-    networkClient,
-    baseUrl: CONSTANTS.API_URL,
-    appId: numericAppId,
-    token: token ?? '',
-    enabled: !!appId && !!token,
-  });
-
-  const isLoading = statesLoading || actionsLoading || executionsLoading;
+  const isLoading = statesLoading;
 
   const { initialNodes, initialEdges } = useMemo(() => {
     if (pageStates.length === 0) return { initialNodes: [], initialEdges: [] };
-
-    // Set of page state IDs belonging to this page
-    const pageStateIds = new Set(pageStates.map(ps => ps.id));
-
-    // Build actionId -> action lookup
-    const actionById = new Map<number, (typeof actions)[number]>();
-    for (const action of actions) {
-      actionById.set(action.id, action);
-    }
 
     // Create nodes - one per page state
     const rawNodes: Node[] = pageStates.map(ps => ({
@@ -116,36 +85,10 @@ export default function PageGraphPage() {
       },
     }));
 
-    // Derive edges from actions + executions
-    const edgeSet = new Set<string>();
     const rawEdges: Edge[] = [];
-
-    for (const execution of actionExecutions) {
-      const action = actionById.get(execution.actionId);
-      if (!action?.startingPageStateId || !execution.targetPageStateId) continue;
-
-      // Only include edges where the starting state belongs to this page
-      if (!pageStateIds.has(action.startingPageStateId)) continue;
-
-      const sourceId = String(action.startingPageStateId);
-      const targetId = String(execution.targetPageStateId);
-
-      const edgeKey = `${sourceId}-${targetId}`;
-      if (edgeSet.has(edgeKey)) continue;
-      edgeSet.add(edgeKey);
-
-      rawEdges.push({
-        id: edgeKey,
-        source: sourceId,
-        target: targetId,
-        animated: true,
-        style: { stroke: '#6b7280' },
-      });
-    }
-
     const layoutNodes = layoutGraph(rawNodes, rawEdges);
     return { initialNodes: layoutNodes, initialEdges: rawEdges };
-  }, [pageStates, actions, actionExecutions]);
+  }, [pageStates]);
 
   const [nodes, , onNodesChange] = useNodesState(initialNodes);
   const [edges, , onEdgesChange] = useEdgesState(initialEdges);

@@ -1,33 +1,30 @@
 import { useParams } from 'react-router-dom';
 import { createColumnHelper } from '@tanstack/react-table';
 import { useApi } from '@sudobility/building_blocks/firebase';
-import { useAppIssues } from '@sudobility/testomniac_client';
+import { useAppFindings } from '@sudobility/testomniac_client';
+import SEOHead from '@/components/SEOHead';
 import { CONSTANTS } from '../config/constants';
 import { DataTable } from '../components/data/DataTable';
-import { StatusBadge } from '../components/scanner/StatusBadge';
 
-interface IssueRow {
+interface FindingRow {
   id: number;
-  ruleName: string;
+  type: string;
   title: string;
   description: string;
-  severity: string;
-  status: string;
+  expertiseRuleId: number | null;
 }
 
-const columnHelper = createColumnHelper<IssueRow>();
-
-const SEVERITY_COLORS: Record<string, string> = {
+const columnHelper = createColumnHelper<FindingRow>();
+const TYPE_COLORS: Record<string, string> = {
   error: 'text-red-600 dark:text-red-400',
   warning: 'text-yellow-600 dark:text-yellow-400',
-  info: 'text-blue-600 dark:text-blue-400',
 };
 
 const columns = [
-  columnHelper.accessor('severity', {
-    header: 'Severity',
+  columnHelper.accessor('type', {
+    header: 'Type',
     cell: info => (
-      <span className={`text-sm font-medium ${SEVERITY_COLORS[info.getValue()] || ''}`}>
+      <span className={`text-sm font-medium ${TYPE_COLORS[info.getValue()] || ''}`}>
         {info.getValue()}
       </span>
     ),
@@ -48,15 +45,13 @@ const columns = [
       </span>
     ),
   }),
-  columnHelper.accessor('ruleName', {
+  columnHelper.accessor('expertiseRuleId', {
     header: 'Rule',
     cell: info => (
-      <span className="text-xs font-mono text-gray-500 dark:text-gray-400">{info.getValue()}</span>
+      <span className="text-xs font-mono text-gray-500 dark:text-gray-400">
+        {info.getValue() == null ? 'manual' : `rule #${info.getValue()}`}
+      </span>
     ),
-  }),
-  columnHelper.accessor('status', {
-    header: 'Status',
-    cell: info => <StatusBadge status={info.getValue()} />,
   }),
 ];
 
@@ -64,7 +59,7 @@ export default function IssuesPage() {
   const { appId } = useParams<{ appId: string }>();
   const { networkClient, token } = useApi();
 
-  const { issues, isLoading, error } = useAppIssues({
+  const { findings, isLoading, error } = useAppFindings({
     networkClient,
     baseUrl: CONSTANTS.API_URL,
     appId: Number(appId),
@@ -82,9 +77,10 @@ export default function IssuesPage() {
 
   return (
     <div className="p-6">
-      <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-6">Issues</h1>
+      <SEOHead title="Findings" description="" noIndex />
+      <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-6">Findings</h1>
 
-      <DataTable data={issues} columns={columns as never} isLoading={isLoading} />
+      <DataTable data={findings} columns={columns as never} isLoading={isLoading} />
     </div>
   );
 }

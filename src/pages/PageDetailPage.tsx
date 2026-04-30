@@ -1,6 +1,7 @@
 import { useParams } from 'react-router-dom';
 import { useApi } from '@sudobility/building_blocks/firebase';
 import { usePageStates } from '@sudobility/testomniac_client';
+import SEOHead from '@/components/SEOHead';
 import { CONSTANTS } from '../config/constants';
 import { useLocalizedNavigate } from '../hooks/useLocalizedNavigate';
 
@@ -31,6 +32,7 @@ export default function PageDetailPage() {
 
   return (
     <div className="p-6">
+      <SEOHead title="Page Detail" description="" noIndex />
       <div className="flex items-center justify-between mb-6">
         <div>
           <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">Page Detail</h1>

@@ -1,0 +1,35 @@
+{
+  "webApp": {
+    "description": "Testomniac is an AI-powered web application testing platform that discovers pages, generates test cases, and finds issues automatically.",
+    "features": [
+      "AI-powered test generation",
+      "Automated page discovery",
+      "Visual regression testing",
+      "Cross-device testing",
+      "Real-time scan progress",
+      "Issue detection and reporting"
+    ]
+  },
+  "home": {
+    "name": "How to Test Your Web App with Testomniac",
+    "description": "Get started with automated web application testing using Testomniac's AI-powered scanner.",
+    "steps": [
+      {
+        "name": "Enter Your URL",
+        "text": "Paste the URL of the web application you want to test into the scan form on the homepage."
+      },
+      {
+        "name": "Start the Scan",
+        "text": "Click the scan button to begin. Testomniac will automatically discover pages, detect components, and map your application."
+      },
+      {
+        "name": "Review Generated Tests",
+        "text": "Once the scan completes, review the AI-generated test cases, test suites, and personas created for your application."
+      },
+      {
+        "name": "Analyze Results",
+        "text": "Explore the dashboard to view test run results, detected issues, discovered pages, and component inventory."
+      }
+    ]
+  }
+}

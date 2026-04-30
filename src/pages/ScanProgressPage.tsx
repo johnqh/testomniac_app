@@ -1,5 +1,6 @@
 import { useParams } from 'react-router-dom';
 import { useScanProgressStore } from '@sudobility/testomniac_lib';
+import SEOHead from '@/components/SEOHead';
 import { ScanProgressPanel } from '../components/scanner/ScanProgressPanel';
 import { useEventSource } from '../hooks/useEventSource';
 import { useLocalizedNavigate } from '../hooks/useLocalizedNavigate';
@@ -20,6 +21,7 @@ export default function ScanProgressPage() {
 
   return (
     <div className="p-6">
+      <SEOHead title="Scan Progress" description="" noIndex />
       <div className="flex items-center justify-between mb-6">
         <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">Scan Progress</h1>
         {store.isComplete && (

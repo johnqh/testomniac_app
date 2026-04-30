@@ -23,6 +23,7 @@ export default defineConfig({
       '@sudobility/building_blocks',
     ],
     alias: {
+      '@': path.resolve(__dirname, 'src'),
       react: path.resolve(__dirname, 'node_modules/react'),
       'react-dom': path.resolve(__dirname, 'node_modules/react-dom'),
       'react-helmet-async': path.resolve(__dirname, 'node_modules/react-helmet-async'),
