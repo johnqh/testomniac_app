@@ -24,18 +24,16 @@ const StartScanPage = lazy(() => import('./pages/StartScanPage'));
 const ScanProgressPage = lazy(() => import('./pages/ScanProgressPage'));
 const PublicScanProgressPage = lazy(() => import('./pages/PublicScanProgressPage'));
 const TestCasesPage = lazy(() => import('./pages/TestCasesPage'));
-const TestRunsPage = lazy(() => import('./pages/TestRunsPage'));
-const IssuesPage = lazy(() => import('./pages/IssuesPage'));
 const PagesPage = lazy(() => import('./pages/PagesPage'));
 const ComponentsPage = lazy(() => import('./pages/ComponentsPage'));
 const PersonasPage = lazy(() => import('./pages/PersonasPage'));
-const ScansPage = lazy(() => import('./pages/ScansPage'));
 const PageDetailPage = lazy(() => import('./pages/PageDetailPage'));
 const PageStateDetailPage = lazy(() => import('./pages/PageStateDetailPage'));
 const AppGraphPage = lazy(() => import('./pages/AppGraphPage'));
 const PageGraphPage = lazy(() => import('./pages/PageGraphPage'));
 const RunRedirect = lazy(() => import('./pages/RunRedirect'));
-const AppConsolePage = lazy(() => import('./pages/AppConsolePage'));
+const BundlesPage = lazy(() => import('./pages/BundlesPage'));
+const SchedulesPage = lazy(() => import('./pages/SchedulesPage'));
 const TestSuitesListPage = lazy(() => import('./pages/TestSuitesListPage'));
 const TestSuiteDetailPage = lazy(() => import('./pages/TestSuiteDetailPage'));
 const TestCaseDetailPage = lazy(() => import('./pages/TestCaseDetailPage'));
@@ -129,24 +127,23 @@ function AppRoutes() {
                   <Route index element={<DashboardOverview />} />
                   <Route path="scan/new" element={<StartScanPage />} />
 
-                  {/* App Console */}
-                  <Route path="apps/:appId" element={<AppConsolePage />}>
-                    <Route index element={<Navigate to="test-suites" replace />} />
-                    <Route path="test-suites" element={<TestSuitesListPage />} />
-                    <Route path="test-suites/:suiteId" element={<TestSuiteDetailPage />} />
-                    <Route path="test-cases/:caseId" element={<TestCaseDetailPage />} />
-                    <Route path="test-runs" element={<TestRunsListPage />} />
-                    <Route path="test-runs/:runId" element={<TestRunDetailPage />} />
-                    <Route path="findings" element={<FindingsListPage />} />
-                    <Route path="settings" element={<AppSettingsPage />} />
-                  </Route>
-
-                  {/* App-centric routes */}
-                  <Route path="apps/:appId/scans" element={<ScansPage />} />
-                  <Route path="apps/:appId/scans/:scanId/progress" element={<ScanProgressPage />} />
+                  {/* App dashboard routes */}
+                  <Route path="apps/:appId/bundles" element={<BundlesPage />} />
+                  <Route path="apps/:appId/test-suites" element={<TestSuitesListPage />} />
+                  <Route
+                    path="apps/:appId/test-suites/:suiteId"
+                    element={<TestSuiteDetailPage />}
+                  />
                   <Route path="apps/:appId/test-cases" element={<TestCasesPage />} />
-                  <Route path="apps/:appId/test-runs" element={<TestRunsPage />} />
-                  <Route path="apps/:appId/issues" element={<IssuesPage />} />
+                  <Route path="apps/:appId/test-cases/:caseId" element={<TestCaseDetailPage />} />
+                  <Route path="apps/:appId/runs" element={<TestRunsListPage />} />
+                  <Route path="apps/:appId/runs/:runId" element={<TestRunDetailPage />} />
+                  <Route path="apps/:appId/runs/:runId/progress" element={<ScanProgressPage />} />
+                  <Route path="apps/:appId/issues" element={<FindingsListPage />} />
+                  <Route path="apps/:appId/schedules" element={<SchedulesPage />} />
+                  <Route path="apps/:appId/settings" element={<AppSettingsPage />} />
+
+                  {/* Additional app data routes */}
                   <Route path="apps/:appId/pages" element={<PagesPage />} />
                   <Route path="apps/:appId/pages/:pageId" element={<PageDetailPage />} />
                   <Route
@@ -158,10 +155,11 @@ function AppRoutes() {
                   <Route path="apps/:appId/components" element={<ComponentsPage />} />
                   <Route path="apps/:appId/personas" element={<PersonasPage />} />
 
-                  {/* Legacy run routes — redirect to app-centric */}
+                  {/* Legacy run routes */}
                   <Route path="runs/:runId" element={<RunRedirect />} />
                   <Route path="runs/:runId/*" element={<RunRedirect />} />
 
+                  {/* Entity management routes */}
                   <Route path="settings" element={<SettingsPage />} />
                   <Route path="workspaces" element={<WorkspacesPage />} />
                   <Route path="members" element={<MembersPage />} />

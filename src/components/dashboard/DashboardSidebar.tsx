@@ -77,8 +77,7 @@ export function DashboardSidebar({ entitySlug }: DashboardSidebarProps) {
 
   // Active path detection
   const currentPath = useMemo(() => {
-    const langPrefix =
-      location.pathname.match(/^\/[a-z]{2}(-[a-z]+)?\//)?.[0] || '/';
+    const langPrefix = location.pathname.match(/^\/[a-z]{2}(-[a-z]+)?\//)?.[0] || '/';
     return location.pathname.slice(langPrefix.length - 1);
   }, [location.pathname]);
 
@@ -97,14 +96,9 @@ export function DashboardSidebar({ entitySlug }: DashboardSidebarProps) {
           <label className="text-xs font-medium text-gray-500 dark:text-gray-400 mb-1 block">
             Project
           </label>
-          <Select
-            value={selectedProjectId ?? undefined}
-            onValueChange={handleProjectChange}
-          >
+          <Select value={selectedProjectId ?? undefined} onValueChange={handleProjectChange}>
             <SelectTrigger className="w-full">
-              <SelectValue
-                placeholder={projectsLoading ? 'Loading...' : 'Select project'}
-              />
+              <SelectValue placeholder={projectsLoading ? 'Loading...' : 'Select project'} />
             </SelectTrigger>
             <SelectContent>
               {projects.map(p => (
@@ -127,9 +121,7 @@ export function DashboardSidebar({ entitySlug }: DashboardSidebarProps) {
             disabled={!selectedProjectId}
           >
             <SelectTrigger className="w-full">
-              <SelectValue
-                placeholder={appsLoading ? 'Loading...' : 'Select app'}
-              />
+              <SelectValue placeholder={appsLoading ? 'Loading...' : 'Select app'} />
             </SelectTrigger>
             <SelectContent>
               {apps.map(a => (
