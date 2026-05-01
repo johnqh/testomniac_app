@@ -1,6 +1,6 @@
 import { useParams } from 'react-router-dom';
 import { useApi } from '@sudobility/building_blocks/firebase';
-import { useAppTestSuites } from '@sudobility/testomniac_client';
+import { useRunnerTestSuites } from '@sudobility/testomniac_client';
 import type { TestSuiteResponse } from '@sudobility/testomniac_types';
 import SEOHead from '@/components/SEOHead';
 import { useLocalizedNavigate } from '../hooks/useLocalizedNavigate';
@@ -47,19 +47,19 @@ function PriorityBadge({ priority }: { priority: number }) {
 }
 
 export default function TestSuitesListPage() {
-  const { entitySlug, appId } = useParams<{ entitySlug: string; appId: string }>();
+  const { entitySlug, runnerId } = useParams<{ entitySlug: string; runnerId: string }>();
   const { networkClient, token } = useApi();
   const { navigate } = useLocalizedNavigate();
 
-  const { testSuites, isLoading, error } = useAppTestSuites({
+  const { testSuites, isLoading, error } = useRunnerTestSuites({
     networkClient,
     baseUrl: CONSTANTS.API_URL,
-    appId: Number(appId),
+    runnerId: Number(runnerId),
     token: token ?? '',
-    enabled: !!appId && !!token,
+    enabled: !!runnerId && !!token,
   });
 
-  const basePath = `/dashboard/${entitySlug}/apps/${appId}`;
+  const basePath = `/dashboard/${entitySlug}/runners/${runnerId}`;
 
   if (error) {
     return (

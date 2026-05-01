@@ -1,6 +1,6 @@
 import { useParams } from 'react-router-dom';
 import { useApi } from '@sudobility/building_blocks/firebase';
-import { useAppTestRuns } from '@sudobility/testomniac_client';
+import { useRunnerTestRuns } from '@sudobility/testomniac_client';
 import type { TestRunResponse } from '@sudobility/testomniac_types';
 import SEOHead from '@/components/SEOHead';
 import { useLocalizedNavigate } from '../hooks/useLocalizedNavigate';
@@ -19,19 +19,19 @@ function formatDate(dateStr: string | null): string {
 }
 
 export default function TestRunsListPage() {
-  const { entitySlug, appId } = useParams<{ entitySlug: string; appId: string }>();
+  const { entitySlug, runnerId } = useParams<{ entitySlug: string; runnerId: string }>();
   const { networkClient, token } = useApi();
   const { navigate } = useLocalizedNavigate();
 
-  const { testRuns, isLoading, error } = useAppTestRuns({
+  const { testRuns, isLoading, error } = useRunnerTestRuns({
     networkClient,
     baseUrl: CONSTANTS.API_URL,
-    appId: Number(appId),
+    runnerId: Number(runnerId),
     token: token ?? '',
-    enabled: !!appId && !!token,
+    enabled: !!runnerId && !!token,
   });
 
-  const basePath = `/dashboard/${entitySlug}/apps/${appId}`;
+  const basePath = `/dashboard/${entitySlug}/runners/${runnerId}`;
 
   if (error) {
     return (

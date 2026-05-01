@@ -6,9 +6,9 @@ import { CONSTANTS } from '../config/constants';
 import { useLocalizedNavigate } from '../hooks/useLocalizedNavigate';
 
 export default function PageDetailPage() {
-  const { pageId, appId, entitySlug } = useParams<{
+  const { pageId, runnerId, entitySlug } = useParams<{
     pageId: string;
-    appId: string;
+    runnerId: string;
     entitySlug: string;
   }>();
   const { networkClient, token } = useApi();
@@ -39,7 +39,9 @@ export default function PageDetailPage() {
           <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">Page #{pageId}</p>
         </div>
         <button
-          onClick={() => navigate(`/dashboard/${entitySlug}/apps/${appId}/pages/${pageId}/graph`)}
+          onClick={() =>
+            navigate(`/dashboard/${entitySlug}/runners/${runnerId}/pages/${pageId}/graph`)
+          }
           className="px-4 py-2 text-sm rounded-lg border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
         >
           View Page Graph
@@ -55,7 +57,7 @@ export default function PageDetailPage() {
               key={state.id}
               onClick={() =>
                 navigate(
-                  `/dashboard/${entitySlug}/apps/${appId}/pages/${pageId}/states/${state.id}`
+                  `/dashboard/${entitySlug}/runners/${runnerId}/pages/${pageId}/states/${state.id}`
                 )
               }
               className="text-left rounded-lg border border-gray-200 dark:border-gray-700 overflow-hidden hover:border-blue-300 dark:hover:border-blue-600 transition-colors"

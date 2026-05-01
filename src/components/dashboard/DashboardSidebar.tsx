@@ -8,7 +8,7 @@ import {
   SelectItem,
   SelectValue,
 } from '@sudobility/components';
-import { useEntityProjects, useProjectApps } from '@sudobility/testomniac_client';
+import { useEntityProducts, useProductRunners } from '@sudobility/testomniac_client';
 import { useLocalizedNavigate } from '../../hooks/useLocalizedNavigate';
 import { CONSTANTS } from '../../config/constants';
 
@@ -27,12 +27,12 @@ const MENU_ITEMS = [
 ];
 
 export function DashboardSidebar({ entitySlug }: DashboardSidebarProps) {
-  const { appId: routeAppId } = useParams<{ appId: string }>();
+  const { runnerId: routeRunnerId } = useParams<{ runnerId: string }>();
   const { networkClient, token } = useApi();
   const { navigate } = useLocalizedNavigate();
   const location = useLocation();
 
-  const { projects, isLoading: projectsLoading } = useEntityProjects({
+  const { products, isLoading: productsLoading } = useEntityProducts({
     networkClient,
     baseUrl: CONSTANTS.API_URL,
     entitySlug,
@@ -40,39 +40,39 @@ export function DashboardSidebar({ entitySlug }: DashboardSidebarProps) {
     enabled: !!token,
   });
 
-  // Auto-select project if only one exists
-  const selectedProjectId = useMemo(() => {
-    if (projects.length === 1) return String(projects[0].id);
+  // Auto-select product if only one exists
+  const selectedProductId = useMemo(() => {
+    if (products.length === 1) return String(products[0].id);
     return null;
-  }, [projects]);
+  }, [products]);
 
-  const { apps, isLoading: appsLoading } = useProjectApps({
+  const { runners, isLoading: runnersLoading } = useProductRunners({
     networkClient,
     baseUrl: CONSTANTS.API_URL,
-    projectId: Number(selectedProjectId),
+    productId: Number(selectedProductId),
     token: token ?? '',
-    enabled: !!selectedProjectId && !!token,
+    enabled: !!selectedProductId && !!token,
   });
 
-  // Auto-select app if only one exists and no app in route
+  // Auto-select runner if only one exists and no runner in route
   useEffect(() => {
-    if (apps.length === 1 && !routeAppId) {
-      navigate(`/dashboard/${entitySlug}/apps/${apps[0].id}/bundles`);
+    if (runners.length === 1 && !routeRunnerId) {
+      navigate(`/dashboard/${entitySlug}/runners/${runners[0].id}/bundles`);
     }
-  }, [apps, routeAppId, entitySlug, navigate]);
+  }, [runners, routeRunnerId, entitySlug, navigate]);
 
-  const handleProjectChange = (value: string) => {
+  const handleProductChange = (value: string) => {
     if (value === 'new') {
-      navigate(`/dashboard/${entitySlug}/projects/new`);
+      navigate(`/dashboard/${entitySlug}/products/new`);
     }
   };
 
-  const handleAppChange = (value: string) => {
+  const handleRunnerChange = (value: string) => {
     if (value === 'new') {
-      navigate(`/dashboard/${entitySlug}/apps/new`);
+      navigate(`/dashboard/${entitySlug}/runners/new`);
       return;
     }
-    navigate(`/dashboard/${entitySlug}/apps/${value}/bundles`);
+    navigate(`/dashboard/${entitySlug}/runners/${value}/bundles`);
   };
 
   // Active path detection
@@ -81,27 +81,27 @@ export function DashboardSidebar({ entitySlug }: DashboardSidebarProps) {
     return location.pathname.slice(langPrefix.length - 1);
   }, [location.pathname]);
 
-  const appBasePath = `/dashboard/${entitySlug}/apps/${routeAppId}`;
+  const runnerBasePath = `/dashboard/${entitySlug}/runners/${routeRunnerId}`;
 
   const isActive = (menuPath: string) => {
-    const full = `${appBasePath}/${menuPath}`;
+    const full = `${runnerBasePath}/${menuPath}`;
     return currentPath === full || currentPath.startsWith(full + '/');
   };
 
   return (
     <div className="flex flex-col h-full bg-white dark:bg-gray-900 border-r border-gray-200 dark:border-gray-800">
-      {/* Project & App Selectors */}
+      {/* Product & Runner Selectors */}
       <div className="p-4 space-y-3 border-b border-gray-200 dark:border-gray-800">
         <div>
           <label className="text-xs font-medium text-gray-500 dark:text-gray-400 mb-1 block">
-            Project
+            Product
           </label>
-          <Select value={selectedProjectId ?? undefined} onValueChange={handleProjectChange}>
+          <Select value={selectedProductId ?? undefined} onValueChange={handleProductChange}>
             <SelectTrigger className="w-full">
-              <SelectValue placeholder={projectsLoading ? 'Loading...' : 'Select project'} />
+              <SelectValue placeholder={productsLoading ? 'Loading...' : 'Select product'} />
             </SelectTrigger>
             <SelectContent>
-              {projects.map(p => (
+              {products.map(p => (
                 <SelectItem key={p.id} value={String(p.id)}>
                   {p.title}
                 </SelectItem>
@@ -113,18 +113,18 @@ export function DashboardSidebar({ entitySlug }: DashboardSidebarProps) {
 
         <div>
           <label className="text-xs font-medium text-gray-500 dark:text-gray-400 mb-1 block">
-            App
+            Runner
           </label>
           <Select
-            value={routeAppId ?? undefined}
-            onValueChange={handleAppChange}
-            disabled={!selectedProjectId}
+            value={routeRunnerId ?? undefined}
+            onValueChange={handleRunnerChange}
+            disabled={!selectedProductId}
           >
             <SelectTrigger className="w-full">
-              <SelectValue placeholder={appsLoading ? 'Loading...' : 'Select app'} />
+              <SelectValue placeholder={runnersLoading ? 'Loading...' : 'Select runner'} />
             </SelectTrigger>
             <SelectContent>
-              {apps.map(a => (
+              {runners.map(a => (
                 <SelectItem key={a.id} value={String(a.id)}>
                   {a.title}
                 </SelectItem>
@@ -136,12 +136,12 @@ export function DashboardSidebar({ entitySlug }: DashboardSidebarProps) {
       </div>
 
       {/* Navigation Menu */}
-      {routeAppId && (
+      {routeRunnerId && (
         <nav className="flex-1 py-2 px-2 overflow-y-auto">
           {MENU_ITEMS.map(item => (
             <button
               key={item.path}
-              onClick={() => navigate(`${appBasePath}/${item.path}`)}
+              onClick={() => navigate(`${runnerBasePath}/${item.path}`)}
               className={`w-full text-left px-3 py-2 rounded-md text-sm font-medium transition-colors ${
                 isActive(item.path)
                   ? 'bg-blue-50 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300'
@@ -154,10 +154,10 @@ export function DashboardSidebar({ entitySlug }: DashboardSidebarProps) {
         </nav>
       )}
 
-      {!routeAppId && (
+      {!routeRunnerId && (
         <div className="flex-1 flex items-center justify-center p-4">
           <p className="text-sm text-gray-500 dark:text-gray-400 text-center">
-            Select a project and app to get started
+            Select a product and runner to get started
           </p>
         </div>
       )}

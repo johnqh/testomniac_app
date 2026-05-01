@@ -1,4 +1,4 @@
-export default function AppSettingsPage() {
+export default function RunnerSettingsPage() {
   return (
     <div className="flex items-center justify-center h-full min-h-[400px]">
       <div className="text-center">
@@ -6,7 +6,7 @@ export default function AppSettingsPage() {
           Settings coming soon
         </h1>
         <p className="text-sm text-gray-500 dark:text-gray-400 mt-2">
-          App configuration options will be available here in a future update.
+          Runner configuration options will be available here in a future update.
         </p>
       </div>
     </div>

@@ -98,12 +98,12 @@ function CogIcon() {
   );
 }
 
-export default function AppConsolePage() {
-  const { entitySlug, appId } = useParams<{ entitySlug: string; appId: string }>();
+export default function RunnerConsolePage() {
+  const { entitySlug, runnerId } = useParams<{ entitySlug: string; runnerId: string }>();
   const { navigate } = useLocalizedNavigate();
   const location = useLocation();
 
-  const basePath = `/dashboard/${entitySlug}/apps/${appId}`;
+  const basePath = `/dashboard/${entitySlug}/runners/${runnerId}`;
 
   const currentWithoutLang = useMemo(() => {
     const langPrefix = location.pathname.match(/^\/[a-z]{2}(-[a-z]+)?\//)?.[0] || '/';
@@ -126,9 +126,11 @@ export default function AppConsolePage() {
       <div className="w-60 flex-shrink-0 border-r border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 overflow-y-auto">
         <div className="p-4 border-b border-gray-200 dark:border-gray-700">
           <h2 className="text-sm font-semibold text-gray-900 dark:text-gray-100 truncate">
-            App Console
+            Runner Console
           </h2>
-          <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5 truncate">App #{appId}</p>
+          <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5 truncate">
+            Runner #{runnerId}
+          </p>
         </div>
         <nav className="p-2 space-y-0.5">
           {navItems.map(item => (

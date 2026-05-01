@@ -14,34 +14,87 @@ A Firebase-authenticated user.
 | createdAt    | string?  | Creation timestamp                       |
 | updatedAt    | string?  | Last update timestamp                    |
 
-### Project
+### Product
 
-A project owned by an entity, containing one or more apps.
+A product owned by an entity, containing one or more runners.
 
 | Field           | Type     | Description                              |
 |-----------------|----------|------------------------------------------|
 | id              | number   | Primary key                              |
 | entityId        | string   | Parent entity                            |
-| title           | string   | Project title                            |
-| description     | string?  | Project description                      |
+| title           | string   | Product title                            |
+| description     | string?  | Product description                      |
 | contactEmail    | string?  | Contact email                            |
-| claimedByUserId | string?  | User who claimed this project            |
-| claimedAt       | string?  | When the project was claimed             |
+| claimedByUserId | string?  | User who claimed this product            |
+| claimedAt       | string?  | When the product was claimed             |
 | createdAt       | string?  | Creation timestamp                       |
 | updatedAt       | string?  | Last update timestamp                    |
 
-### App
+### Runner
 
-A website or web application to be tested.
+A registered compute agent that executes test runs. Two types:
+
+- **worker** — runs on a server, can execute against any environment except local
+- **extension** — runs in a user's Chrome browser, can execute against any environment (including local)
 
 | Field            | Type     | Description                              |
 |------------------|----------|------------------------------------------|
 | id               | number   | Primary key                              |
-| projectId        | number   | Parent project                           |
-| title            | string   | App title                                |
-| baseUrl          | string   | Base URL (e.g., `https://example.com`)   |
-| normalizedBaseUrl| string   | Normalized base URL for dedup            |
+| productId        | number   | Parent product                           |
+| title            | string   | Runner title                             |
+| type             | string   | `worker` or `extension`                  |
+| ownerEntityId    | string?  | Owner entity (required when type=extension) |
 | createdAt        | string?  | Creation timestamp                       |
+
+### Test Environment
+
+An environment where a product can be tested. Each product can have multiple environments (e.g., Prod, Staging, QA, Dev). Replaces the old per-runner base URL.
+
+| Field         | Type     | Description                              |
+|---------------|----------|------------------------------------------|
+| id            | number   | Primary key                              |
+| productId     | number   | Parent product                           |
+| title         | string   | Environment name (e.g., "Prod", "Staging", "QA", "Dev") |
+| baseUrl       | string   | Base URL for this environment (e.g., `https://staging.example.com`) |
+| githubBranch  | string?  | Associated git branch (e.g., "main", "develop") |
+| createdAt     | string?  | Creation timestamp                       |
+| updatedAt     | string?  | Last update timestamp                    |
+
+### Product Settings
+
+Per-product configuration. One-to-one relationship with product.
+
+| Field       | Type     | Description                              |
+|-------------|----------|------------------------------------------|
+| id          | number   | Primary key                              |
+| productId   | number   | Parent product (unique)                  |
+| githubLink  | string?  | GitHub repository URL                    |
+| createdAt   | string?  | Creation timestamp                       |
+| updatedAt   | string?  | Last update timestamp                    |
+
+### API Key
+
+An API key for programmatic access to a product's resources. Mutable endpoints (POST/PUT/DELETE) can be called with either Firebase authentication or an API key.
+
+| Field     | Type     | Description                              |
+|-----------|----------|------------------------------------------|
+| id        | number   | Primary key                              |
+| productId | number   | Parent product                           |
+| title     | string   | Key name/label                           |
+| apiKey    | string   | The API key value                        |
+| createdAt | string?  | Creation timestamp                       |
+
+### Test File
+
+A file used for testing (e.g., an image for OCR testing, a document for parsing). Stored externally with a path reference.
+
+| Field     | Type     | Description                              |
+|-----------|----------|------------------------------------------|
+| id        | number   | Primary key                              |
+| productId | number   | Parent product                           |
+| title     | string   | File name/label                          |
+| filePath  | string   | Path to the stored file                  |
+| createdAt | string?  | Creation timestamp                       |
 
 ---
 
@@ -49,13 +102,13 @@ A website or web application to be tested.
 
 ### Page
 
-A unique path discovered within an app.
+A unique path discovered within a runner.
 
 | Field          | Type     | Description                              |
 |----------------|----------|------------------------------------------|
 | id             | number   | Primary key                              |
-| appId          | number   | Parent app                               |
-| relativePath   | string   | Path relative to app's base URL (e.g., `/products/123`) |
+| runnerId       | number   | Parent runner                            |
+| relativePath   | string   | Path relative to environment's base URL (e.g., `/products/123`) |
 | routeKey       | string?  | Normalized path for grouping (e.g., `/products/:id`) |
 | requiresLogin  | boolean? | Whether this page requires authentication |
 | createdAt      | string?  | Creation timestamp                       |
@@ -69,22 +122,22 @@ A single captured rendering of a page. The same page can have multiple states (e
 | id                     | number   | Primary key                              |
 | pageId                 | number   | Parent page                              |
 | sizeClass              | string   | desktop or mobile                        |
-| *— Full page hashes —*|          |                                          |
-| htmlHash               | string?  | SHA-256 of raw HTML — detects any change |
-| normalizedHtmlHash     | string?  | SHA-256 of normalized HTML — ignores CSS/attribute variations |
-| textHash               | string?  | SHA-256 of visible text only — detects content changes |
-| actionableHash         | string?  | SHA-256 of sorted interactive elements — detects UI control changes |
-| *— Decomposed hashes (component-aware) —* | | |
+| *-- Full page hashes --*|          |                                          |
+| htmlHash               | string?  | SHA-256 of raw HTML -- detects any change |
+| normalizedHtmlHash     | string?  | SHA-256 of normalized HTML -- ignores CSS/attribute variations |
+| textHash               | string?  | SHA-256 of visible text only -- detects content changes |
+| actionableHash         | string?  | SHA-256 of sorted interactive elements -- detects UI control changes |
+| *-- Decomposed hashes (component-aware) --* | | |
 | fixedBodyHash          | string?  | SHA-256 of body minus reusable regions and patterns |
 | reusableElementsHash   | string?  | SHA-256 of header/footer/nav components  |
 | patternsHash           | string?  | SHA-256 of UI patterns (cards, modals, tables, etc.) |
-| *— HTML content —*     |          |                                          |
+| *-- HTML content --*    |          |                                          |
 | bodyHtmlElementId      | number?  | Full body HTML element record            |
 | contentHtmlElementId   | number?  | Content body HTML element record         |
 | fixedBodyHtmlElementId | number?  | Stripped body HTML element record (minus components and patterns) |
 | rawHtmlPath            | string?  | Path to stored raw HTML file             |
 | contentText            | string?  | Extracted visible text                   |
-| *— Metadata —*         |          |                                          |
+| *-- Metadata --*        |          |                                          |
 | screenshotPath         | string?  | Path to captured screenshot              |
 | createdByTestRunId     | number?  | Test run that created this state         |
 | capturedAt             | string?  | When this state was captured             |
@@ -106,12 +159,12 @@ A stored chunk of HTML markup, content-addressed by hash.
 
 ### Reusable HTML Element
 
-An app-level canonical component (e.g., a site header, footer, sidebar). Deduplicated by type + hash — the same component appearing on many pages is stored once.
+A runner-level canonical component (e.g., a site header, footer, sidebar). Deduplicated by type + hash -- the same component appearing on many pages is stored once.
 
 | Field         | Type     | Description                              |
 |---------------|----------|------------------------------------------|
 | id            | number   | Primary key                              |
-| appId         | number   | Parent app                               |
+| runnerId      | number   | Parent runner                            |
 | type          | string   | Component type (see values below)        |
 | htmlElementId | number   | References the HTML Element record       |
 | htmlHash      | string?  | Hash of the component's HTML             |
@@ -141,12 +194,12 @@ An interactive UI element discovered on a page state (button, link, input, selec
 
 ### Element Identity
 
-App-level persistent record of a UI element, tracked across test runs. Used to generate stable Playwright locators.
+Runner-level persistent record of a UI element, tracked across test runs. Used to generate stable Playwright locators.
 
 | Field                | Type     | Description                              |
 |----------------------|----------|------------------------------------------|
 | id                   | number   | Primary key                              |
-| appId                | number   | Parent app                               |
+| runnerId             | number   | Parent runner                            |
 | role                 | string   | ARIA role                                |
 | computedName         | string?  | Accessible name                          |
 | tagName              | string   | HTML tag name                            |
@@ -220,15 +273,27 @@ A detected UI pattern instance on a page state. Unlike reusable elements (which 
 ### Hierarchy
 
 ```
-App
- ├── Test Suites (1:many with App)
+Product
+ ├── Runners (compute agents, 1:many with Product)
+ │     ├── Pages → Page States → Actionable Items
+ │     ├── Element Identities
+ │     └── Reusable HTML Elements
+ │
+ ├── Test Environments (1:many with Product)
+ │
+ ├── Personas (1:many with Product)
+ │     └── Use Cases → Input Values
+ │
+ ├── Test Credentials (1:many with Product)
+ │
+ ├── Test Suites (1:many with Runner)
  │     └── Test Cases (1:many via testSuiteId FK)
  │           └── Test Actions (1:many, strict parent/child)
  │
- ├── Test Suite Bundles (1:many with App, user-created)
- │     └── test_suite_bundle_suites ──► Test Suites (many:many)
+ ├── Test Suite Bundles (1:many with Runner, user-created)
+ │     └── test_suite_bundle_suites --> Test Suites (many:many)
  │
- ├── Test Schedules (1:many with App)
+ ├── Test Schedules (1:many with Runner)
  │     └── targets one of: Test Suite, Test Case, or Test Suite Bundle
  │
  └── Test Runs (tree via parentTestRunId/rootTestRunId)
@@ -243,28 +308,29 @@ App
            └── Test Case Run
                  └── Test Run Findings (1:many)
 
-AI Decomposition Jobs ──► testRunId
-Report Email ──► rootTestRunId
-Element Identity ──► firstSeenTestRunId / lastSeenTestRunId
+AI Decomposition Jobs --> testRunId
+Report Email --> rootTestRunId
+Element Identity --> firstSeenTestRunId / lastSeenTestRunId
+Test Activity --> productId (event log)
 ```
 
 ### Test Suite
 
-A named grouping of test cases. Each test suite belongs to one app. Test cases have a 1:many relationship with their suite (each test case belongs to exactly one suite).
+A named grouping of test cases. Each test suite belongs to one runner. Test cases have a 1:many relationship with their suite (each test case belongs to exactly one suite).
 
 | Field                    | Type     | Description                |
 |--------------------------|----------|----------------------------|
 | id                       | number   | Primary key                |
-| appId                    | number   | Parent app                 |
+| runnerId                 | number   | Parent runner              |
 | decompositionJobId       | number?  | AI Decomposition Job that created this suite |
 | title                    | string   | Suite title                |
 | description              | string   | Suite description          |
 | sizeClass                | string   | desktop or mobile          |
 | priority                 | number   | 1 (highest) to 5 (lowest) |
 | startingPageStateId      | number   | Page state where this suite begins |
-| startingPath             | string   | Entry path (relative to app's baseUrl) |
+| startingPath             | string   | Entry path (relative to environment's baseUrl) |
 | dependencyTestCaseId     | number?  | Test case that must complete before this suite can run |
-| personaIds               | number[] | Associated personas        |
+| personaIdsJson           | json     | Associated persona IDs (stored as JSONB) |
 | reusableHtmlElementId    | number?  | If this suite tests a reusable element (header, footer, etc.) |
 | reusableHtmlElementType  | string?  | Component type (topMenu, footer, breadcrumb, etc.) |
 | patternType              | string?  | If this suite tests a UI pattern (card, modal, table, etc.) |
@@ -279,7 +345,7 @@ A user-created grouping of test suites. Many-to-many relationship with test suit
 | Field       | Type     | Description                |
 |-------------|----------|----------------------------|
 | id          | number   | Primary key                |
-| appId       | number   | Parent app                 |
+| runnerId    | number   | Parent runner              |
 | title       | string   | Bundle title               |
 | description | string?  | Bundle description         |
 | createdAt   | string?  | Creation timestamp         |
@@ -302,7 +368,7 @@ A single test scenario containing an ordered list of test actions. Belongs to ex
 | Field                  | Type       | Description                        |
 |------------------------|------------|------------------------------------|
 | id                     | number     | Primary key                        |
-| appId                  | number     | Parent app                         |
+| runnerId               | number     | Parent runner                      |
 | testSuiteId            | number     | Parent test suite (1:many)         |
 | title                  | string     | Test case title                    |
 | testType               | string     | render, interaction, form, form_negative, password, navigation, e2e |
@@ -316,8 +382,9 @@ A single test scenario containing an ordered list of test actions. Belongs to ex
 | personaId              | number?    | Associated persona                 |
 | useCaseId              | number?    | Associated use case                |
 | startingPageStateId    | number?    | Initial page state                 |
-| startingPath           | string?    | Entry path (relative to app's baseUrl) |
-| globalExpectationsJson | unknown    | Expectations checked after all steps |
+| startingPath           | string?    | Entry path (relative to environment's baseUrl) |
+| stepsJson              | json?      | Ordered test steps stored inline (alternative to Test Actions) |
+| globalExpectationsJson | json?      | Expectations checked after all steps |
 | estimatedDurationMs    | number?    | Estimated duration                 |
 | generatedAt            | string?    | Generation timestamp               |
 
@@ -336,7 +403,7 @@ A single step within a test case. Strict parent/child relationship with its test
 | containerType              | string?  | Component type if targeting element inside a component (topMenu, footer, etc.) |
 | containerElementIdentityId | number?  | Element identity of the container component |
 | value                      | string?  | Input value (for fill/select)            |
-| path                       | string?  | Target path (relative to app's baseUrl, for goto) |
+| path                       | string?  | Target path (relative to environment's baseUrl, for goto) |
 | playwrightCode             | string   | Executable Playwright code               |
 | description                | string   | Human-readable step description          |
 | expectations               | json     | Array of expectations to verify after this action |
@@ -344,7 +411,7 @@ A single step within a test case. Strict parent/child relationship with its test
 
 ### Test Case Run
 
-A single execution of a test case. This is where actual browser work happens — navigation, clicks, assertions, screenshots. Contains execution details and findings.
+A single execution of a test case. This is where actual browser work happens -- navigation, clicks, assertions, screenshots. Contains execution details and findings.
 
 | Field           | Type     | Description                              |
 |-----------------|----------|------------------------------------------|
@@ -399,7 +466,7 @@ When `discovery` is true, the test run triggers AI decomposition of discovered p
 | Field                | Type     | Description                              |
 |----------------------|----------|------------------------------------------|
 | id                   | number   | Primary key                              |
-| appId                | number   | Parent app                               |
+| runnerId             | number   | Parent runner                            |
 | testSuiteBundleRunId | number?  | Target bundle run (exactly one of three) |
 | testSuiteRunId       | number?  | Target suite run (exactly one of three)  |
 | testCaseRunId        | number?  | Target case run (exactly one of three)   |
@@ -460,47 +527,48 @@ Discovery replaces the old scanning concept. A discovery-mode test run explores 
 
 ```
 User enters URL
-  │
+  |
   v
-1. Find/create App for URL
-2. Find/create singleton "Direct Navigations" test suite for app
+1. Find/create Runner for Product
+2. Find/create singleton "Direct Navigations" test suite for runner
 3. Find/create test case with navigate action to URL, add to suite
 4. Create ROOT test run (discovery=true, parentTestRunId=null)
-  │
+  |
   v
 5. Execute: navigate to URL, capture page state
 6. Create AI Decomposition Job (testRunId = root)
-  │
+  |
   v
 7. AI processes decomposition:
-   - For each component: find/create persistent per-app suite
+   - For each component: find/create persistent per-runner suite
      (e.g., "Top Menu"), generate test cases in it
    - For each link: add navigation test case to "Direct Navigations"
      if not already present
-  │
+  |
   v
 8. Create child test runs for new suites (discovery=true inherited)
-9. Execute child runs → discover new page states → new decomp jobs
-  │
+9. Execute child runs -> discover new page states -> new decomp jobs
+  |
   v
-10. Loop until no new page states → mark root completed with stats
+10. Loop until no new page states -> mark root completed with stats
 ```
 
-Test suites are persistent per-app singletons that accumulate test cases across discovery runs.
+Test suites are persistent per-runner singletons that accumulate test cases across discovery runs.
 
-### Credential
+### Test Credential
 
-Stored login credentials for an app (used during test runs).
+Stored login credentials for testing a product. Can be associated with a specific persona for persona-based testing.
 
-| Field         | Type     | Description                              |
-|---------------|----------|------------------------------------------|
-| id            | number   | Primary key                              |
-| appId         | number   | Parent app                               |
-| username      | string?  | Login username                           |
-| email         | string?  | Login email                              |
-| password      | string   | Login password                           |
-| twoFactorCode | string?  | 2FA code                                 |
-| createdAt     | string?  | Creation timestamp                       |
+| Field            | Type     | Description                              |
+|------------------|----------|------------------------------------------|
+| id               | number   | Primary key                              |
+| productId        | number   | Parent product                           |
+| personaId        | number?  | Associated persona                       |
+| signic           | boolean  | Use automatic Signic email address       |
+| email            | string?  | Login email                              |
+| password         | string?  | Login password                           |
+| verificationCode | string?  | Verification/2FA code                    |
+| createdAt        | string?  | Creation timestamp                       |
 
 ---
 
@@ -513,7 +581,7 @@ A flexible scheduling object to automate test run creation. Can target a test su
 | Field             | Type     | Description                              |
 |-------------------|----------|------------------------------------------|
 | id                | number   | Primary key                              |
-| appId             | number   | Parent app                               |
+| runnerId          | number   | Parent runner                            |
 | title             | string   | Schedule title                           |
 | testSuiteId       | number?  | Target suite (exactly one of three)      |
 | testCaseId        | number?  | Target case (exactly one of three)       |
@@ -534,10 +602,10 @@ A flexible scheduling object to automate test run creation. Can target a test su
 **Constraint:** Exactly one of `testSuiteId`, `testCaseId`, or `testSuiteBundleId` must be set.
 
 **Recurrence types:**
-- `one_time` — runs once at the specified time, then disabled
-- `weekday` — runs Monday through Friday at the specified time
-- `daily` — runs every day at the specified time
-- `weekly` — runs on the specified `dayOfWeek` at the specified time
+- `one_time` -- runs once at the specified time, then disabled
+- `weekday` -- runs Monday through Friday at the specified time
+- `daily` -- runs every day at the specified time
+- `weekly` -- runs on the specified `dayOfWeek` at the specified time
 
 ---
 
@@ -545,12 +613,12 @@ A flexible scheduling object to automate test run creation. Can target a test su
 
 ### Persona
 
-An AI-generated user archetype for a website.
+An AI-generated user archetype for a product.
 
 | Field       | Type     | Description                              |
 |-------------|----------|------------------------------------------|
 | id          | number   | Primary key                              |
-| appId       | number   | Parent app                               |
+| productId   | number   | Parent product                           |
 | title       | string   | Persona title (e.g., "New Customer")     |
 | description | string?  | User profile description                 |
 | createdAt   | string?  | Creation timestamp                       |
@@ -595,6 +663,35 @@ An email report sent for a test run.
 | userEmail       | string   | Recipient email                          |
 | deepLinkToken   | string   | Unique token for deep link access        |
 | sentAt          | string?  | When the email was sent                  |
+
+### AI Usage
+
+Tracks AI model usage per test run phase.
+
+| Field            | Type     | Description                              |
+|------------------|----------|------------------------------------------|
+| id               | number   | Primary key                              |
+| testRunId        | number   | Parent test run                          |
+| phase            | string   | Scan phase that used AI                  |
+| model            | string   | AI model name                            |
+| promptTokens     | number   | Number of prompt tokens                  |
+| completionTokens | number   | Number of completion tokens              |
+| totalTokens      | number   | Total tokens used                        |
+| purpose          | string?  | What the AI call was for                 |
+| createdAt        | string?  | Creation timestamp                       |
+
+### Test Activity
+
+An event log for product-level activity. Uses extensible event types so new events can be added without schema changes.
+
+| Field       | Type     | Description                              |
+|-------------|----------|------------------------------------------|
+| id          | number   | Primary key                              |
+| productId   | number   | Parent product                           |
+| eventType   | string   | Event type (e.g., test_run_started, test_run_completed, test_suite_created) |
+| testRunId   | number?  | Referenced test run (if applicable)      |
+| testSuiteId | number?  | Referenced test suite (if applicable)    |
+| createdAt   | string?  | Timestamp                                |
 
 ---
 

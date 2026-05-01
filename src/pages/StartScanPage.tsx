@@ -30,12 +30,12 @@ export default function StartScanPage() {
       });
       const data = await response.json();
 
-      if (data.success && data.data?.scanId && data.data?.appId) {
+      if (data.success && data.data?.scanId && data.data?.runnerId) {
         navigate(
-          `/dashboard/${entitySlug}/apps/${data.data.appId}/scans/${data.data.scanId}/progress`
+          `/dashboard/${entitySlug}/runners/${data.data.runnerId}/scans/${data.data.scanId}/progress`
         );
       } else if (data.success && data.data?.runId) {
-        // Fallback for older API responses without appId
+        // Fallback for older API responses without runnerId
         navigate(`/dashboard/${entitySlug}/runs/${data.data.runId}/progress`);
       } else {
         setError(data.error || data.data?.message || 'Failed to start scan');

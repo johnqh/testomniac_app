@@ -14,7 +14,7 @@ import {
 import '@xyflow/react/dist/style.css';
 import dagre from 'dagre';
 import { useApi } from '@sudobility/building_blocks/firebase';
-import { useAppPages, useAppPageStates } from '@sudobility/testomniac_client';
+import { useRunnerPages, useRunnerPageStates } from '@sudobility/testomniac_client';
 import { CONSTANTS } from '../config/constants';
 import { useLocalizedNavigate } from '../hooks/useLocalizedNavigate';
 
@@ -48,27 +48,27 @@ function layoutGraph(nodes: Node[], edges: Edge[]): Node[] {
   });
 }
 
-export default function AppGraphPage() {
-  const { appId, entitySlug } = useParams<{ appId: string; entitySlug: string }>();
+export default function RunnerGraphPage() {
+  const { runnerId, entitySlug } = useParams<{ runnerId: string; entitySlug: string }>();
   const { networkClient, token } = useApi();
   const { navigate } = useLocalizedNavigate();
 
-  const numericAppId = Number(appId);
+  const numericRunnerId = Number(runnerId);
 
-  const { pages, isLoading: pagesLoading } = useAppPages({
+  const { pages, isLoading: pagesLoading } = useRunnerPages({
     networkClient,
     baseUrl: CONSTANTS.API_URL,
-    appId: numericAppId,
+    runnerId: numericRunnerId,
     token: token ?? '',
-    enabled: !!appId && !!token,
+    enabled: !!runnerId && !!token,
   });
 
-  const { pageStates, isLoading: pageStatesLoading } = useAppPageStates({
+  const { pageStates, isLoading: pageStatesLoading } = useRunnerPageStates({
     networkClient,
     baseUrl: CONSTANTS.API_URL,
-    appId: numericAppId,
+    runnerId: numericRunnerId,
     token: token ?? '',
-    enabled: !!appId && !!token,
+    enabled: !!runnerId && !!token,
   });
 
   const isLoading = pagesLoading || pageStatesLoading;
@@ -110,15 +110,15 @@ export default function AppGraphPage() {
 
   const onNodeClick = useCallback(
     (_: React.MouseEvent, node: Node) => {
-      navigate(`/dashboard/${entitySlug}/apps/${appId}/pages/${node.id}`);
+      navigate(`/dashboard/${entitySlug}/runners/${runnerId}/pages/${node.id}`);
     },
-    [navigate, entitySlug, appId]
+    [navigate, entitySlug, runnerId]
   );
 
   if (isLoading) {
     return (
       <div className="p-6">
-        <SEOHead title="App Graph" description="" noIndex />
+        <SEOHead title="Runner Graph" description="" noIndex />
         <div className="text-center text-gray-500 dark:text-gray-400 py-8">Loading graph...</div>
       </div>
     );
@@ -127,8 +127,8 @@ export default function AppGraphPage() {
   if (pages.length === 0) {
     return (
       <div className="p-6">
-        <SEOHead title="App Graph" description="" noIndex />
-        <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-6">App Graph</h1>
+        <SEOHead title="Runner Graph" description="" noIndex />
+        <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-6">Runner Graph</h1>
         <p className="text-gray-500 dark:text-gray-400">No pages discovered yet.</p>
       </div>
     );
@@ -136,8 +136,8 @@ export default function AppGraphPage() {
 
   return (
     <div className="p-6">
-      <SEOHead title="App Graph" description="" noIndex />
-      <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-6">App Graph</h1>
+      <SEOHead title="Runner Graph" description="" noIndex />
+      <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-6">Runner Graph</h1>
       <div className="w-full h-[600px] border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden">
         <ReactFlow
           nodes={nodes}

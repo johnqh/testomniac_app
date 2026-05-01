@@ -48,9 +48,9 @@ function layoutGraph(nodes: Node[], edges: Edge[]): Node[] {
 }
 
 export default function PageGraphPage() {
-  const { pageId, appId, entitySlug } = useParams<{
+  const { pageId, runnerId, entitySlug } = useParams<{
     pageId: string;
-    appId: string;
+    runnerId: string;
     entitySlug: string;
   }>();
   const { networkClient, token } = useApi();
@@ -95,9 +95,9 @@ export default function PageGraphPage() {
 
   const onNodeClick = useCallback(
     (_: React.MouseEvent, node: Node) => {
-      navigate(`/dashboard/${entitySlug}/apps/${appId}/pages/${pageId}/states/${node.id}`);
+      navigate(`/dashboard/${entitySlug}/runners/${runnerId}/pages/${pageId}/states/${node.id}`);
     },
-    [navigate, entitySlug, appId, pageId]
+    [navigate, entitySlug, runnerId, pageId]
   );
 
   if (isLoading) {

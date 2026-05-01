@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useApi } from '@sudobility/building_blocks/firebase';
-import { useAppFindings } from '@sudobility/testomniac_client';
+import { useRunnerFindings } from '@sudobility/testomniac_client';
 import type { TestRunFindingResponse } from '@sudobility/testomniac_types';
 import SEOHead from '@/components/SEOHead';
 import { CONSTANTS } from '../config/constants';
@@ -26,16 +26,16 @@ function FindingTypeBadge({ type }: { type: string }) {
 type FilterMode = 'all' | 'errors';
 
 export default function FindingsListPage() {
-  const { appId } = useParams<{ appId: string }>();
+  const { runnerId } = useParams<{ runnerId: string }>();
   const { networkClient, token } = useApi();
   const [filter, setFilter] = useState<FilterMode>('all');
 
-  const { findings, isLoading, error } = useAppFindings({
+  const { findings, isLoading, error } = useRunnerFindings({
     networkClient,
     baseUrl: CONSTANTS.API_URL,
-    appId: Number(appId),
+    runnerId: Number(runnerId),
     token: token ?? '',
-    enabled: !!appId && !!token,
+    enabled: !!runnerId && !!token,
   });
 
   const filteredFindings =
@@ -95,7 +95,7 @@ export default function FindingsListPage() {
           </div>
           <p className="text-sm text-gray-500 dark:text-gray-400 mt-2">
             {filter === 'errors'
-              ? 'There are no error-level findings for this app.'
+              ? 'There are no error-level findings for this runner.'
               : 'Findings will appear here after test runs complete.'}
           </p>
         </div>

@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useApi } from '@sudobility/building_blocks/firebase';
-import { useAppPersonas, usePersonaUseCases } from '@sudobility/testomniac_client';
+import { useRunnerPersonas, usePersonaUseCases } from '@sudobility/testomniac_client';
 import SEOHead from '@/components/SEOHead';
 import { CONSTANTS } from '../config/constants';
 
@@ -37,16 +37,16 @@ function PersonaUseCases({ personaId }: { personaId: number }) {
 }
 
 export default function PersonasPage() {
-  const { appId } = useParams<{ appId: string }>();
+  const { runnerId } = useParams<{ runnerId: string }>();
   const { networkClient, token } = useApi();
   const [expandedId, setExpandedId] = useState<number | null>(null);
 
-  const { personas, isLoading, error } = useAppPersonas({
+  const { personas, isLoading, error } = useRunnerPersonas({
     networkClient,
     baseUrl: CONSTANTS.API_URL,
-    appId: Number(appId),
+    runnerId: Number(runnerId),
     token: token ?? '',
-    enabled: !!appId && !!token,
+    enabled: !!runnerId && !!token,
   });
 
   if (isLoading) {

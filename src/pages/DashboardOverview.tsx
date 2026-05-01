@@ -1,7 +1,7 @@
 import { useParams } from 'react-router-dom';
 import { useApi } from '@sudobility/building_blocks/firebase';
-import { useEntityProjects, useProjectApps } from '@sudobility/testomniac_client';
-import type { ProjectSummaryResponse, AppResponse } from '@sudobility/testomniac_types';
+import { useEntityProducts, useProductRunners } from '@sudobility/testomniac_client';
+import type { ProductSummaryResponse, RunnerResponse } from '@sudobility/testomniac_types';
 import SEOHead from '@/components/SEOHead';
 import { useLocalizedNavigate } from '../hooks/useLocalizedNavigate';
 import { CONSTANTS } from '../config/constants';
@@ -33,34 +33,30 @@ function SectionLink({
   );
 }
 
-/** A single app card with links to its dashboard sections. */
-function AppCard({ app, basePath }: { app: AppResponse; basePath: string }) {
+/** A single runner card with links to its dashboard sections. */
+function RunnerCard({ runner, basePath }: { runner: RunnerResponse; basePath: string }) {
   const { navigate } = useLocalizedNavigate();
-  const appBasePath = `${basePath}/apps/${app.id}`;
+  const runnerBasePath = `${basePath}/runners/${runner.id}`;
 
   const sections = [
     {
       label: 'Test Suites',
       description: 'Test suite hierarchy',
-      path: `${appBasePath}/test-suites`,
+      path: `${runnerBasePath}/test-suites`,
     },
-    { label: 'Test Runs', description: 'Execution results', path: `${appBasePath}/test-runs` },
-    { label: 'Findings', description: 'Errors and warnings', path: `${appBasePath}/findings` },
-    { label: 'Settings', description: 'App settings', path: `${appBasePath}/settings` },
+    { label: 'Test Runs', description: 'Execution results', path: `${runnerBasePath}/test-runs` },
+    { label: 'Findings', description: 'Errors and warnings', path: `${runnerBasePath}/findings` },
+    { label: 'Settings', description: 'Runner settings', path: `${runnerBasePath}/settings` },
   ];
 
   return (
     <div className="rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 overflow-hidden">
-      {/* App header */}
+      {/* Runner header */}
       <div className="px-5 py-4 border-b border-gray-100 dark:border-gray-700">
         <h3 className="text-base font-semibold text-gray-900 dark:text-gray-100 truncate">
-          {app.title}
+          {runner.title}
         </h3>
-        {app.normalizedBaseUrl && (
-          <p className="text-sm text-gray-500 dark:text-gray-400 mt-0.5 truncate">
-            {app.normalizedBaseUrl}
-          </p>
-        )}
+        <p className="text-sm text-gray-500 dark:text-gray-400 mt-0.5 truncate">{runner.type}</p>
       </div>
 
       {/* Section links grid */}
@@ -78,20 +74,20 @@ function AppCard({ app, basePath }: { app: AppResponse; basePath: string }) {
   );
 }
 
-/** Lists apps for a single project, with lazy loading. */
-function ProjectSection({
-  project,
+/** Lists runners for a single product, with lazy loading. */
+function ProductSection({
+  product,
   basePath,
 }: {
-  project: ProjectSummaryResponse;
+  product: ProductSummaryResponse;
   basePath: string;
 }) {
   const { networkClient, token } = useApi();
 
-  const { apps, isLoading, error } = useProjectApps({
+  const { runners, isLoading, error } = useProductRunners({
     networkClient,
     baseUrl: CONSTANTS.API_URL,
-    projectId: project.id,
+    productId: product.id,
     token: token ?? '',
     enabled: !!token,
   });
@@ -99,28 +95,28 @@ function ProjectSection({
   return (
     <section>
       <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-3">
-        {project.title}
+        {product.title}
       </h2>
 
       {isLoading && (
-        <div className="text-sm text-gray-500 dark:text-gray-400 py-4">Loading apps...</div>
+        <div className="text-sm text-gray-500 dark:text-gray-400 py-4">Loading runners...</div>
       )}
 
       {error && (
         <div className="text-sm text-red-600 dark:text-red-400 py-2">
-          Failed to load apps: {error}
+          Failed to load runners: {error}
         </div>
       )}
 
-      {!isLoading && !error && apps.length === 0 && (
+      {!isLoading && !error && runners.length === 0 && (
         <div className="text-sm text-gray-500 dark:text-gray-400 py-4 border border-dashed border-gray-200 dark:border-gray-700 rounded-lg text-center">
-          No apps in this project yet.
+          No runners in this product yet.
         </div>
       )}
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-        {apps.map((app: AppResponse) => (
-          <AppCard key={app.id} app={app} basePath={basePath} />
+        {runners.map((runner: RunnerResponse) => (
+          <RunnerCard key={runner.id} runner={runner} basePath={basePath} />
         ))}
       </div>
     </section>
@@ -137,7 +133,7 @@ export default function DashboardOverview() {
   const { networkClient, token } = useApi();
   const basePath = `/dashboard/${entitySlug}`;
 
-  const { projects, isLoading, error } = useEntityProjects({
+  const { products, isLoading, error } = useEntityProducts({
     networkClient,
     baseUrl: CONSTANTS.API_URL,
     entitySlug: entitySlug ?? '',
@@ -171,34 +167,34 @@ export default function DashboardOverview() {
       {/* Loading state */}
       {isLoading && (
         <div className="text-sm text-gray-500 dark:text-gray-400 py-8 text-center">
-          Loading projects...
+          Loading products...
         </div>
       )}
 
       {/* Error state */}
       {error && (
         <div className="text-sm text-red-600 dark:text-red-400 py-4 px-4 rounded-lg bg-red-50 dark:bg-red-900/20">
-          Failed to load projects: {error}
+          Failed to load products: {error}
         </div>
       )}
 
       {/* Empty state */}
-      {!isLoading && !error && projects.length === 0 && (
+      {!isLoading && !error && products.length === 0 && (
         <div className="rounded-xl border border-gray-200 dark:border-gray-700 p-8 text-center">
           <div className="text-lg font-semibold text-gray-900 dark:text-gray-100">
-            No projects yet
+            No products yet
           </div>
           <p className="text-sm text-gray-500 dark:text-gray-400 mt-2">
-            Start a scan to automatically create your first project and discover your application.
+            Start a scan to automatically create your first product and discover your application.
           </p>
         </div>
       )}
 
-      {/* Projects list */}
-      {projects.length > 0 && (
+      {/* Products list */}
+      {products.length > 0 && (
         <div className="space-y-8">
-          {projects.map((project: ProjectSummaryResponse) => (
-            <ProjectSection key={project.id} project={project} basePath={basePath} />
+          {products.map((product: ProductSummaryResponse) => (
+            <ProductSection key={product.id} product={product} basePath={basePath} />
           ))}
         </div>
       )}

@@ -1,19 +1,19 @@
 import { useParams } from 'react-router-dom';
 import { useApi } from '@sudobility/building_blocks/firebase';
-import { useAppPages } from '@sudobility/testomniac_client';
+import { useRunnerPages } from '@sudobility/testomniac_client';
 import SEOHead from '@/components/SEOHead';
 import { CONSTANTS } from '../config/constants';
 
 export default function PagesPage() {
-  const { appId } = useParams<{ appId: string }>();
+  const { runnerId } = useParams<{ runnerId: string }>();
   const { networkClient, token } = useApi();
 
-  const { pages, isLoading, error } = useAppPages({
+  const { pages, isLoading, error } = useRunnerPages({
     networkClient,
     baseUrl: CONSTANTS.API_URL,
-    appId: Number(appId),
+    runnerId: Number(runnerId),
     token: token ?? '',
-    enabled: !!appId && !!token,
+    enabled: !!runnerId && !!token,
   });
 
   if (isLoading) {

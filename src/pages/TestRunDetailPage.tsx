@@ -28,15 +28,15 @@ function FindingTypeBadge({ type }: { type: string }) {
 }
 
 export default function TestRunDetailPage() {
-  const { entitySlug, appId, runId } = useParams<{
+  const { entitySlug, runnerId, runId } = useParams<{
     entitySlug: string;
-    appId: string;
+    runnerId: string;
     runId: string;
   }>();
   const { networkClient, token } = useApi();
   const { navigate } = useLocalizedNavigate();
 
-  const basePath = `/dashboard/${entitySlug}/apps/${appId}`;
+  const basePath = `/dashboard/${entitySlug}/runners/${runnerId}`;
 
   const { findings, isLoading, error } = useTestRunFindings({
     networkClient,

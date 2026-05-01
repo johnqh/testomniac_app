@@ -48,15 +48,15 @@ function ActionRow({ action }: { action: TestActionResponse }) {
 }
 
 export default function TestCaseDetailPage() {
-  const { entitySlug, appId, caseId } = useParams<{
+  const { entitySlug, runnerId, caseId } = useParams<{
     entitySlug: string;
-    appId: string;
+    runnerId: string;
     caseId: string;
   }>();
   const { networkClient, token } = useApi();
   const { navigate } = useLocalizedNavigate();
 
-  const basePath = `/dashboard/${entitySlug}/apps/${appId}`;
+  const basePath = `/dashboard/${entitySlug}/runners/${runnerId}`;
 
   const { actions, isLoading, error } = useTestCaseActions({
     networkClient,

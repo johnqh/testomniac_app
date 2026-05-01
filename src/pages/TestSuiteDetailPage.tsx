@@ -43,15 +43,15 @@ function FileIcon() {
 }
 
 export default function TestSuiteDetailPage() {
-  const { entitySlug, appId, suiteId } = useParams<{
+  const { entitySlug, runnerId, suiteId } = useParams<{
     entitySlug: string;
-    appId: string;
+    runnerId: string;
     suiteId: string;
   }>();
   const { networkClient, token } = useApi();
   const { navigate } = useLocalizedNavigate();
 
-  const basePath = `/dashboard/${entitySlug}/apps/${appId}`;
+  const basePath = `/dashboard/${entitySlug}/runners/${runnerId}`;
 
   const {
     childSuites,

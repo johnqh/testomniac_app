@@ -1,7 +1,7 @@
 import { useParams } from 'react-router-dom';
 import { createColumnHelper } from '@tanstack/react-table';
 import { useApi } from '@sudobility/building_blocks/firebase';
-import { useAppScans } from '@sudobility/testomniac_client';
+import { useRunnerScans } from '@sudobility/testomniac_client';
 import SEOHead from '@/components/SEOHead';
 import { CONSTANTS } from '../config/constants';
 import { useLocalizedNavigate } from '../hooks/useLocalizedNavigate';
@@ -35,16 +35,16 @@ function formatDate(iso: string | null): string {
 }
 
 export default function ScansPage() {
-  const { appId, entitySlug } = useParams<{ appId: string; entitySlug: string }>();
+  const { runnerId, entitySlug } = useParams<{ runnerId: string; entitySlug: string }>();
   const { networkClient, token } = useApi();
   const { navigate } = useLocalizedNavigate();
 
-  const { scans, isLoading } = useAppScans({
+  const { scans, isLoading } = useRunnerScans({
     networkClient,
     baseUrl: CONSTANTS.API_URL,
-    appId: Number(appId),
+    runnerId: Number(runnerId),
     token: token ?? '',
-    enabled: !!appId && !!token,
+    enabled: !!runnerId && !!token,
   });
 
   const columns = [
@@ -53,7 +53,9 @@ export default function ScansPage() {
       cell: info => (
         <button
           onClick={() =>
-            navigate(`/dashboard/${entitySlug}/apps/${appId}/scans/${info.getValue()}/progress`)
+            navigate(
+              `/dashboard/${entitySlug}/runners/${runnerId}/scans/${info.getValue()}/progress`
+            )
           }
           className="font-medium text-blue-600 dark:text-blue-400 hover:underline"
         >
