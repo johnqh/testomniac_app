@@ -1,7 +1,7 @@
-import type { RunStreamEvent } from '@sudobility/testomniac_types';
+import type { TestRunStreamEvent } from '@sudobility/testomniac_types';
 
 interface EventLogProps {
-  events: RunStreamEvent[];
+  events: TestRunStreamEvent[];
   maxHeight?: string;
 }
 

@@ -1,4 +1,4 @@
-import type { RunStreamEvent } from '@sudobility/testomniac_types';
+import type { TestRunStreamEvent } from '@sudobility/testomniac_types';
 import { LiveCounters } from './LiveCounters';
 import { EventLog } from './EventLog';
 
@@ -7,7 +7,7 @@ interface ScanProgressPanelProps {
   pageStatesFound: number;
   testRunsCompleted: number;
   findingsFound: number;
-  events: RunStreamEvent[];
+  events: TestRunStreamEvent[];
   isConnected: boolean;
   isComplete: boolean;
   latestScreenshotUrl?: string | null;

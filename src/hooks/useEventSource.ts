@@ -1,10 +1,10 @@
 /* eslint-disable react-hooks/set-state-in-effect */
 import { useEffect, useRef, useState, useCallback } from 'react';
-import type { RunStreamEvent } from '@sudobility/testomniac_types';
+import type { TestRunStreamEvent } from '@sudobility/testomniac_types';
 
 interface UseEventSourceConfig {
   url: string | null;
-  onEvent: (event: RunStreamEvent) => void;
+  onEvent: (event: TestRunStreamEvent) => void;
   onError?: (error: string) => void;
   reconnectIntervalMs?: number;
 }
@@ -51,7 +51,7 @@ export function useEventSource(config: UseEventSourceConfig): UseEventSourceRetu
 
       es.onmessage = event => {
         try {
-          const data = JSON.parse(event.data) as RunStreamEvent;
+          const data = JSON.parse(event.data) as TestRunStreamEvent;
           onEvent(data);
         } catch {
           // Ignore unparseable messages

@@ -13,7 +13,7 @@ interface ScanRow {
   status: string;
   pagesFound: number | null;
   startedAt: string | null;
-  endedAt: string | null;
+  completedAt: string | null;
 }
 
 const columnHelper = createColumnHelper<ScanRow>();
@@ -84,7 +84,7 @@ export default function ScansPage() {
       header: 'Duration',
       cell: ({ row }) => (
         <span className="text-xs text-gray-500 dark:text-gray-400">
-          {formatDuration(row.original.startedAt, row.original.endedAt)}
+          {formatDuration(row.original.startedAt, row.original.completedAt)}
         </span>
       ),
     }),

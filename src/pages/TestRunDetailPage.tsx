@@ -41,7 +41,7 @@ export default function TestRunDetailPage() {
   const { findings, isLoading, error } = useTestRunFindings({
     networkClient,
     baseUrl: CONSTANTS.API_URL,
-    testRunId: Number(runId),
+    testCaseRunId: Number(runId),
     token: token ?? '',
     enabled: !!runId && !!token,
   });

@@ -102,7 +102,7 @@ export default function TestRunsListPage() {
                     <StatusBadge status={run.status} />
                   </td>
                   <td className="px-4 py-3 text-gray-600 dark:text-gray-400">
-                    {formatDuration(run.durationMs)}
+                    {formatDuration(run.totalDurationMs)}
                   </td>
                   <td className="px-4 py-3 text-gray-600 dark:text-gray-400">
                     {formatDate(run.createdAt)}
