@@ -1,12 +1,12 @@
 # Implementation Plan: Scanning Service, Scanner & Extension
 
-Align `testomniac_scanning_service`, `testomniac_scanner`, and `testomniac_extension` with the new data model.
+Align `testomniac_runner_service`, `testomniac_runner`, and `testomniac_extension` with the new data model.
 
 **Depends on:** Types, API & Client plan must be completed first.
 
 **Projects:**
-- `testomniac_scanning_service` (`/Users/johnhuang/projects/testomniac_scanning_service`) — Core scanning logic library, shared by scanner and extension
-- `testomniac_scanner` (`/Users/johnhuang/projects/testomniac_scanner`) — Server-side worker that polls for pending scans and runs them via Puppeteer
+- `testomniac_runner_service` (`/Users/johnhuang/projects/testomniac_runner_service`) — Core scanning logic library, shared by scanner and extension
+- `testomniac_runner` (`/Users/johnhuang/projects/testomniac_runner`) — Server-side worker that polls for pending scans and runs them via Puppeteer
 - `testomniac_extension` (`/Users/johnhuang/projects/testomniac_extension`) — Chrome extension that runs scans in the user's browser via Chrome Debugger Protocol
 
 ---
@@ -32,7 +32,7 @@ Key architectural changes:
 
 ## Phase 1: API Client Updates
 
-**File:** `/Users/johnhuang/projects/testomniac_scanning_service/src/api/client.ts`
+**File:** `/Users/johnhuang/projects/testomniac_runner_service/src/api/client.ts`
 
 ### 1.1 New API calls to add
 
@@ -98,7 +98,7 @@ updatePhaseDuration(...)
 
 ## Phase 2: New Orchestrator — Generate/Run Loop
 
-**Replace:** `/Users/johnhuang/projects/testomniac_scanning_service/src/orchestrator/`
+**Replace:** `/Users/johnhuang/projects/testomniac_runner_service/src/orchestrator/`
 
 ### 2.1 New orchestrator entry point
 
@@ -274,9 +274,9 @@ interface ScanEventHandler {
 
 ---
 
-## Phase 5: testomniac_scanner — Server-Side Worker
+## Phase 5: testomniac_runner — Server-Side Worker
 
-**Project:** `/Users/johnhuang/projects/testomniac_scanner`
+**Project:** `/Users/johnhuang/projects/testomniac_runner`
 
 The scanner is a standalone Bun service that polls for pending scans and runs them via Puppeteer. Currently runs the full 5-phase pipeline. Needs to adopt the new Generate/Run loop.
 
@@ -406,9 +406,9 @@ SCREENSHOT_CAPTURED, SCAN_COMPLETE, SCAN_ERROR
 
 ## Dependency Deployment
 
-**Important:** Whenever you modify a lower-level library (e.g., `testomniac_types`, `testomniac_client`, `testomniac_scanning_service`), run `/Users/johnhuang/projects/testomniac_app/scripts/push_all.sh`. This deploys the library and updates all higher-level projects' dependencies.
+**Important:** Whenever you modify a lower-level library (e.g., `testomniac_types`, `testomniac_client`, `testomniac_runner_service`), run `/Users/johnhuang/projects/testomniac_app/scripts/push_all.sh`. This deploys the library and updates all higher-level projects' dependencies.
 
-Dependency chain: `testomniac_types` → `testomniac_scanning_service` → `testomniac_scanner` / `testomniac_extension`
+Dependency chain: `testomniac_types` → `testomniac_runner_service` → `testomniac_runner` / `testomniac_extension`
 
 Run `push_all.sh` after changes to types or scanning_service, before working on scanner or extension.
 
@@ -416,11 +416,11 @@ Run `push_all.sh` after changes to types or scanning_service, before working on 
 
 ## Execution Order
 
-1. **Scanning service API client** (Phase 1) — update HTTP client in testomniac_scanning_service
+1. **Scanning service API client** (Phase 1) — update HTTP client in testomniac_runner_service
 2. **Scanning service orchestrator** (Phase 2) — build the generate/run loop → run `push_all.sh`
 3. **Scanning service cleanup** (Phase 3) — remove deprecated modules → run `push_all.sh`
 4. **Scanning service events** (Phase 4) — update event types → run `push_all.sh`
-5. **Scanner** (Phase 5) — update testomniac_scanner to use new scanning_service
+5. **Scanner** (Phase 5) — update testomniac_runner to use new scanning_service
 6. **Extension** (Phase 6) — update testomniac_extension UI and background worker
 
 ---

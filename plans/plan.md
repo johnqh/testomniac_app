@@ -50,7 +50,7 @@ These rules resolve the main ambiguities in the original design and are part of 
 ## 4.1 Service Boundaries
 
 - `testomniac_api` remains the existing `Hono` API service.
-- The scanner lives in its own project at `~/projects/testomniac_scanner`.
+- The scanner lives in its own project at `~/projects/testomniac_runner`.
 - The scanner is a separate worker/service that polls PostgreSQL for pending runs.
 - The API does not launch Chromium or perform scanning work directly.
 - Real-time updates flow through PostgreSQL `LISTEN/NOTIFY` and are exposed by the API via SSE.
@@ -93,7 +93,7 @@ Admin rule:
 Shared domain and API contract types must live in `testomniac_types`.
 
 Rules:
-- `testomniac_api`, `testomniac_scanner`, and `testomniac_client` all consume shared types from `testomniac_types`
+- `testomniac_api`, `testomniac_runner`, and `testomniac_client` all consume shared types from `testomniac_types`
 - Do not duplicate source-of-truth request/response/domain models across those projects
 - Scanner-only internal helper types may live in the scanner project, but persisted models and API-facing contracts belong in `testomniac_types`
 
@@ -1686,7 +1686,7 @@ Admin capabilities:
 
 # 15. Multi-Project Structure
 
-## Scanner Service (`~/projects/testomniac_scanner`)
+## Scanner Service (`~/projects/testomniac_runner`)
 
 ```
 src/
@@ -1798,7 +1798,7 @@ src/
 
 `testomniac_types` is the source of truth for shared contracts used by:
 - `testomniac_api`
-- `testomniac_scanner`
+- `testomniac_runner`
 - `testomniac_client`
 
 ## Client (testomniac_client)

@@ -4,7 +4,7 @@
 
 **Goal:** Build a Node.js system that discovers web app UI elements via action-driven scanning, generates AI-informed test cases, and executes them via Puppeteer.
 
-**Architecture:** The scanner lives in its own project at `~/projects/testomniac_scanner`. It runs as a separate worker that polls PostgreSQL for pending runs and drives exhaustive mouseover → click traversal within configured traversal limits. AI generates personas and input values after mouse scanning. Template-based test generation produces JSON action sequences executed by a custom Puppeteer runner. The existing `testomniac_api` service remains the HTTP/SSE boundary for frontend clients.
+**Architecture:** The scanner lives in its own project at `~/projects/testomniac_runner`. It runs as a separate worker that polls PostgreSQL for pending runs and drives exhaustive mouseover → click traversal within configured traversal limits. AI generates personas and input values after mouse scanning. Template-based test generation produces JSON action sequences executed by a custom Puppeteer runner. The existing `testomniac_api` service remains the HTTP/SSE boundary for frontend clients.
 
 **Tech Stack:** Node.js, TypeScript, Puppeteer-core, PostgreSQL, Drizzle ORM, OpenAI SDK, Hono, Pino, Vitest, @sudobility/entity_service, @sudobility/signic_sdk
 
@@ -14,7 +14,7 @@ These changes supersede earlier parts of this implementation plan where they con
 
 1. API/runtime boundary
    - Keep `testomniac_api` as the existing `Hono` service.
-   - Build the scanner in the separate `~/projects/testomniac_scanner` project as its own worker/service.
+   - Build the scanner in the separate `~/projects/testomniac_runner` project as its own worker/service.
    - Do not embed Chromium orchestration in the API server.
 2. State identity
    - A page state is identified by normalized URL + normalized HTML hash + actionable-item hash + visible overlay fingerprint.
@@ -45,7 +45,7 @@ These changes supersede earlier parts of this implementation plan where they con
 10. Admin visibility
    - Site admins in `testomniac_api` must be able to list all unclaimed projects.
 11. Shared type ownership
-   - `testomniac_api`, `testomniac_scanner`, and `testomniac_client` must share domain and API contract types through `testomniac_types`.
+   - `testomniac_api`, `testomniac_runner`, and `testomniac_client` must share domain and API contract types through `testomniac_types`.
    - Do not create duplicate source-of-truth models for persisted entities or API payloads inside those projects.
 
 ## Execution Rules
@@ -61,13 +61,13 @@ These rules apply across all tasks and phases:
      - `/testomniac_app`
    - A phase is not complete until both checks pass.
 3. Project boundary rule
-   - Scanner implementation work belongs in `~/projects/testomniac_scanner`.
+   - Scanner implementation work belongs in `~/projects/testomniac_runner`.
    - API integration work belongs in `/testomniac_api`.
    - Frontend integration work belongs in `/testomniac_app`.
 4. Shared-contract rule
    - When a type is used across scanner, API, and client boundaries, define it in `testomniac_types` first and consume it from there.
 5. Deployment compatibility rule
-   - `testomniac_scanner` must include a Docker container setup compatible with deployment from `~/projects/sudobility_dockerized`.
+   - `testomniac_runner` must include a Docker container setup compatible with deployment from `~/projects/sudobility_dockerized`.
 6. Phase completion tracking rule
    - After completing all tasks in a phase and passing verification, update this plan file to mark the phase as completed (e.g., change `## Phase N:` to `## Phase N: ✅ COMPLETED`) and check off all task/step checkboxes within that phase.
    - This keeps the plan file as the single source of truth for progress across sessions.
@@ -76,7 +76,7 @@ These rules apply across all tasks and phases:
 
 ## File Map
 
-This file map is for the `~/projects/testomniac_scanner` project unless noted otherwise.
+This file map is for the `~/projects/testomniac_runner` project unless noted otherwise.
 
 ```
 src/
@@ -184,7 +184,7 @@ tsconfig.json
 - [ ] **Step 1: Initialize project**
 
 ```bash
-mkdir -p ~/projects/testomniac_scanner && cd ~/projects/testomniac_scanner
+mkdir -p ~/projects/testomniac_runner && cd ~/projects/testomniac_runner
 bun init -y
 ```
 
@@ -265,7 +265,7 @@ Add to `scripts`:
 
 - [ ] **Step 7a: Add Docker container support**
 
-Create `Dockerfile` and `.dockerignore` in `testomniac_scanner`.
+Create `Dockerfile` and `.dockerignore` in `testomniac_runner`.
 
 Requirements:
 - compatible with deployment from `~/projects/sudobility_dockerized`
@@ -4171,7 +4171,7 @@ git commit -m "feat: email reporting with deep link tokens"
 
 ### Task 19: API Contract + Worker Integration
 
-This task replaces the earlier standalone API-server idea. The API remains in the existing `testomniac_api` Hono project. The scanner worker implementation lives in `~/projects/testomniac_scanner`; shared contract types live in `testomniac_types`; this project integrates against those contracts.
+This task replaces the earlier standalone API-server idea. The API remains in the existing `testomniac_api` Hono project. The scanner worker implementation lives in `~/projects/testomniac_runner`; shared contract types live in `testomniac_types`; this project integrates against those contracts.
 
 **Files:**
 - Create: `src/worker/index.ts`

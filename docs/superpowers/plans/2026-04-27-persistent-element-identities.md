@@ -23,7 +23,7 @@
 - **Modify:** `src/routes/runs-read.ts` — User-facing read endpoint
 - **Modify:** `src/routes/index.ts` — (only if new router file needed; likely not)
 
-### testomniac_scanning_service (`/Users/johnhuang/projects/testomniac_scanning_service`)
+### testomniac_runner_service (`/Users/johnhuang/projects/testomniac_runner_service`)
 - **Modify:** `src/browser/dom-snapshot.ts` — Extract identity signals (groupName, headingContext, landmarkAncestor, testId, formContext)
 - **Modify:** `src/extractors/types.ts` — Add new fields to `DomSnapshotEntry`
 - **Create:** `src/identity/playwright-locator.ts` — Playwright locator generator
@@ -405,7 +405,7 @@ cd /Users/johnhuang/projects/testomniac_types && npm publish
 Then update the dependency in both consuming repos:
 ```bash
 cd /Users/johnhuang/projects/testomniac_api && bun update @sudobility/testomniac_types
-cd /Users/johnhuang/projects/testomniac_scanning_service && bun update @sudobility/testomniac_types
+cd /Users/johnhuang/projects/testomniac_runner_service && bun update @sudobility/testomniac_types
 ```
 
 ---
@@ -745,10 +745,10 @@ git commit -m "feat: add user-facing element identities read endpoint"
 
 ## Task 6: Scanning Service — Enhanced DOM Snapshot Extraction
 
-**Repo:** `testomniac_scanning_service`
+**Repo:** `testomniac_runner_service`
 **Files:**
-- Modify: `/Users/johnhuang/projects/testomniac_scanning_service/src/extractors/types.ts`
-- Modify: `/Users/johnhuang/projects/testomniac_scanning_service/src/browser/dom-snapshot.ts`
+- Modify: `/Users/johnhuang/projects/testomniac_runner_service/src/extractors/types.ts`
+- Modify: `/Users/johnhuang/projects/testomniac_runner_service/src/browser/dom-snapshot.ts`
 
 - [ ] **Step 1: Add new fields to `DomSnapshotEntry`**
 
@@ -915,13 +915,13 @@ Then update the `entries.push(...)` call to include the new fields:
 
 - [ ] **Step 3: Run typecheck to verify**
 
-Run: `cd /Users/johnhuang/projects/testomniac_scanning_service && bun run typecheck`
+Run: `cd /Users/johnhuang/projects/testomniac_runner_service && bun run typecheck`
 Expected: PASS (no type errors)
 
 - [ ] **Step 4: Commit**
 
 ```bash
-cd /Users/johnhuang/projects/testomniac_scanning_service
+cd /Users/johnhuang/projects/testomniac_runner_service
 git add src/extractors/types.ts src/browser/dom-snapshot.ts
 git commit -m "feat: extract identity signals (group, heading, landmark, testId, form) in DOM snapshot"
 ```
@@ -930,10 +930,10 @@ git commit -m "feat: extract identity signals (group, heading, landmark, testId,
 
 ## Task 7: Scanning Service — Playwright Locator Generator
 
-**Repo:** `testomniac_scanning_service`
+**Repo:** `testomniac_runner_service`
 **Files:**
-- Create: `/Users/johnhuang/projects/testomniac_scanning_service/src/identity/playwright-locator.ts`
-- Create: `/Users/johnhuang/projects/testomniac_scanning_service/src/identity/playwright-locator.test.ts`
+- Create: `/Users/johnhuang/projects/testomniac_runner_service/src/identity/playwright-locator.ts`
+- Create: `/Users/johnhuang/projects/testomniac_runner_service/src/identity/playwright-locator.test.ts`
 
 - [ ] **Step 1: Write failing tests**
 
@@ -1046,7 +1046,7 @@ describe("buildScopeChain", () => {
 
 - [ ] **Step 2: Run tests to verify they fail**
 
-Run: `cd /Users/johnhuang/projects/testomniac_scanning_service && bun run test src/identity/playwright-locator.test.ts`
+Run: `cd /Users/johnhuang/projects/testomniac_runner_service && bun run test src/identity/playwright-locator.test.ts`
 Expected: FAIL — module not found
 
 - [ ] **Step 3: Implement the locator generator**
@@ -1139,13 +1139,13 @@ export function buildScopeChain(
 
 - [ ] **Step 4: Run tests to verify they pass**
 
-Run: `cd /Users/johnhuang/projects/testomniac_scanning_service && bun run test src/identity/playwright-locator.test.ts`
+Run: `cd /Users/johnhuang/projects/testomniac_runner_service && bun run test src/identity/playwright-locator.test.ts`
 Expected: ALL PASS
 
 - [ ] **Step 5: Commit**
 
 ```bash
-cd /Users/johnhuang/projects/testomniac_scanning_service
+cd /Users/johnhuang/projects/testomniac_runner_service
 git add src/identity/playwright-locator.ts src/identity/playwright-locator.test.ts
 git commit -m "feat: add Playwright locator generator"
 ```
@@ -1154,10 +1154,10 @@ git commit -m "feat: add Playwright locator generator"
 
 ## Task 8: Scanning Service — Element Identity Matcher
 
-**Repo:** `testomniac_scanning_service`
+**Repo:** `testomniac_runner_service`
 **Files:**
-- Create: `/Users/johnhuang/projects/testomniac_scanning_service/src/identity/element-matcher.ts`
-- Create: `/Users/johnhuang/projects/testomniac_scanning_service/src/identity/element-matcher.test.ts`
+- Create: `/Users/johnhuang/projects/testomniac_runner_service/src/identity/element-matcher.ts`
+- Create: `/Users/johnhuang/projects/testomniac_runner_service/src/identity/element-matcher.test.ts`
 
 - [ ] **Step 1: Write failing tests**
 
@@ -1277,7 +1277,7 @@ describe("matchElementIdentity", () => {
 
 - [ ] **Step 2: Run tests to verify they fail**
 
-Run: `cd /Users/johnhuang/projects/testomniac_scanning_service && bun run test src/identity/element-matcher.test.ts`
+Run: `cd /Users/johnhuang/projects/testomniac_runner_service && bun run test src/identity/element-matcher.test.ts`
 Expected: FAIL — module not found
 
 - [ ] **Step 3: Implement the matcher**
@@ -1398,13 +1398,13 @@ function computeMatchScore(
 
 - [ ] **Step 4: Run tests to verify they pass**
 
-Run: `cd /Users/johnhuang/projects/testomniac_scanning_service && bun run test src/identity/element-matcher.test.ts`
+Run: `cd /Users/johnhuang/projects/testomniac_runner_service && bun run test src/identity/element-matcher.test.ts`
 Expected: ALL PASS
 
 - [ ] **Step 5: Commit**
 
 ```bash
-cd /Users/johnhuang/projects/testomniac_scanning_service
+cd /Users/johnhuang/projects/testomniac_runner_service
 git add src/identity/element-matcher.ts src/identity/element-matcher.test.ts
 git commit -m "feat: add multi-signal element identity matcher"
 ```
@@ -1413,10 +1413,10 @@ git commit -m "feat: add multi-signal element identity matcher"
 
 ## Task 9: Scanning Service — API Client Methods and Identity Cache
 
-**Repo:** `testomniac_scanning_service`
+**Repo:** `testomniac_runner_service`
 **Files:**
-- Modify: `/Users/johnhuang/projects/testomniac_scanning_service/src/api/client.ts`
-- Create: `/Users/johnhuang/projects/testomniac_scanning_service/src/identity/identity-cache.ts`
+- Modify: `/Users/johnhuang/projects/testomniac_runner_service/src/api/client.ts`
+- Create: `/Users/johnhuang/projects/testomniac_runner_service/src/identity/identity-cache.ts`
 
 - [ ] **Step 1: Add API client methods**
 
@@ -1497,13 +1497,13 @@ export class IdentityCache {
 
 - [ ] **Step 3: Run typecheck**
 
-Run: `cd /Users/johnhuang/projects/testomniac_scanning_service && bun run typecheck`
+Run: `cd /Users/johnhuang/projects/testomniac_runner_service && bun run typecheck`
 Expected: PASS
 
 - [ ] **Step 4: Commit**
 
 ```bash
-cd /Users/johnhuang/projects/testomniac_scanning_service
+cd /Users/johnhuang/projects/testomniac_runner_service
 git add src/api/client.ts src/identity/identity-cache.ts
 git commit -m "feat: add element identity API client methods and preloading cache"
 ```
@@ -1512,10 +1512,10 @@ git commit -m "feat: add element identity API client methods and preloading cach
 
 ## Task 10: Scanning Service — Integrate Identity Matching into Mouse Scanning
 
-**Repo:** `testomniac_scanning_service`
+**Repo:** `testomniac_runner_service`
 **Files:**
-- Modify: `/Users/johnhuang/projects/testomniac_scanning_service/src/orchestrator/mouse-scanning.ts`
-- Modify: `/Users/johnhuang/projects/testomniac_scanning_service/src/extractors/helpers.ts`
+- Modify: `/Users/johnhuang/projects/testomniac_runner_service/src/orchestrator/mouse-scanning.ts`
+- Modify: `/Users/johnhuang/projects/testomniac_runner_service/src/extractors/helpers.ts`
 
 This task wires everything together: after extracting actionable items on each page, build fingerprints, match/create identities, generate Playwright locators, and store the `elementIdentityId` on each actionable item.
 
@@ -1686,13 +1686,13 @@ In `mouse-scanning.ts`, after the `insertActionableItems` call (around line 247)
 
 - [ ] **Step 4: Run typecheck**
 
-Run: `cd /Users/johnhuang/projects/testomniac_scanning_service && bun run typecheck`
+Run: `cd /Users/johnhuang/projects/testomniac_runner_service && bun run typecheck`
 Expected: PASS
 
 - [ ] **Step 5: Commit**
 
 ```bash
-cd /Users/johnhuang/projects/testomniac_scanning_service
+cd /Users/johnhuang/projects/testomniac_runner_service
 git add src/orchestrator/mouse-scanning.ts src/extractors/helpers.ts
 git commit -m "feat: integrate element identity matching into mouse scanning loop"
 ```
@@ -1701,10 +1701,10 @@ git commit -m "feat: integrate element identity matching into mouse scanning loo
 
 ## Task 11: Scanning Service — Playwright Test Script Export
 
-**Repo:** `testomniac_scanning_service`
+**Repo:** `testomniac_runner_service`
 **Files:**
-- Create: `/Users/johnhuang/projects/testomniac_scanning_service/src/generation/playwright-export.ts`
-- Create: `/Users/johnhuang/projects/testomniac_scanning_service/src/generation/playwright-export.test.ts`
+- Create: `/Users/johnhuang/projects/testomniac_runner_service/src/generation/playwright-export.ts`
+- Create: `/Users/johnhuang/projects/testomniac_runner_service/src/generation/playwright-export.test.ts`
 
 - [ ] **Step 1: Write failing tests**
 
@@ -1770,7 +1770,7 @@ describe("exportAsPlaywrightScript", () => {
 
 - [ ] **Step 2: Run tests to verify they fail**
 
-Run: `cd /Users/johnhuang/projects/testomniac_scanning_service && bun run test src/generation/playwright-export.test.ts`
+Run: `cd /Users/johnhuang/projects/testomniac_runner_service && bun run test src/generation/playwright-export.test.ts`
 Expected: FAIL — module not found
 
 - [ ] **Step 3: Implement the export function**
@@ -1854,13 +1854,13 @@ function escapeSingleQuotes(s: string): string {
 
 - [ ] **Step 4: Run tests to verify they pass**
 
-Run: `cd /Users/johnhuang/projects/testomniac_scanning_service && bun run test src/generation/playwright-export.test.ts`
+Run: `cd /Users/johnhuang/projects/testomniac_runner_service && bun run test src/generation/playwright-export.test.ts`
 Expected: ALL PASS
 
 - [ ] **Step 5: Run full verify and commit**
 
 ```bash
-cd /Users/johnhuang/projects/testomniac_scanning_service && bun run verify
+cd /Users/johnhuang/projects/testomniac_runner_service && bun run verify
 git add src/generation/playwright-export.ts src/generation/playwright-export.test.ts
 git commit -m "feat: add Playwright test script export generator"
 ```

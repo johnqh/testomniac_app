@@ -226,7 +226,7 @@ A scan has two interleaved phases that run in a loop:
 
 This loop continues until no new page states are discovered.
 
-`createdByUserId` is always set to the user who initiated the scan. `ownedByUserId` is set only when the scan is initiated from the web extension (meaning the user's browser runs it). When `ownedByUserId` is null, the server-side scanner (`testomniac_scanner`) picks up and executes the scan.
+`createdByUserId` is always set to the user who initiated the scan. `ownedByUserId` is set only when the scan is initiated from the web extension (meaning the user's browser runs it). When `ownedByUserId` is null, the server-side scanner (`testomniac_runner`) picks up and executes the scan.
 
 | Field                     | Type     | Description                              |
 |---------------------------|----------|------------------------------------------|

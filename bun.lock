@@ -16,7 +16,7 @@
         "@sudobility/di_web": "^0.1.175",
         "@sudobility/entity_client": "^0.0.35",
         "@sudobility/entity_pages": "^0.0.103",
-        "@sudobility/seo_lib": "^0.0.16",
+        "@sudobility/seo_lib": "^0.0.17",
         "@sudobility/subscription-components": "^1.0.31",
         "@sudobility/subscription_lib": "^0.0.42",
         "@sudobility/testomniac_client": "^0.0.42",
@@ -463,7 +463,7 @@
 
     "@sudobility/entity_pages": ["@sudobility/entity_pages@0.0.103", "", { "optionalDependencies": { "@rollup/rollup-linux-x64-gnu": "4.52.5", "@rollup/rollup-linux-x64-musl": "4.52.5" }, "peerDependencies": { "@heroicons/react": "^2.2.0", "@sudobility/components": "^5.0.63", "@sudobility/design": "^1.1.30", "@sudobility/entity-components": "^1.0.13", "@sudobility/entity_client": "^0.0.35", "@sudobility/types": "^1.9.61", "@tanstack/react-query": "^5.0.0", "react": "^18.0.0 || ^19.0.0", "react-dom": "^18.0.0 || ^19.0.0" } }, "sha512-Cp6hyr/Lt4C2XS2l0X3rOUIg8ziRVOdAzAqgFr/0fQZSFyGYgPibN9M16ZzXOIMAh3Dro49htfbzDnzveFHFSQ=="],
 
-    "@sudobility/seo_lib": ["@sudobility/seo_lib@0.0.16", "", { "peerDependencies": { "react": "^18.0.0 || ^19.0.0", "react-dom": "^18.0.0 || ^19.0.0", "react-helmet-async": ">=2.0.0" } }, "sha512-5ECzHUs7MxSzhikkwZYxBCq4q60b+6BRt6BDRQFJJL6ojVaCAw1VEMNhoO7AoMWMlpZWLWuNu1DxLDg9X93F3A=="],
+    "@sudobility/seo_lib": ["@sudobility/seo_lib@0.0.17", "", { "peerDependencies": { "react": "^18.0.0 || ^19.0.0", "react-dom": "^18.0.0 || ^19.0.0", "react-helmet-async": ">=2.0.0" } }, "sha512-xjNEOpofPZKtzpzc7rMoZoCOJXHq7urh+dFYSqbsv1pEBeHjRu52JWlcK6cNJvFpZf5F0dEOimDWlUbJo6rsLQ=="],
 
     "@sudobility/subscription-components": ["@sudobility/subscription-components@1.0.31", "", { "optionalDependencies": { "@rollup/rollup-linux-x64-gnu": "4.52.5", "@rollup/rollup-linux-x64-musl": "4.52.5" }, "peerDependencies": { "@heroicons/react": "^2.2.0", "@revenuecat/purchases-js": "^1.0.0", "@sudobility/components": "^5.0.7", "@sudobility/design": "^1.1.18", "react": "^18.0.0 || ^19.0.0", "react-dom": "^18.0.0 || ^19.0.0" }, "optionalPeers": ["@revenuecat/purchases-js"] }, "sha512-zYy5doepoOumZy4c0q6+SfJNf8KZ6RAS+JfpjYZ/Ia/Bi9+E+cERL4CnGlQfupZ9ycp8yZsxg905Ex3IYppF1A=="],
 
