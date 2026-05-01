@@ -3,9 +3,8 @@ import { useTranslation } from 'react-i18next';
 import SEOHead from '@/components/SEOHead';
 import { buildHowToSchema } from '@/components/buildHowToSchema';
 import { ScanForm } from '../components/scanner/ScanForm';
+import { CONSTANTS } from '../config/constants';
 import { useLocalizedNavigate } from '../hooks/useLocalizedNavigate';
-
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8027';
 
 export default function HomePage() {
   const { t } = useTranslation('common');
@@ -28,17 +27,20 @@ export default function HomePage() {
     setError(null);
     setIsSubmitting(true);
     try {
-      const response = await fetch(`${API_URL}/api/v1/scan`, {
+      const response = await fetch(`${CONSTANTS.API_URL}/api/v1/scan`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ url, email }),
+        body: JSON.stringify({
+          url,
+          ...(email ? { reportEmail: email } : {}),
+        }),
       });
       const data = await response.json();
 
       if (data.success && data.data) {
         const result = data.data;
-        if (result.status === 'pending' && result.runId) {
-          navigate(`/scan/${result.runId}/progress`);
+        if (result.status === 'pending' && result.testRunId) {
+          navigate(`/scan/${result.testRunId}/progress`);
         } else if (result.status === 'duplicate_owned') {
           setError(
             result.message ||
@@ -52,7 +54,7 @@ export default function HomePage() {
           setError(result.message || 'Validation failed. Please check your input.');
         }
       } else {
-        setError(data.error || 'Failed to start scan');
+        setError(data.error || 'Failed to start discovery run');
       }
     } catch {
       setError('Failed to connect to server');
@@ -77,7 +79,7 @@ export default function HomePage() {
               {t('home.description', 'Automated web app testing powered by AI')}
             </p>
             <p className="mt-1 text-sm text-gray-500 dark:text-gray-500">
-              Enter your URL to discover pages, generate tests, and find issues
+              Enter your URL to start a discovery run, generate tests, and find issues
             </p>
           </div>
 

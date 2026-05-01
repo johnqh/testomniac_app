@@ -1,9 +1,10 @@
 import { useParams } from 'react-router-dom';
 import { useApi } from '@sudobility/building_blocks/firebase';
-import { useTestRunFindings } from '@sudobility/testomniac_client';
+import { useRun, useTestRunFindings } from '@sudobility/testomniac_client';
 import type { TestRunFindingResponse } from '@sudobility/testomniac_types';
 import { useLocalizedNavigate } from '../hooks/useLocalizedNavigate';
 import { CONSTANTS } from '../config/constants';
+import { StatusBadge } from '../components/scanner/StatusBadge';
 
 function formatDate(dateStr: string | null): string {
   if (!dateStr) return '-';
@@ -37,19 +38,42 @@ export default function TestRunDetailPage() {
   const { navigate } = useLocalizedNavigate();
 
   const basePath = `/dashboard/${entitySlug}/runners/${runnerId}`;
+  const testRunId = Number(runId);
 
-  const { findings, isLoading, error } = useTestRunFindings({
+  const {
+    run,
+    isLoading: isRunLoading,
+    error: runError,
+  } = useRun({
     networkClient,
     baseUrl: CONSTANTS.API_URL,
-    testCaseRunId: Number(runId),
+    runId: testRunId,
     token: token ?? '',
     enabled: !!runId && !!token,
   });
 
-  if (error) {
+  const { findings, isLoading, error } = useTestRunFindings({
+    networkClient,
+    baseUrl: CONSTANTS.API_URL,
+    testCaseRunId: run?.testCaseRunId ?? 0,
+    token: token ?? '',
+    enabled: !!run?.testCaseRunId && !!token,
+  });
+
+  if (runError || error) {
     return (
       <div className="p-6">
-        <div className="text-center text-red-600 dark:text-red-400 py-8">Error: {error}</div>
+        <div className="text-center text-red-600 dark:text-red-400 py-8">
+          Error: {runError || error}
+        </div>
+      </div>
+    );
+  }
+
+  if (isRunLoading || !run) {
+    return (
+      <div className="p-6">
+        <div className="text-center text-gray-500 dark:text-gray-400 py-8">Loading run...</div>
       </div>
     );
   }
@@ -74,7 +98,24 @@ export default function TestRunDetailPage() {
 
       {/* Metadata */}
       <div className="flex flex-wrap items-center gap-2 mb-6">
+        <StatusBadge status={run.status} />
+        <StatusBadge status={run.sizeClass} />
         <span className="text-xs text-gray-500 dark:text-gray-400">ID: {runId}</span>
+        {run.createdAt && (
+          <span className="text-xs text-gray-500 dark:text-gray-400">
+            Created {formatDate(run.createdAt)}
+          </span>
+        )}
+        {run.startedAt && (
+          <span className="text-xs text-gray-500 dark:text-gray-400">
+            Started {formatDate(run.startedAt)}
+          </span>
+        )}
+        {run.completedAt && (
+          <span className="text-xs text-gray-500 dark:text-gray-400">
+            Completed {formatDate(run.completedAt)}
+          </span>
+        )}
       </div>
 
       {/* Findings */}
@@ -82,13 +123,22 @@ export default function TestRunDetailPage() {
         Findings
       </h2>
 
-      {isLoading && (
+      {run.testCaseRunId === null && (
+        <div className="rounded-xl border border-dashed border-gray-200 dark:border-gray-700 p-8 text-center">
+          <div className="text-sm text-gray-500 dark:text-gray-400">
+            This test run tracks a suite or discovery workflow and does not map directly to a single
+            test case run.
+          </div>
+        </div>
+      )}
+
+      {run.testCaseRunId !== null && isLoading && (
         <div className="text-sm text-gray-500 dark:text-gray-400 py-8 text-center">
           Loading findings...
         </div>
       )}
 
-      {!isLoading && findings.length === 0 && (
+      {run.testCaseRunId !== null && !isLoading && findings.length === 0 && (
         <div className="rounded-xl border border-dashed border-gray-200 dark:border-gray-700 p-8 text-center">
           <div className="text-sm text-gray-500 dark:text-gray-400">
             No findings for this test run.
@@ -96,7 +146,7 @@ export default function TestRunDetailPage() {
         </div>
       )}
 
-      {!isLoading && findings.length > 0 && (
+      {run.testCaseRunId !== null && !isLoading && findings.length > 0 && (
         <div className="space-y-3">
           {(findings as TestRunFindingResponse[]).map(finding => (
             <div

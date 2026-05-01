@@ -21,9 +21,11 @@ export default function ScanProgressPage() {
 
   return (
     <div className="p-6">
-      <SEOHead title="Scan Progress" description="" noIndex />
+      <SEOHead title="Discovery Run Progress" description="" noIndex />
       <div className="flex items-center justify-between mb-6">
-        <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">Scan Progress</h1>
+        <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">
+          Discovery Run Progress
+        </h1>
         {store.isComplete && (
           <button
             onClick={() => navigate(`/dashboard/${entitySlug}/runs/${runId}`)}
@@ -39,6 +41,7 @@ export default function ScanProgressPage() {
         pageStatesFound={store.pageStatesFound}
         testRunsCompleted={store.testRunsCompleted}
         findingsFound={store.findingsFound}
+        error={store.error}
         events={store.events}
         isConnected={isConnected}
         isComplete={store.isComplete}

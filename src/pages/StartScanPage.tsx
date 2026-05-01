@@ -4,8 +4,7 @@ import { useApi } from '@sudobility/building_blocks/firebase';
 import SEOHead from '@/components/SEOHead';
 import { useLocalizedNavigate } from '../hooks/useLocalizedNavigate';
 import { ScanForm } from '../components/scanner/ScanForm';
-
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8027';
+import { CONSTANTS } from '../config/constants';
 
 export default function StartScanPage() {
   const { entitySlug } = useParams<{ entitySlug: string }>();
@@ -14,29 +13,29 @@ export default function StartScanPage() {
   const [error, setError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [sizeClass, setSizeClass] = useState<'desktop' | 'mobile'>('desktop');
-  const [plugins, setPlugins] = useState<string[]>(['seo', 'security', 'content']);
 
   async function handleSubmit(url: string, email?: string) {
     setError(null);
     setIsSubmitting(true);
     try {
-      const response = await fetch(`${API_URL}/api/v1/scan`, {
+      const response = await fetch(`${CONSTANTS.API_URL}/api/v1/scan`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           ...(token ? { Authorization: `Bearer ${token}` } : {}),
         },
-        body: JSON.stringify({ url, email, sizeClass, plugins }),
+        body: JSON.stringify({
+          url,
+          sizeClass,
+          ...(email ? { reportEmail: email } : {}),
+        }),
       });
       const data = await response.json();
 
-      if (data.success && data.data?.scanId && data.data?.runnerId) {
+      if (data.success && data.data?.testRunId && data.data?.runnerId) {
         navigate(
-          `/dashboard/${entitySlug}/runners/${data.data.runnerId}/scans/${data.data.scanId}/progress`
+          `/dashboard/${entitySlug}/runners/${data.data.runnerId}/runs/${data.data.testRunId}/progress`
         );
-      } else if (data.success && data.data?.runId) {
-        // Fallback for older API responses without runnerId
-        navigate(`/dashboard/${entitySlug}/runs/${data.data.runId}/progress`);
       } else {
         setError(data.error || data.data?.message || 'Failed to start scan');
       }
@@ -47,17 +46,12 @@ export default function StartScanPage() {
     }
   }
 
-  const pluginOptions = [
-    { id: 'seo', label: 'SEO Checks' },
-    { id: 'security', label: 'Security Checks' },
-    { id: 'content', label: 'Content Quality' },
-    { id: 'ui-consistency', label: 'UI Consistency' },
-  ];
-
   return (
     <div className="p-6 max-w-lg">
-      <SEOHead title="Start New Scan" description="" noIndex />
-      <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-6">Start New Scan</h1>
+      <SEOHead title="Start Discovery Run" description="" noIndex />
+      <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-6">
+        Start Discovery Run
+      </h1>
 
       <div className="space-y-6">
         <ScanForm
@@ -99,28 +93,10 @@ export default function StartScanPage() {
               </div>
             </div>
 
-            <div>
-              <label className="block text-sm text-gray-600 dark:text-gray-400 mb-2">Plugins</label>
-              <div className="space-y-2">
-                {pluginOptions.map(plugin => (
-                  <label key={plugin.id} className="flex items-center gap-2">
-                    <input
-                      type="checkbox"
-                      checked={plugins.includes(plugin.id)}
-                      onChange={e => {
-                        if (e.target.checked) {
-                          setPlugins([...plugins, plugin.id]);
-                        } else {
-                          setPlugins(plugins.filter(p => p !== plugin.id));
-                        }
-                      }}
-                      className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-                    />
-                    <span className="text-sm text-gray-700 dark:text-gray-300">{plugin.label}</span>
-                  </label>
-                ))}
-              </div>
-            </div>
+            <p className="text-xs text-gray-500 dark:text-gray-400">
+              Discovery creates a root test run and captures page states for the selected device
+              size.
+            </p>
           </div>
         </div>
       </div>

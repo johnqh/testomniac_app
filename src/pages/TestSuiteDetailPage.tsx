@@ -1,28 +1,10 @@
 import { useParams } from 'react-router-dom';
 import { useApi } from '@sudobility/building_blocks/firebase';
-import { useTestSuiteChildSuites, useTestSuiteTestCases } from '@sudobility/testomniac_client';
-import type { TestSuiteResponse, TestCaseResponse } from '@sudobility/testomniac_types';
+import { useTestSuiteTestCases } from '@sudobility/testomniac_client';
+import type { TestCaseResponse } from '@sudobility/testomniac_types';
 import { useLocalizedNavigate } from '../hooks/useLocalizedNavigate';
 import { CONSTANTS } from '../config/constants';
 import { StatusBadge } from '../components/scanner/StatusBadge';
-
-function FolderIcon() {
-  return (
-    <svg
-      className="w-5 h-5 flex-shrink-0 text-yellow-500 dark:text-yellow-400"
-      fill="none"
-      viewBox="0 0 24 24"
-      stroke="currentColor"
-      strokeWidth={1.5}
-    >
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        d="M2.25 12.75V12A2.25 2.25 0 014.5 9.75h15A2.25 2.25 0 0121.75 12v.75m-8.69-6.44l-2.12-2.12a1.5 1.5 0 00-1.06-.44H4.5A2.25 2.25 0 002.25 6v12a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9a2.25 2.25 0 00-2.25-2.25h-5.379a1.5 1.5 0 01-1.06-.44z"
-      />
-    </svg>
-  );
-}
 
 function FileIcon() {
   return (
@@ -54,18 +36,6 @@ export default function TestSuiteDetailPage() {
   const basePath = `/dashboard/${entitySlug}/runners/${runnerId}`;
 
   const {
-    childSuites,
-    isLoading: suitesLoading,
-    error: suitesError,
-  } = useTestSuiteChildSuites({
-    networkClient,
-    baseUrl: CONSTANTS.API_URL,
-    testSuiteId: Number(suiteId),
-    token: token ?? '',
-    enabled: !!suiteId && !!token,
-  });
-
-  const {
     testCases,
     isLoading: casesLoading,
     error: casesError,
@@ -77,8 +47,8 @@ export default function TestSuiteDetailPage() {
     enabled: !!suiteId && !!token,
   });
 
-  const isLoading = suitesLoading || casesLoading;
-  const error = suitesError || casesError;
+  const isLoading = casesLoading;
+  const error = casesError;
 
   if (error) {
     return (
@@ -110,43 +80,12 @@ export default function TestSuiteDetailPage() {
         <div className="text-sm text-gray-500 dark:text-gray-400 py-8 text-center">Loading...</div>
       )}
 
-      {!isLoading && childSuites.length === 0 && testCases.length === 0 && (
+      {!isLoading && testCases.length === 0 && (
         <div className="rounded-xl border border-dashed border-gray-200 dark:border-gray-700 p-8 text-center">
           <div className="text-lg font-semibold text-gray-900 dark:text-gray-100">Empty suite</div>
           <p className="text-sm text-gray-500 dark:text-gray-400 mt-2">
-            This test suite has no child suites or test cases.
+            This test suite has no test cases.
           </p>
-        </div>
-      )}
-
-      {/* Child suites */}
-      {childSuites.length > 0 && (
-        <div className="mb-6">
-          <h2 className="text-sm font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-3">
-            Child Suites
-          </h2>
-          <div className="space-y-2">
-            {childSuites.map((suite: TestSuiteResponse) => (
-              <button
-                key={suite.id}
-                onClick={() => navigate(`${basePath}/test-suites/${suite.id}`)}
-                className="w-full text-left flex items-center gap-3 px-4 py-3 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors"
-              >
-                <FolderIcon />
-                <div className="flex-1 min-w-0">
-                  <div className="text-sm font-medium text-gray-900 dark:text-gray-100 truncate">
-                    {suite.title}
-                  </div>
-                  {suite.description && (
-                    <div className="text-xs text-gray-500 dark:text-gray-400 mt-0.5 truncate">
-                      {suite.description}
-                    </div>
-                  )}
-                </div>
-                <StatusBadge status={suite.sizeClass} />
-              </button>
-            ))}
-          </div>
         </div>
       )}
 

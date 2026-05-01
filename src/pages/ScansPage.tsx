@@ -54,7 +54,7 @@ export default function ScansPage() {
         <button
           onClick={() =>
             navigate(
-              `/dashboard/${entitySlug}/runners/${runnerId}/scans/${info.getValue()}/progress`
+              `/dashboard/${entitySlug}/runners/${runnerId}/runs/${info.getValue()}/progress`
             )
           }
           className="font-medium text-blue-600 dark:text-blue-400 hover:underline"
@@ -94,8 +94,8 @@ export default function ScansPage() {
 
   return (
     <div className="p-6">
-      <SEOHead title="Scans" description="" noIndex />
-      <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-6">Scans</h1>
+      <SEOHead title="Discovery Runs" description="" noIndex />
+      <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-6">Discovery Runs</h1>
 
       <DataTable data={scans as ScanRow[]} columns={columns as never} isLoading={isLoading} />
     </div>

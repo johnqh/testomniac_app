@@ -7,6 +7,7 @@ interface ScanProgressPanelProps {
   pageStatesFound: number;
   testRunsCompleted: number;
   findingsFound: number;
+  error?: string | null;
   events: TestRunStreamEvent[];
   isConnected: boolean;
   isComplete: boolean;
@@ -19,6 +20,7 @@ export function ScanProgressPanel({
   pageStatesFound,
   testRunsCompleted,
   findingsFound,
+  error,
   events,
   isConnected,
   isComplete,
@@ -29,7 +31,7 @@ export function ScanProgressPanel({
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
-          {isComplete ? 'Scan finished' : 'Scanning...'}
+          {isComplete ? 'Discovery run finished' : 'Running discovery...'}
         </span>
         <div className="flex items-center gap-2">
           {isComplete ? (
@@ -41,6 +43,12 @@ export function ScanProgressPanel({
           )}
         </div>
       </div>
+
+      {error && (
+        <div className="rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700 dark:border-red-800 dark:bg-red-900/20 dark:text-red-300">
+          {error}
+        </div>
+      )}
 
       <LiveCounters
         pagesFound={pagesFound}
@@ -62,7 +70,7 @@ export function ScanProgressPanel({
             )}
           </div>
           {latestScreenshotUrl && (
-            <img src={latestScreenshotUrl} alt="Current scan page" className="w-full h-auto" />
+            <img src={latestScreenshotUrl} alt="Current discovery page" className="w-full h-auto" />
           )}
         </div>
       )}

@@ -1,30 +1,63 @@
 import { useParams } from 'react-router-dom';
+import { useApi } from '@sudobility/building_blocks/firebase';
+import {
+  useRun,
+  useRunComponents,
+  useRunPages,
+  useRunPersonas,
+  useRunTestCases,
+  useRunTestRuns,
+} from '@sudobility/testomniac_client';
 import SEOHead from '@/components/SEOHead';
 import { useLocalizedNavigate } from '../hooks/useLocalizedNavigate';
+import { CONSTANTS } from '../config/constants';
 import { StatusBadge } from '../components/scanner/StatusBadge';
 
 export default function RunDetailsPage() {
   const { entitySlug, runId } = useParams<{ entitySlug: string; runId: string }>();
+  const { networkClient, token } = useApi();
   const { navigate } = useLocalizedNavigate();
   const basePath = `/dashboard/${entitySlug}/runs/${runId}`;
 
-  // TODO: fetch run data via useRunManager once API endpoints are live
-  const run = {
-    id: Number(runId),
-    status: 'completed',
-    phase: null,
-    startedAt: new Date().toISOString(),
-    completedAt: new Date().toISOString(),
+  const queryConfig = {
+    networkClient,
+    baseUrl: CONSTANTS.API_URL,
+    runId: Number(runId),
+    token: token ?? '',
+    enabled: !!runId && !!token,
   };
 
+  const { run, isLoading, error } = useRun(queryConfig);
+  const { pages } = useRunPages(queryConfig);
+  const { testCases } = useRunTestCases(queryConfig);
+  const { testRuns } = useRunTestRuns(queryConfig);
+  const { personas } = useRunPersonas(queryConfig);
+  const { components } = useRunComponents(queryConfig);
+
+  if (error) {
+    return (
+      <div className="p-6">
+        <div className="text-center text-red-600 dark:text-red-400 py-8">Error: {error}</div>
+      </div>
+    );
+  }
+
+  if (isLoading || !run) {
+    return (
+      <div className="p-6">
+        <div className="text-center text-gray-500 dark:text-gray-400 py-8">Loading run...</div>
+      </div>
+    );
+  }
+
   const subPages = [
-    { label: 'Test Cases', path: `${basePath}/test-cases`, count: 0 },
-    { label: 'Test Runs', path: `${basePath}/test-runs`, count: 0 },
+    { label: 'Test Cases', path: `${basePath}/test-cases`, count: testCases.length },
+    { label: 'Test Runs', path: `${basePath}/test-runs`, count: testRuns.length },
     { label: 'Issues', path: `${basePath}/issues`, count: 0 },
-    { label: 'Pages', path: `${basePath}/pages`, count: 0 },
+    { label: 'Pages', path: `${basePath}/pages`, count: pages.length },
     { label: 'Site Map', path: `${basePath}/map`, count: null },
-    { label: 'Components', path: `${basePath}/components`, count: 0 },
-    { label: 'Personas', path: `${basePath}/personas`, count: 0 },
+    { label: 'Components', path: `${basePath}/components`, count: components.length },
+    { label: 'Personas', path: `${basePath}/personas`, count: personas.length },
   ];
 
   return (
@@ -37,19 +70,25 @@ export default function RunDetailsPage() {
 
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
         <div className="p-4 rounded-lg border border-gray-200 dark:border-gray-700">
-          <div className="text-2xl font-bold text-gray-900 dark:text-gray-100">0</div>
+          <div className="text-2xl font-bold text-gray-900 dark:text-gray-100">
+            {run.pagesFound ?? pages.length}
+          </div>
           <div className="text-xs text-gray-500">Pages Found</div>
         </div>
         <div className="p-4 rounded-lg border border-gray-200 dark:border-gray-700">
-          <div className="text-2xl font-bold text-gray-900 dark:text-gray-100">0</div>
+          <div className="text-2xl font-bold text-gray-900 dark:text-gray-100">
+            {testCases.length}
+          </div>
           <div className="text-xs text-gray-500">Test Cases</div>
         </div>
         <div className="p-4 rounded-lg border border-gray-200 dark:border-gray-700">
-          <div className="text-2xl font-bold text-green-600">0</div>
+          <div className="text-2xl font-bold text-green-600">
+            {run.testRunsCompleted ?? testRuns.length}
+          </div>
           <div className="text-xs text-gray-500">Passed</div>
         </div>
         <div className="p-4 rounded-lg border border-gray-200 dark:border-gray-700">
-          <div className="text-2xl font-bold text-red-600">0</div>
+          <div className="text-2xl font-bold text-red-600">{run.pageStatesFound ?? 0}</div>
           <div className="text-xs text-gray-500">Issues</div>
         </div>
       </div>

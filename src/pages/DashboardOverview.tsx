@@ -146,17 +146,17 @@ export default function DashboardOverview() {
       <SEOHead title="Dashboard" description="" noIndex />
       <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-2">Dashboard</h1>
       <p className="text-gray-500 dark:text-gray-400 mb-8">
-        Manage your web application tests and scan results.
+        Manage your web application tests and discovery run results.
       </p>
 
-      {/* Start new scan CTA */}
+      {/* Start new discovery run CTA */}
       <div className="mb-8">
         <button
           onClick={() => navigate(`${basePath}/scan/new`)}
           className="w-full sm:w-auto p-6 text-left rounded-xl border-2 border-dashed border-gray-300 dark:border-gray-600 hover:border-blue-400 dark:hover:border-blue-500 transition-colors group"
         >
           <div className="text-lg font-semibold text-gray-900 dark:text-gray-100 group-hover:text-blue-600 dark:group-hover:text-blue-400">
-            Start New Scan
+            Start Discovery Run
           </div>
           <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
             Enter a URL to discover pages, run tests, and find issues
@@ -185,7 +185,8 @@ export default function DashboardOverview() {
             No products yet
           </div>
           <p className="text-sm text-gray-500 dark:text-gray-400 mt-2">
-            Start a scan to automatically create your first product and discover your application.
+            Start a discovery run to automatically create your first product and discover your
+            application.
           </p>
         </div>
       )}

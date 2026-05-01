@@ -20,14 +20,17 @@ export default function PublicScanProgressPage() {
 
   return (
     <div className="max-w-2xl mx-auto px-4 py-8">
-      <SEOHead title="Scan Progress" description="" noIndex />
-      <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-6">Scan Progress</h1>
+      <SEOHead title="Discovery Run Progress" description="" noIndex />
+      <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-6">
+        Discovery Run Progress
+      </h1>
 
       <ScanProgressPanel
         pagesFound={store.pagesFound}
         pageStatesFound={store.pageStatesFound}
         testRunsCompleted={store.testRunsCompleted}
         findingsFound={store.findingsFound}
+        error={store.error}
         events={store.events}
         isConnected={isConnected}
         isComplete={store.isComplete}
@@ -38,7 +41,7 @@ export default function PublicScanProgressPage() {
       {store.isComplete && (
         <div className="mt-6 p-4 rounded-lg bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800">
           <p className="text-sm text-green-800 dark:text-green-200">
-            Scan complete! Create an account to view full results and manage your projects.
+            Discovery run complete. Create an account to view full results and manage your products.
           </p>
         </div>
       )}
