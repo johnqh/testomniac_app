@@ -141,7 +141,7 @@ An interactive UI element discovered on a page state (button, link, input, selec
 
 ### Element Identity
 
-App-level persistent record of a UI element, tracked across scans. Used to generate stable Playwright locators.
+App-level persistent record of a UI element, tracked across test runs. Used to generate stable Playwright locators.
 
 | Field                | Type     | Description                              |
 |----------------------|----------|------------------------------------------|
@@ -165,9 +165,9 @@ App-level persistent record of a UI element, tracked across scans. Used to gener
 | isUniqueOnPage       | boolean  | Whether this element is unique on the page |
 | cssSelector          | string   | Fallback CSS selector                    |
 | locators             | json     | Array of locator strategies (test-id, role-name, label, placeholder, text, alt-text, css) |
-| firstSeenScanId      | number   | First scan this element was seen in      |
-| lastSeenScanId       | number   | Most recent scan this element was seen in |
-| timesSeen            | number   | Number of scans this element appeared in |
+| firstSeenTestRunId   | number   | First test run this element was seen in  |
+| lastSeenTestRunId    | number   | Most recent test run this element was seen in |
+| timesSeen            | number   | Number of test runs this element appeared in |
 | createdAt            | string?  | Creation timestamp                       |
 | updatedAt            | string?  | Last update timestamp                    |
 
@@ -215,81 +215,282 @@ A detected UI pattern instance on a page state. Unlike reusable elements (which 
 
 ---
 
-## Scan Domain
+## Test Domain
 
-### Scan
+### Hierarchy
 
-A scan has two interleaved phases that run in a loop:
-
-1. **Generate** — AI Decomposition Jobs decompose page states into pieces and create test suites (with dedup) containing test cases.
-2. **Run** — Test cases are executed. If a test case produces a target page state that differs from any previously seen page state, a new AI Decomposition Job is created for it, feeding back into phase 1.
-
-This loop continues until no new page states are discovered.
-
-`createdByUserId` is always set to the user who initiated the scan. `ownedByUserId` is set only when the scan is initiated from the web extension (meaning the user's browser runs it). When `ownedByUserId` is null, the server-side scanner (`testomniac_runner`) picks up and executes the scan.
-
-| Field                     | Type     | Description                              |
-|---------------------------|----------|------------------------------------------|
-| id                        | number   | Primary key                              |
-| appId                     | number   | Parent app                               |
-| scanUrl                   | string   | URL to scan (may differ from app's baseUrl) |
-| createdByUserId           | string   | User who initiated the scan              |
-| ownedByUserId             | string?  | User who owns/runs the scan (set when initiated from web extension; null for server-side execution) |
-| status                    | string   | pending, running, completed, failed      |
-| sizeClass                 | string   | desktop or mobile                        |
-| pagesFound                | number?  | Number of unique pages discovered        |
-| pageStatesFound           | number?  | Number of page state captures            |
-| testRunsCompleted         | number?  | Number of test runs completed            |
-| aiSummary                 | string?  | AI-generated summary of the scan         |
-| totalDurationMs           | number?  | Total scan duration                      |
-| createdAt                 | string   | Creation timestamp (status set to pending) |
-| startedAt                 | string?  | When execution started                   |
-| endedAt                   | string?  | When execution ended                     |
-
-**Scan loop:**
 ```
-Scan starts with initial page state
-  │
-  ▼
-┌─────────────────────────────────────────────────┐
-│ Phase 1: GENERATE                               │
-│   AI Decomposition Job (per new page state)     │
-│     → Decompose into pieces (reusable + body)   │
-│     → Create/dedup Test Suites                  │
-│     → Create Test Cases within suites           │
-└──────────────────────┬──────────────────────────┘
-                       │
-                       ▼
-┌─────────────────────────────────────────────────┐
-│ Phase 2: RUN                                    │
-│   Create Test Runs for test cases               │
-│     → Execute test cases                        │
-│     → If target page state is NEW               │
-│         → Create new AI Decomposition Job ──┐   │
-└─────────────────────────────────────────────┼───┘
-                                              │
-                       loops back to Phase 1 ◄┘
-                       
-Until no new page states are discovered → Scan complete
+App
+ ├── Test Suites (1:many with App)
+ │     └── Test Cases (1:many via testSuiteId FK)
+ │           └── Test Actions (1:many, strict parent/child)
+ │
+ ├── Test Suite Bundles (1:many with App, user-created)
+ │     └── test_suite_bundle_suites ──► Test Suites (many:many)
+ │
+ ├── Test Schedules (1:many with App)
+ │     └── targets one of: Test Suite, Test Case, or Test Suite Bundle
+ │
+ └── Test Runs (tree via parentTestRunId/rootTestRunId)
+       └── points to one of:
+           ├── Test Suite Bundle Run
+           │     └── Test Suite Runs (1:many)
+           │           └── Test Case Runs (1:many)
+           │                 └── Test Run Findings (1:many)
+           ├── Test Suite Run
+           │     └── Test Case Runs (1:many)
+           │           └── Test Run Findings (1:many)
+           └── Test Case Run
+                 └── Test Run Findings (1:many)
+
+AI Decomposition Jobs ──► testRunId
+Report Email ──► rootTestRunId
+Element Identity ──► firstSeenTestRunId / lastSeenTestRunId
 ```
+
+### Test Suite
+
+A named grouping of test cases. Each test suite belongs to one app. Test cases have a 1:many relationship with their suite (each test case belongs to exactly one suite).
+
+| Field                    | Type     | Description                |
+|--------------------------|----------|----------------------------|
+| id                       | number   | Primary key                |
+| appId                    | number   | Parent app                 |
+| decompositionJobId       | number?  | AI Decomposition Job that created this suite |
+| title                    | string   | Suite title                |
+| description              | string   | Suite description          |
+| sizeClass                | string   | desktop or mobile          |
+| priority                 | number   | 1 (highest) to 5 (lowest) |
+| startingPageStateId      | number   | Page state where this suite begins |
+| startingPath             | string   | Entry path (relative to app's baseUrl) |
+| dependencyTestCaseId     | number?  | Test case that must complete before this suite can run |
+| personaIds               | number[] | Associated personas        |
+| reusableHtmlElementId    | number?  | If this suite tests a reusable element (header, footer, etc.) |
+| reusableHtmlElementType  | string?  | Component type (topMenu, footer, breadcrumb, etc.) |
+| patternType              | string?  | If this suite tests a UI pattern (card, modal, table, etc.) |
+| suiteTags                | string[] | Categorization tags        |
+| estimatedDurationMs      | number?  | Estimated duration         |
+| createdAt                | string?  | Creation timestamp         |
+
+### Test Suite Bundle
+
+A user-created grouping of test suites. Many-to-many relationship with test suites. Bundles are manually created for organizing suites for running/scheduling. Discovery never creates or modifies bundles.
+
+| Field       | Type     | Description                |
+|-------------|----------|----------------------------|
+| id          | number   | Primary key                |
+| appId       | number   | Parent app                 |
+| title       | string   | Bundle title               |
+| description | string?  | Bundle description         |
+| createdAt   | string?  | Creation timestamp         |
+| updatedAt   | string?  | Last update timestamp      |
+
+**Junction: test_suite_bundle_suites**
+
+| Field              | Type   | Description         |
+|--------------------|--------|---------------------|
+| id                 | number | Primary key         |
+| testSuiteBundleId  | number | The bundle          |
+| testSuiteId        | number | The suite           |
+
+UNIQUE constraint on (testSuiteBundleId, testSuiteId).
+
+### Test Case
+
+A single test scenario containing an ordered list of test actions. Belongs to exactly one test suite. If the same scenario is needed in multiple suites, the test case is duplicated.
+
+| Field                  | Type       | Description                        |
+|------------------------|------------|------------------------------------|
+| id                     | number     | Primary key                        |
+| appId                  | number     | Parent app                         |
+| testSuiteId            | number     | Parent test suite (1:many)         |
+| title                  | string     | Test case title                    |
+| testType               | string     | render, interaction, form, form_negative, password, navigation, e2e |
+| sizeClass              | string     | desktop or mobile                  |
+| suiteTags              | string[]   | Categorization tags                |
+| priority               | number     | 1 (highest) to 5 (lowest)         |
+| reusableHtmlElementId  | number?    | If this case tests a reusable element (header, footer, etc.) |
+| patternType            | string?    | If this case tests a UI pattern (card, modal, table, etc.) |
+| dependencyTestCaseId   | number?    | Test case that must complete before this one can run |
+| pageId                 | number?    | Associated page                    |
+| personaId              | number?    | Associated persona                 |
+| useCaseId              | number?    | Associated use case                |
+| startingPageStateId    | number?    | Initial page state                 |
+| startingPath           | string?    | Entry path (relative to app's baseUrl) |
+| globalExpectationsJson | unknown    | Expectations checked after all steps |
+| estimatedDurationMs    | number?    | Estimated duration                 |
+| generatedAt            | string?    | Generation timestamp               |
+
+### Test Action
+
+A single step within a test case. Strict parent/child relationship with its test case.
+
+| Field                      | Type     | Description                              |
+|----------------------------|----------|------------------------------------------|
+| id                         | number   | Primary key                              |
+| testCaseId                 | number   | Parent test case (strict ownership)      |
+| stepOrder                  | number   | Position within the test case            |
+| actionType                 | string   | goto, click, fill, select, screenshot, etc. |
+| pageStateId                | number?  | Page state context for this action       |
+| elementIdentityId          | number?  | Target element                           |
+| containerType              | string?  | Component type if targeting element inside a component (topMenu, footer, etc.) |
+| containerElementIdentityId | number?  | Element identity of the container component |
+| value                      | string?  | Input value (for fill/select)            |
+| path                       | string?  | Target path (relative to app's baseUrl, for goto) |
+| playwrightCode             | string   | Executable Playwright code               |
+| description                | string   | Human-readable step description          |
+| expectations               | json     | Array of expectations to verify after this action |
+| continueOnFailure          | boolean  | Whether to proceed if this step fails    |
+
+### Test Case Run
+
+A single execution of a test case. This is where actual browser work happens — navigation, clicks, assertions, screenshots. Contains execution details and findings.
+
+| Field           | Type     | Description                              |
+|-----------------|----------|------------------------------------------|
+| id              | number   | Primary key                              |
+| testCaseId      | number   | The test case being executed             |
+| testSuiteRunId  | number?  | Parent test suite run (null if run standalone) |
+| status          | string   | pending, running, completed, failed      |
+| durationMs      | number?  | Execution duration                       |
+| errorMessage    | string?  | Failure details                          |
+| screenshotPath  | string?  | Result screenshot                        |
+| consoleLog      | string?  | Browser console output                   |
+| networkLog      | string?  | Network requests log                     |
+| startedAt       | string?  | When execution started                   |
+| completedAt     | string?  | When execution ended                     |
+| createdAt       | string?  | Creation timestamp                       |
+
+### Test Suite Run
+
+A single execution of a test suite. Contains a list of Test Case Runs (one per test case in the suite).
+
+| Field                | Type     | Description                              |
+|----------------------|----------|------------------------------------------|
+| id                   | number   | Primary key                              |
+| testSuiteId          | number   | The test suite being executed            |
+| testSuiteBundleRunId | number?  | Parent bundle run (null if run standalone) |
+| status               | string   | pending, running, completed, failed      |
+| startedAt            | string?  | When execution started                   |
+| completedAt          | string?  | When execution ended                     |
+| createdAt            | string?  | Creation timestamp                       |
+
+### Test Suite Bundle Run
+
+A single execution of a test suite bundle. Contains a list of Test Suite Runs (one per suite in the bundle).
+
+| Field              | Type     | Description                              |
+|--------------------|----------|------------------------------------------|
+| id                 | number   | Primary key                              |
+| testSuiteBundleId  | number   | The bundle being executed                |
+| status             | string   | pending, running, completed, failed      |
+| startedAt          | string?  | When execution started                   |
+| completedAt        | string?  | When execution ended                     |
+| createdAt          | string?  | Creation timestamp                       |
+
+### Test Run
+
+The top-level execution record. Points to exactly one of: Test Suite Bundle Run, Test Suite Run, or Test Case Run. Test runs form a tree via `parentTestRunId`/`rootTestRunId`. Root test runs (where `parentTestRunId` is null) carry discovery metadata and aggregate stats.
+
+When `discovery` is true, the test run triggers AI decomposition of discovered page states and creates child test runs for newly generated test suites.
+
+`createdByUserId` is always set to the user who initiated the run. `ownedByUserId` is set only when initiated from the web extension (meaning the user's browser runs it). When `ownedByUserId` is null, the server-side runner (`testomniac_runner`) picks up and executes the run.
+
+| Field                | Type     | Description                              |
+|----------------------|----------|------------------------------------------|
+| id                   | number   | Primary key                              |
+| appId                | number   | Parent app                               |
+| testSuiteBundleRunId | number?  | Target bundle run (exactly one of three) |
+| testSuiteRunId       | number?  | Target suite run (exactly one of three)  |
+| testCaseRunId        | number?  | Target case run (exactly one of three)   |
+| discovery            | boolean  | When true, AI decomposes discovered pages. Default false |
+| parentTestRunId      | number?  | Parent test run (null for root)          |
+| rootTestRunId        | number?  | Topmost ancestor (null for root itself)  |
+| sizeClass            | string   | desktop or mobile                        |
+| status               | string   | pending, planned, running, completed, failed |
+| createdByUserId      | string?  | User who initiated this run              |
+| ownedByUserId        | string?  | User who owns/runs it (null = server-side) |
+| scanUrl              | string?  | URL being tested (set on root runs)      |
+| pagesFound           | number?  | Number of unique pages discovered        |
+| pageStatesFound      | number?  | Number of page state captures            |
+| testRunsCompleted    | number?  | Number of child test runs completed      |
+| aiSummary            | string?  | AI-generated summary                     |
+| totalDurationMs      | number?  | Total tree duration                      |
+| createdAt            | string   | Creation timestamp                       |
+| startedAt            | string?  | When execution started                   |
+| completedAt          | string?  | When execution ended                     |
+
+**Constraint:** Exactly one of `testSuiteBundleRunId`, `testSuiteRunId`, or `testCaseRunId` must be set.
+
+### Test Run Finding
+
+An error or warning discovered during a test case run execution.
+
+| Field           | Type     | Description                              |
+|-----------------|----------|------------------------------------------|
+| id              | number   | Primary key                              |
+| testCaseRunId   | number   | Parent test case run                     |
+| expertiseRuleId | number?  | Expertise rule that produced this finding |
+| type            | string   | error or warning                         |
+| title           | string   | Finding summary                          |
+| description     | string   | Detailed description                     |
+| createdAt       | string?  | Creation timestamp                       |
+
+---
+
+## Discovery Domain
 
 ### AI Decomposition Job
 
-Created by a scan for each page state that needs decomposition. Takes the page state, breaks it into pieces (reusable elements and main body), and creates test suites for each piece. New jobs can be created during test execution when previously unseen page states are encountered.
+Created during a discovery test run for each page state that needs decomposition. Takes the page state, breaks it into pieces (reusable elements and main body), and creates test suites with test cases for each piece. New jobs can be created during test execution when previously unseen page states are encountered.
 
 | Field        | Type     | Description                              |
 |--------------|----------|------------------------------------------|
 | id           | number   | Primary key                              |
-| scanId       | number   | Parent scan                              |
+| testRunId    | number   | The test run that triggered this job     |
 | pageStateId  | number   | The page state to decompose              |
 | personaId    | number?  | Persona context for test generation      |
 | status       | string   | Pending or Done                          |
 | createdAt    | string?  | Creation timestamp                       |
 | completedAt  | string?  | When decomposition finished              |
 
+### Discovery Flow
+
+Discovery replaces the old scanning concept. A discovery-mode test run explores the site and auto-generates test suites and test cases.
+
+```
+User enters URL
+  │
+  v
+1. Find/create App for URL
+2. Find/create singleton "Direct Navigations" test suite for app
+3. Find/create test case with navigate action to URL, add to suite
+4. Create ROOT test run (discovery=true, parentTestRunId=null)
+  │
+  v
+5. Execute: navigate to URL, capture page state
+6. Create AI Decomposition Job (testRunId = root)
+  │
+  v
+7. AI processes decomposition:
+   - For each component: find/create persistent per-app suite
+     (e.g., "Top Menu"), generate test cases in it
+   - For each link: add navigation test case to "Direct Navigations"
+     if not already present
+  │
+  v
+8. Create child test runs for new suites (discovery=true inherited)
+9. Execute child runs → discover new page states → new decomp jobs
+  │
+  v
+10. Loop until no new page states → mark root completed with stats
+```
+
+Test suites are persistent per-app singletons that accumulate test cases across discovery runs.
+
 ### Credential
 
-Stored login credentials for an app (used during scanning).
+Stored login credentials for an app (used during test runs).
 
 | Field         | Type     | Description                              |
 |---------------|----------|------------------------------------------|
@@ -300,6 +501,43 @@ Stored login credentials for an app (used during scanning).
 | password      | string   | Login password                           |
 | twoFactorCode | string?  | 2FA code                                 |
 | createdAt     | string?  | Creation timestamp                       |
+
+---
+
+## Scheduling Domain
+
+### Test Schedule
+
+A flexible scheduling object to automate test run creation. Can target a test suite, test case, or test suite bundle.
+
+| Field             | Type     | Description                              |
+|-------------------|----------|------------------------------------------|
+| id                | number   | Primary key                              |
+| appId             | number   | Parent app                               |
+| title             | string   | Schedule title                           |
+| testSuiteId       | number?  | Target suite (exactly one of three)      |
+| testCaseId        | number?  | Target case (exactly one of three)       |
+| testSuiteBundleId | number?  | Target bundle (exactly one of three)     |
+| discovery         | boolean  | Default false. Passed to created test runs |
+| recurrenceType    | string   | one_time, weekday, daily, weekly         |
+| timeOfDay         | string   | HH:MM format (e.g., "09:00")            |
+| dayOfWeek         | number?  | 0-6 (Sunday-Saturday); required when recurrenceType=weekly |
+| timezone          | string   | IANA timezone (e.g., "America/New_York") |
+| enabled           | boolean  | Default true                             |
+| sizeClass         | string   | desktop or mobile                        |
+| createdByUserId   | string   | User who created the schedule            |
+| lastRunAt         | string?  | Timestamp of last execution              |
+| nextRunAt         | string?  | Computed next execution time             |
+| createdAt         | string?  | Creation timestamp                       |
+| updatedAt         | string?  | Last update timestamp                    |
+
+**Constraint:** Exactly one of `testSuiteId`, `testCaseId`, or `testSuiteBundleId` must be set.
+
+**Recurrence types:**
+- `one_time` — runs once at the specified time, then disabled
+- `weekday` — runs Monday through Friday at the specified time
+- `daily` — runs every day at the specified time
+- `weekly` — runs on the specified `dayOfWeek` at the specified time
 
 ---
 
@@ -348,15 +586,15 @@ A test data value mapped to a form field for a use case.
 
 ### Report Email
 
-An email report sent for a scan.
+An email report sent for a test run.
 
-| Field         | Type     | Description                              |
-|---------------|----------|------------------------------------------|
-| id            | number   | Primary key                              |
-| scanId        | number   | Parent scan                              |
-| userEmail     | string   | Recipient email                          |
-| deepLinkToken | string   | Unique token for deep link access        |
-| sentAt        | string?  | When the email was sent                  |
+| Field           | Type     | Description                              |
+|-----------------|----------|------------------------------------------|
+| id              | number   | Primary key                              |
+| rootTestRunId   | number   | Root test run this report is for         |
+| userEmail       | string   | Recipient email                          |
+| deepLinkToken   | string   | Unique token for deep link access        |
+| sentAt          | string?  | When the email was sent                  |
 
 ---
 
@@ -388,157 +626,3 @@ A single verification rule within an expertise. May be deterministic (code-based
 | description    | string   | What this rule checks                    |
 | aiEndpointUrl  | string?  | AI endpoint URL (null = deterministic code rule) |
 | createdAt      | string?  | Creation timestamp                       |
-
----
-
-## Test Domain
-
-### Hierarchy
-
-```
-App
- └─ Test Suites ──┐
-                   ├── (many-to-many) ──► Test Suites
-                   └── (many-to-many) ──► Test Cases
-                                            └── (one-to-many) ──► Test Actions
-
-Scan
- └─ AI Decomposition Jobs (per page state)
-      └─ Creates Test Suites / Test Cases
-
-Test Run ──► points to one Test Suite or one Test Case
- └─ Test Run Findings (errors/warnings)
- └─ Verified by Expertise Rules (global)
-```
-
-### Test Suite
-
-A named grouping that can contain other test suites and/or test cases. The relationship is a **directed acyclic graph (DAG)** — a test suite can belong to multiple other test suites, and a test case can belong to multiple test suites. **Circular references must be prevented** (e.g., A contains B contains A is invalid).
-
-| Field                    | Type     | Description                |
-|--------------------------|----------|----------------------------|
-| id                       | number   | Primary key                |
-| appId                    | number   | Parent app                 |
-| decompositionJobId       | number?  | AI Decomposition Job that created this suite |
-| title                    | string   | Suite title                |
-| description              | string   | Suite description          |
-| sizeClass                | string   | desktop or mobile          |
-| priority                 | number   | 1 (highest) to 5 (lowest) |
-| startingPageStateId      | number   | Page state where this suite begins |
-| startingPath             | string   | Entry path (relative to app's baseUrl) |
-| dependencyTestCaseId     | number?  | Test case that must complete before this suite can run |
-| personaIds               | number[] | Associated personas        |
-| reusableHtmlElementId    | number?  | If this suite tests a reusable element (header, footer, etc.) |
-| reusableHtmlElementType  | string?  | Component type (topMenu, footer, breadcrumb, etc.) |
-| patternType              | string?  | If this suite tests a UI pattern (card, modal, table, etc.) |
-| suiteTags                | string[] | Categorization tags        |
-| estimatedDurationMs      | number?  | Estimated duration         |
-| createdAt                | string?  | Creation timestamp         |
-
-**Relationships:**
-- Many-to-many with other Test Suites (DAG — no cycles allowed)
-- Many-to-many with Test Cases (a suite can contain cases, a case can be in multiple suites)
-
-### Test Case
-
-A single test scenario containing an ordered list of test actions. Belongs to one or more test suites.
-
-| Field                  | Type       | Description                        |
-|------------------------|------------|------------------------------------|
-| id                     | number     | Primary key                        |
-| appId                  | number     | Parent app                         |
-| title                  | string     | Test case title                    |
-| testType               | string     | render, interaction, form, form_negative, password, navigation, e2e |
-| sizeClass              | string     | desktop or mobile                  |
-| suiteTags              | string[]   | Categorization tags                |
-| priority               | number     | 1 (highest) to 5 (lowest)         |
-| reusableHtmlElementId  | number?    | If this case tests a reusable element (header, footer, etc.) |
-| patternType            | string?    | If this case tests a UI pattern (card, modal, table, etc.) |
-| dependencyTestCaseId   | number?    | Test case that must complete before this one can run |
-| pageId                 | number?    | Associated page                    |
-| personaId              | number?    | Associated persona                 |
-| useCaseId              | number?    | Associated use case                |
-| startingPageStateId    | number?    | Initial page state                 |
-| startingPath           | string?    | Entry path (relative to app's baseUrl) |
-| globalExpectationsJson | unknown    | Expectations checked after all steps |
-| estimatedDurationMs    | number?    | Estimated duration                 |
-| generatedAt            | string?    | Generation timestamp               |
-
-**Relationships:**
-- Many-to-many with Test Suites (a case can belong to multiple suites)
-- One-to-many with Test Actions (strict parent/child — actions belong to exactly one case)
-- Optional dependency on another Test Case (must complete first)
-
-### Test Action
-
-A single step within a test case. Strict parent/child relationship with its test case.
-
-| Field                      | Type     | Description                              |
-|----------------------------|----------|------------------------------------------|
-| id                         | number   | Primary key                              |
-| testCaseId                 | number   | Parent test case (strict ownership)      |
-| stepOrder                  | number   | Position within the test case            |
-| actionType                 | string   | goto, click, fill, select, screenshot, etc. |
-| pageStateId                | number?  | Page state context for this action       |
-| elementIdentityId          | number?  | Target element                           |
-| containerType              | string?  | Component type if targeting element inside a component (topMenu, footer, etc.) |
-| containerElementIdentityId | number?  | Element identity of the container component |
-| value                      | string?  | Input value (for fill/select)            |
-| path                       | string?  | Target path (relative to app's baseUrl, for goto) |
-| playwrightCode             | string   | Executable Playwright code               |
-| description                | string   | Human-readable step description          |
-| expectations               | json     | Array of expectations to verify after this action |
-| continueOnFailure          | boolean  | Whether to proceed if this step fails    |
-
-### Test Run
-
-A single execution of a test suite or test case. Points to exactly one test suite **or** one test case (not both).
-
-| Field          | Type     | Description                              |
-|----------------|----------|------------------------------------------|
-| id             | number   | Primary key                              |
-| scanId         | number   | Parent scan execution                    |
-| testSuiteId    | number?  | The test suite being run (nullable)      |
-| testCaseId     | number?  | The test case being run (nullable)       |
-| sizeClass      | string   | desktop or mobile                        |
-| status         | string   | Planned, Running, or Completed           |
-| durationMs     | number?  | Execution duration                       |
-| errorMessage   | string?  | Failure details                          |
-| screenshotPath | string?  | Result screenshot                        |
-| consoleLog     | string?  | Browser console output                   |
-| networkLog     | string?  | Network requests log                     |
-| createdAt      | string   | Creation timestamp (status set to Planned) |
-| startedAt      | string?  | When status changed to Running           |
-| completedAt    | string?  | When status changed to Completed         |
-
-**Constraint:** Exactly one of `testSuiteId` or `testCaseId` must be set.
-
-### Test Run Finding
-
-An error or warning discovered during a test run.
-
-| Field       | Type     | Description                              |
-|-------------|----------|------------------------------------------|
-| id              | number   | Primary key                              |
-| testRunId       | number   | Parent test run                          |
-| expertiseRuleId | number?  | Expertise rule that produced this finding |
-| type            | string   | error or warning                         |
-| title           | string   | Finding summary                          |
-| description     | string   | Detailed description                     |
-| createdAt       | string?  | Creation timestamp                       |
-
-### Junction Tables
-
-**test_suite_suites** (suite-to-suite, many-to-many):
-
-| Field         | Type   | Description        |
-|---------------|--------|--------------------|
-| parentSuiteId | number | Containing suite   |
-| childSuiteId  | number | Contained suite    |
-
-**test_suite_cases** (suite-to-case, many-to-many):
-
-| Field       | Type   | Description        |
-|-------------|--------|--------------------|
-| testSuiteId | number | Containing suite   |
-| testCaseId  | number | Contained case     |
