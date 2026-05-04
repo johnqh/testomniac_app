@@ -129,15 +129,15 @@ Replaces the old `mouse-scanning.ts` + `ai-analysis.ts` + `test-generation.ts` p
 ```
 async function processDecompositionJob(job, browserAdapter):
   1. Load page state (screenshot, HTML, hashes)
-  2. Detect reusable elements (header, footer, sidebar, etc.)
+  2. Detect scaffolds (header, footer, sidebar, etc.)
   3. Detect UI patterns (cards, tables, modals, etc.)
   4. For the main body (fixedBody):
-     - Create Test Suite (reusableHtmlElementId=null, patternType=null)
+     - Create Test Suite (scaffoldId=null, patternType=null)
      - Generate test cases (render, interaction, navigation)
      - Create Test Actions for each test case
      - Link test cases to suite via junction
-  5. For each reusable element:
-     - Create or find existing Test Suite (with reusableHtmlElementId)
+  5. For each scaffold:
+     - Create or find existing Test Suite (with scaffoldId)
      - Generate test cases specific to this component
      - Link test cases to suite
      - Link component suite to parent body suite (suite-to-suite)

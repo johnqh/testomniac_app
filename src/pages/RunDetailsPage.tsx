@@ -2,7 +2,7 @@ import { useParams } from 'react-router-dom';
 import { useApi } from '@sudobility/building_blocks/firebase';
 import {
   useRun,
-  useRunComponents,
+  useRunScaffolds,
   useRunPages,
   useRunPersonas,
   useRunTestCases,
@@ -32,7 +32,7 @@ export default function RunDetailsPage() {
   const { testCases } = useRunTestCases(queryConfig);
   const { testRuns } = useRunTestRuns(queryConfig);
   const { personas } = useRunPersonas(queryConfig);
-  const { components } = useRunComponents(queryConfig);
+  const { scaffolds } = useRunScaffolds(queryConfig);
 
   if (error) {
     return (
@@ -56,7 +56,7 @@ export default function RunDetailsPage() {
     { label: 'Issues', path: `${basePath}/issues`, count: 0 },
     { label: 'Pages', path: `${basePath}/pages`, count: pages.length },
     { label: 'Site Map', path: `${basePath}/map`, count: null },
-    { label: 'Components', path: `${basePath}/components`, count: components.length },
+    { label: 'Scaffolds', path: `${basePath}/scaffolds`, count: scaffolds.length },
     { label: 'Personas', path: `${basePath}/personas`, count: personas.length },
   ];
 

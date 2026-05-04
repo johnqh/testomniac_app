@@ -1,14 +1,14 @@
 import { useParams } from 'react-router-dom';
 import { useApi } from '@sudobility/building_blocks/firebase';
-import { useRunnerComponents } from '@sudobility/testomniac_client';
+import { useRunnerScaffolds } from '@sudobility/testomniac_client';
 import SEOHead from '@/components/SEOHead';
 import { CONSTANTS } from '../config/constants';
 
-export default function ComponentsPage() {
+export default function ScaffoldsPage() {
   const { runnerId } = useParams<{ runnerId: string }>();
   const { networkClient, token } = useApi();
 
-  const { components, isLoading, error } = useRunnerComponents({
+  const { scaffolds, isLoading, error } = useRunnerScaffolds({
     networkClient,
     baseUrl: CONSTANTS.API_URL,
     runnerId: Number(runnerId),
@@ -34,32 +34,30 @@ export default function ComponentsPage() {
 
   return (
     <div className="p-6">
-      <SEOHead title="Reusable Components" description="" noIndex />
-      <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-6">
-        Reusable Components
-      </h1>
+      <SEOHead title="Scaffolds" description="" noIndex />
+      <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-6">Scaffolds</h1>
 
-      {components.length === 0 ? (
-        <p className="text-gray-500 dark:text-gray-400">No reusable components detected.</p>
+      {scaffolds.length === 0 ? (
+        <p className="text-gray-500 dark:text-gray-400">No scaffolds detected.</p>
       ) : (
         <div className="space-y-3">
-          {components.map(comp => (
+          {scaffolds.map(scaffold => (
             <div
-              key={comp.id}
+              key={scaffold.id}
               className="p-4 rounded-lg border border-gray-200 dark:border-gray-700"
             >
               <div className="flex items-center justify-between">
                 <div>
                   <div className="text-sm font-medium text-gray-900 dark:text-gray-100">
-                    {comp.type}
+                    {scaffold.type}
                   </div>
                   <div className="text-xs font-mono text-gray-500 dark:text-gray-400 mt-0.5">
-                    Element #{comp.htmlElementId}
+                    Element #{scaffold.htmlElementId}
                   </div>
                 </div>
-                {comp.htmlHash && (
+                {scaffold.htmlHash && (
                   <div className="text-xs font-mono text-gray-400 dark:text-gray-500">
-                    {comp.htmlHash.slice(0, 8)}
+                    {scaffold.htmlHash.slice(0, 8)}
                   </div>
                 )}
               </div>

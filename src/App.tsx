@@ -25,7 +25,7 @@ const ScanProgressPage = lazy(() => import('./pages/ScanProgressPage'));
 const PublicScanProgressPage = lazy(() => import('./pages/PublicScanProgressPage'));
 const TestCasesPage = lazy(() => import('./pages/TestCasesPage'));
 const PagesPage = lazy(() => import('./pages/PagesPage'));
-const ComponentsPage = lazy(() => import('./pages/ComponentsPage'));
+const ScaffoldsPage = lazy(() => import('./pages/ScaffoldsPage'));
 const PersonasPage = lazy(() => import('./pages/PersonasPage'));
 const PageDetailPage = lazy(() => import('./pages/PageDetailPage'));
 const PageStateDetailPage = lazy(() => import('./pages/PageStateDetailPage'));
@@ -158,7 +158,7 @@ function AppRoutes() {
                   />
                   <Route path="runners/:runnerId/graph" element={<RunnerGraphPage />} />
                   <Route path="runners/:runnerId/pages/:pageId/graph" element={<PageGraphPage />} />
-                  <Route path="runners/:runnerId/components" element={<ComponentsPage />} />
+                  <Route path="runners/:runnerId/scaffolds" element={<ScaffoldsPage />} />
                   <Route path="runners/:runnerId/personas" element={<PersonasPage />} />
 
                   {/* Legacy run routes */}

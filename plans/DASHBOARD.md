@@ -24,7 +24,7 @@ Pure additive type changes. No breaking changes.
 ### `testomniac_types/src/index.ts`
 
 Add:
-- `PageStateReusableElementResponse` — junction type: `{ id, pageStateId, reusableHtmlElementId }`
+- `PageStateScaffoldResponse` — junction type: `{ id, pageStateId, scaffoldId }`
 - Add `appId?: number` to `CreateScanResponse`
 
 ### `testomniac_client/src/types.ts`
@@ -33,7 +33,7 @@ Add query keys to `QUERY_KEYS`:
 ```
 app, projectApps, appPages, appPageStates, appActions, appActionExecutions,
 appScans, appTestCases, appTestRuns, appIssues, appComponents, appPersonas,
-pageActions, pageStateReusableElements, htmlElement
+pageActions, pageStateScaffolds, htmlElement
 ```
 
 ### Verify
@@ -63,7 +63,7 @@ Create `appsReadRouter` (Hono) with Firebase auth middleware. Each endpoint reso
 | GET | `/apps/:appId/test-cases` | — | `testCases WHERE appId` |
 | GET | `/apps/:appId/test-runs` | — | Join through testCases.appId |
 | GET | `/apps/:appId/issues` | — | `issues WHERE appId` |
-| GET | `/apps/:appId/components` | — | `reusableHtmlElements WHERE appId` |
+| GET | `/apps/:appId/components` | — | `scaffolds WHERE appId` |
 | GET | `/apps/:appId/personas` | — | `personas WHERE appId` |
 
 ### Modify: `testomniac_api/src/routes/entities.ts`
@@ -79,7 +79,7 @@ Add: `GET /projects/:id/apps` — query `apps WHERE projectId`
 | Method | Path | Notes |
 |--------|------|-------|
 | GET | `/pages/:pageId/actions` | Actions where startingPageStateId belongs to this page |
-| GET | `/page-states/:pageStateId/reusable-elements` | Junction table query |
+| GET | `/page-states/:pageStateId/scaffolds` | Junction table query |
 | GET | `/html-elements/:id` | Single HTML element by ID |
 
 ### Modify: `testomniac_api/src/routes/scan.ts`
@@ -106,7 +106,7 @@ Add methods (following existing pattern like `getRunPages`):
 getApp, getProjectApps, getAppPages, getAppPageStates, getAppActions,
 getAppActionExecutions, getAppScans, getAppTestCases, getAppTestRuns,
 getAppIssues, getAppComponents, getAppPersonas, getPageActions,
-getPageStateReusableElements, getHtmlElement
+getPageStateScaffolds, getHtmlElement
 ```
 
 ### New hooks in `testomniac_client/src/hooks/`
@@ -116,7 +116,7 @@ One file per hook, following `useRunPages.ts` pattern:
 useApp, useProjectApps, useAppPages, useAppPageStates, useAppActions,
 useAppActionExecutions, useAppScans, useAppTestCases, useAppTestRuns,
 useAppIssues, useAppComponents, useAppPersonas, usePageActions,
-usePageStateReusableElements, useHtmlElement
+usePageStateScaffolds, useHtmlElement
 ```
 
 Export all from `hooks/index.ts`.
@@ -261,7 +261,7 @@ Three sections:
    - Rendered: `<iframe sandbox>` loading `/api/v1/artifacts/{rawHtmlPath}`
    - Source: fetch HTML via `useHtmlElement(bodyHtmlElementId)`, show syntax-highlighted
 2. **Content** — Same toggle for `contentHtmlElementId` + show `contentText`
-3. **Reusable Components** — `usePageStateReusableElements(pageStateId)` -> for each, show type label + HTML preview
+3. **Scaffolds** — `usePageStateScaffolds(pageStateId)` -> for each, show type label + HTML preview
 
 ### Verify
 ```bash

@@ -128,8 +128,8 @@ A single captured rendering of a page. The same page can have multiple states (e
 | textHash               | string?  | SHA-256 of visible text only -- detects content changes |
 | actionableHash         | string?  | SHA-256 of sorted interactive elements -- detects UI control changes |
 | *-- Decomposed hashes (component-aware) --* | | |
-| fixedBodyHash          | string?  | SHA-256 of body minus reusable regions and patterns |
-| reusableElementsHash   | string?  | SHA-256 of header/footer/nav components  |
+| fixedBodyHash          | string?  | SHA-256 of body minus scaffold regions and patterns |
+| scaffoldsHash          | string?  | SHA-256 of header/footer/nav components  |
 | patternsHash           | string?  | SHA-256 of UI patterns (cards, modals, tables, etc.) |
 | *-- HTML content --*    |          |                                          |
 | bodyHtmlElementId      | number?  | Full body HTML element record            |
@@ -157,7 +157,7 @@ A stored chunk of HTML markup, content-addressed by hash.
 | hash      | string   | SHA-256 of the HTML content              |
 | createdAt | string?  | Creation timestamp                       |
 
-### Reusable HTML Element
+### Scaffold
 
 A runner-level canonical component (e.g., a site header, footer, sidebar). Deduplicated by type + hash -- the same component appearing on many pages is stored once.
 
@@ -189,7 +189,7 @@ An interactive UI element discovered on a page state (button, link, input, selec
 | disabled             | boolean  | Whether the element is disabled          |
 | visible              | boolean  | Whether the element is in the viewport   |
 | attributesJson       | json     | All HTML attributes                      |
-| reusableHtmlElementId| number?  | If part of a reusable component          |
+| scaffoldId| number?  | If part of a scaffold                    |
 | elementIdentityId    | number?  | Linked element identity                  |
 
 ### Element Identity
@@ -241,19 +241,19 @@ A form extracted from a page state.
 | fieldsJson     | json     | Array of form fields (name, type, label, required, options) |
 | createdAt      | string?  | Creation timestamp                       |
 
-### Page State Reusable Element
+### Page State Scaffold
 
-Junction linking which reusable components appear on which page states.
+Junction linking which scaffolds appear on which page states.
 
 | Field                | Type   | Description                    |
 |----------------------|--------|--------------------------------|
 | id                   | number | Primary key                    |
 | pageStateId          | number | The page state                 |
-| reusableHtmlElementId| number | The reusable component         |
+| scaffoldId| number | The scaffold                   |
 
 ### Page State Pattern
 
-A detected UI pattern instance on a page state. Unlike reusable elements (which are unique components), patterns are repeating structures like cards, tables, or modals.
+A detected UI pattern instance on a page state. Unlike scaffolds (which are unique components), patterns are repeating structures like cards, tables, or modals.
 
 | Field       | Type     | Description                              |
 |-------------|----------|------------------------------------------|
@@ -277,7 +277,7 @@ Product
  ├── Runners (compute agents, 1:many with Product)
  │     ├── Pages → Page States → Actionable Items
  │     ├── Element Identities
- │     └── Reusable HTML Elements
+ │     └── Scaffolds
  │
  ├── Test Environments (1:many with Product)
  │
@@ -331,8 +331,8 @@ A named grouping of test cases. Each test suite belongs to one runner. Test case
 | startingPath             | string   | Entry path (relative to environment's baseUrl) |
 | dependencyTestCaseId     | number?  | Test case that must complete before this suite can run |
 | personaIdsJson           | json     | Associated persona IDs (stored as JSONB) |
-| reusableHtmlElementId    | number?  | If this suite tests a reusable element (header, footer, etc.) |
-| reusableHtmlElementType  | string?  | Component type (topMenu, footer, breadcrumb, etc.) |
+| scaffoldId    | number?  | If this suite tests a scaffold (header, footer, etc.) |
+| scaffoldType  | string?  | Component type (topMenu, footer, breadcrumb, etc.) |
 | patternType              | string?  | If this suite tests a UI pattern (card, modal, table, etc.) |
 | suiteTags                | string[] | Categorization tags        |
 | estimatedDurationMs      | number?  | Estimated duration         |
@@ -375,7 +375,7 @@ A single test scenario containing an ordered list of test actions. Belongs to ex
 | sizeClass              | string     | desktop or mobile                  |
 | suiteTags              | string[]   | Categorization tags                |
 | priority               | number     | 1 (highest) to 5 (lowest)         |
-| reusableHtmlElementId  | number?    | If this case tests a reusable element (header, footer, etc.) |
+| scaffoldId  | number?    | If this case tests a scaffold (header, footer, etc.) |
 | patternType            | string?    | If this case tests a UI pattern (card, modal, table, etc.) |
 | dependencyTestCaseId   | number?    | Test case that must complete before this one can run |
 | pageId                 | number?    | Associated page                    |
@@ -509,7 +509,7 @@ An error or warning discovered during a test case run execution.
 
 ### AI Decomposition Job
 
-Created during a discovery test run for each page state that needs decomposition. Takes the page state, breaks it into pieces (reusable elements and main body), and creates test suites with test cases for each piece. New jobs can be created during test execution when previously unseen page states are encountered.
+Created during a discovery test run for each page state that needs decomposition. Takes the page state, breaks it into pieces (scaffolds and main body), and creates test suites with test cases for each piece. New jobs can be created during test execution when previously unseen page states are encountered.
 
 | Field        | Type     | Description                              |
 |--------------|----------|------------------------------------------|

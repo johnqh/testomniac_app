@@ -21,6 +21,7 @@ const MENU_ITEMS = [
   { label: 'Suites', path: 'test-suites' },
   { label: 'Test Cases', path: 'test-cases' },
   { label: 'Runs', path: 'runs' },
+  { label: 'Scaffolds', path: 'scaffolds' },
   { label: 'Issues', path: 'issues' },
   { label: 'Schedules', path: 'schedules' },
   { label: 'Settings', path: 'settings' },

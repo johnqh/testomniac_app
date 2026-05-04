@@ -79,7 +79,7 @@ src/
     ├── IssuesPage.tsx                    # Detected issues list
     ├── PagesPage.tsx                     # Discovered pages list
     ├── MapPage.tsx                       # Site map visualization
-    ├── ComponentsPage.tsx                # Detected UI components
+    ├── ScaffoldsPage.tsx                # Detected scaffolds list
     ├── PersonasPage.tsx                  # AI-generated personas
     ├── SettingsPage.tsx                  # User settings
     ├── WorkspacesPage.tsx                # Workspace management
@@ -124,7 +124,7 @@ Pages are lazy-loaded with React Suspense.
 - `/:lang/dashboard/:entitySlug/runs/:runId/issues` — Issues
 - `/:lang/dashboard/:entitySlug/runs/:runId/pages` — Pages
 - `/:lang/dashboard/:entitySlug/runs/:runId/map` — Site map
-- `/:lang/dashboard/:entitySlug/runs/:runId/components` — Components
+- `/:lang/dashboard/:entitySlug/runners/:runnerId/scaffolds` — Scaffolds
 - `/:lang/dashboard/:entitySlug/runs/:runId/personas` — Personas
 - `/:lang/dashboard/:entitySlug/settings` — Settings
 - `/:lang/dashboard/:entitySlug/workspaces` — Workspaces

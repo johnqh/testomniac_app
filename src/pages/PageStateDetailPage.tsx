@@ -4,11 +4,11 @@ import { useApi } from '@sudobility/building_blocks/firebase';
 import {
   usePageStates,
   useHtmlElement,
-  usePageStateReusableElements,
+  usePageStateScaffolds,
 } from '@sudobility/testomniac_client';
 import { CONSTANTS } from '../config/constants';
 
-type Tab = 'body' | 'content' | 'reusable';
+type Tab = 'body' | 'content' | 'scaffolds';
 
 export default function PageStateDetailPage() {
   const { pageStateId, pageId, runnerId } = useParams<{
@@ -51,7 +51,7 @@ export default function PageStateDetailPage() {
     enabled: !!state?.contentHtmlElementId && !!token,
   });
 
-  const { reusableElements, isLoading: reusableLoading } = usePageStateReusableElements({
+  const { scaffolds, isLoading: scaffoldsLoading } = usePageStateScaffolds({
     networkClient,
     baseUrl: CONSTANTS.API_URL,
     pageStateId: Number(pageStateId),
@@ -80,7 +80,7 @@ export default function PageStateDetailPage() {
   const tabs: { key: Tab; label: string }[] = [
     { key: 'body', label: 'Body' },
     { key: 'content', label: 'Content' },
-    { key: 'reusable', label: 'Reusable Components' },
+    { key: 'scaffolds', label: 'Scaffolds' },
   ];
 
   return (
@@ -238,28 +238,28 @@ export default function PageStateDetailPage() {
         </div>
       )}
 
-      {/* Reusable Components Tab */}
-      {activeTab === 'reusable' && (
+      {/* Scaffolds Tab */}
+      {activeTab === 'scaffolds' && (
         <div>
-          {reusableLoading ? (
+          {scaffoldsLoading ? (
             <div className="text-gray-500 dark:text-gray-400 py-8 text-center">Loading...</div>
-          ) : reusableElements.length === 0 ? (
+          ) : scaffolds.length === 0 ? (
             <div className="text-gray-500 dark:text-gray-400 py-8 text-center">
-              No reusable components found.
+              No scaffolds found.
             </div>
           ) : (
             <div className="space-y-3">
-              {reusableElements.map(element => (
+              {scaffolds.map(element => (
                 <div
                   key={element.id}
                   className="p-4 rounded-lg border border-gray-200 dark:border-gray-700"
                 >
                   <div className="flex items-center gap-2">
                     <span className="text-sm font-medium text-gray-900 dark:text-gray-100">
-                      Component #{element.reusableHtmlElementId}
+                      Scaffold #{element.scaffoldId}
                     </span>
                     <span className="px-1.5 py-0.5 text-xs rounded bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300">
-                      Reusable Element
+                      Scaffold
                     </span>
                   </div>
                   <div className="text-xs text-gray-500 dark:text-gray-400 mt-1">

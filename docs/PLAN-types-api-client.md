@@ -62,10 +62,10 @@ Align `testomniac_types`, `testomniac_api`, and `testomniac_client` with the spe
 **TestSuite — restructure:**
 - Add: `decompositionJobId`, `priority` (number 1-5), `startingPath`
 - Remove: `testCasesJson` (replaced by junction table)
-- Keep: `startingPageStateId`, `sizeClass`, `dependencyTestCaseId`, `personaIds`/`personaIdsJson`, `reusableHtmlElementId`, `reusableHtmlElementType`, `patternType`, `suiteTags`, `estimatedDurationMs`
+- Keep: `startingPageStateId`, `sizeClass`, `dependencyTestCaseId`, `personaIds`/`personaIdsJson`, `scaffoldId`, `scaffoldType`, `patternType`, `suiteTags`, `estimatedDurationMs`
 
 **TestCase — modify:**
-- Add: `reusableHtmlElementId`, `patternType`, `dependencyTestCaseId`, `startingPath`
+- Add: `scaffoldId`, `patternType`, `dependencyTestCaseId`, `startingPath`
 - Change: `priority` from string to number (1-5)
 - Remove: `startingPageStateId` from embedded TestCase (keep on TestCaseResponse)
 
@@ -125,7 +125,7 @@ testActions (id, testCaseId FK, stepOrder, actionType, pageStateId FK, elementId
 
 **testCases:**
 - Rename `name` → `title`
-- Add columns: `reusableHtmlElementId`, `patternType`, `dependencyTestCaseId`, `startingPageStateId`, `startingPath`, `globalExpectationsJson`, `estimatedDurationMs`
+- Add columns: `scaffoldId`, `patternType`, `dependencyTestCaseId`, `startingPageStateId`, `startingPath`, `globalExpectationsJson`, `estimatedDurationMs`
 - Change: `priority` to integer
 
 **testRuns:**

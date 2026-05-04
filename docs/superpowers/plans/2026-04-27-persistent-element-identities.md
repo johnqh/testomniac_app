@@ -523,7 +523,7 @@ export const elementIdentities = starterSchema.table(
 
 - [ ] **Step 4: Add `elementIdentityId` FK to `actionableItems` table**
 
-In the `actionableItems` table definition, add a new column after `reusableHtmlElementId`:
+In the `actionableItems` table definition, add a new column after `scaffoldId`:
 
 ```typescript
   elementIdentityId: bigserial("element_identity_id", { mode: "number" })
@@ -1574,7 +1574,7 @@ import {
 } from "@sudobility/testomniac_types";
 ```
 
-After the `reusableCache.preload()` call (around line 52), add:
+After the `scaffoldCache.preload()` call (around line 52), add:
 
 ```typescript
   const identityCache = new IdentityCache(config.appId, api);
