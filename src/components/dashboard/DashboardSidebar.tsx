@@ -20,6 +20,7 @@ const MENU_ITEMS = [
   { label: 'Bundles', path: 'bundles' },
   { label: 'Suites', path: 'test-suites' },
   { label: 'Test Cases', path: 'test-cases' },
+  { label: 'Scenarios', path: 'test-scenarios' },
   { label: 'Runs', path: 'runs' },
   { label: 'Scaffolds', path: 'scaffolds' },
   { label: 'Issues', path: 'issues' },

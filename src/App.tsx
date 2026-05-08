@@ -40,6 +40,8 @@ const TestCaseDetailPage = lazy(() => import('./pages/TestCaseDetailPage'));
 const TestRunsListPage = lazy(() => import('./pages/TestRunsListPage'));
 const TestRunDetailPage = lazy(() => import('./pages/TestRunDetailPage'));
 const FindingsListPage = lazy(() => import('./pages/FindingsListPage'));
+const TestScenariosPage = lazy(() => import('./pages/TestScenariosPage'));
+const TestScenarioDetailPage = lazy(() => import('./pages/TestScenarioDetailPage'));
 const RunnerSettingsPage = lazy(() => import('./pages/RunnerSettingsPage'));
 const LanguageRedirect = lazy(() => import('./components/layout/LanguageRedirect'));
 const EntityRedirect = lazy(() => import('./components/layout/EntityRedirect'));
@@ -144,6 +146,11 @@ function AppRoutes() {
                   <Route
                     path="runners/:runnerId/runs/:runId/progress"
                     element={<ScanProgressPage />}
+                  />
+                  <Route path="runners/:runnerId/test-scenarios" element={<TestScenariosPage />} />
+                  <Route
+                    path="runners/:runnerId/test-scenarios/:scenarioId"
+                    element={<TestScenarioDetailPage />}
                   />
                   <Route path="runners/:runnerId/issues" element={<FindingsListPage />} />
                   <Route path="runners/:runnerId/schedules" element={<SchedulesPage />} />
