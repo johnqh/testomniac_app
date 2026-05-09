@@ -2,6 +2,7 @@ import { useParams } from 'react-router-dom';
 import { useApi } from '@sudobility/building_blocks/firebase';
 import {
   useRun,
+  useRunSummary,
   useRunScaffolds,
   useRunPages,
   useRunPersonas,
@@ -28,6 +29,7 @@ export default function RunDetailsPage() {
   };
 
   const { run, isLoading, error } = useRun(queryConfig);
+  const { summary } = useRunSummary(queryConfig);
   const { pages } = useRunPages(queryConfig);
   const { testCases } = useRunTestCases(queryConfig);
   const { testRuns } = useRunTestRuns(queryConfig);
@@ -53,12 +55,15 @@ export default function RunDetailsPage() {
   const subPages = [
     { label: 'Test Cases', path: `${basePath}/test-cases`, count: testCases.length },
     { label: 'Test Runs', path: `${basePath}/test-runs`, count: testRuns.length },
-    { label: 'Issues', path: `${basePath}/issues`, count: 0 },
+    { label: 'Issues', path: `${basePath}/issues`, count: summary?.totalFindings ?? 0 },
     { label: 'Pages', path: `${basePath}/pages`, count: pages.length },
     { label: 'Site Map', path: `${basePath}/map`, count: null },
     { label: 'Scaffolds', path: `${basePath}/scaffolds`, count: scaffolds.length },
     { label: 'Personas', path: `${basePath}/personas`, count: personas.length },
   ];
+  const expertiseEntries = Object.entries(summary?.expertiseSummary ?? {}).sort(([left], [right]) =>
+    left.localeCompare(right)
+  );
 
   return (
     <div className="p-6">
@@ -71,7 +76,7 @@ export default function RunDetailsPage() {
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
         <div className="p-4 rounded-lg border border-gray-200 dark:border-gray-700">
           <div className="text-2xl font-bold text-gray-900 dark:text-gray-100">
-            {run.pagesFound ?? pages.length}
+            {summary?.pagesFound ?? run.pagesFound ?? pages.length}
           </div>
           <div className="text-xs text-gray-500">Pages Found</div>
         </div>
@@ -83,15 +88,83 @@ export default function RunDetailsPage() {
         </div>
         <div className="p-4 rounded-lg border border-gray-200 dark:border-gray-700">
           <div className="text-2xl font-bold text-green-600">
-            {run.testRunsCompleted ?? testRuns.length}
+            {summary?.testRunsCompleted ?? run.testRunsCompleted ?? testRuns.length}
           </div>
-          <div className="text-xs text-gray-500">Passed</div>
+          <div className="text-xs text-gray-500">Test Runs</div>
         </div>
         <div className="p-4 rounded-lg border border-gray-200 dark:border-gray-700">
-          <div className="text-2xl font-bold text-red-600">{run.pageStatesFound ?? 0}</div>
-          <div className="text-xs text-gray-500">Issues</div>
+          <div className="text-2xl font-bold text-red-600">{summary?.totalFindings ?? 0}</div>
+          <div className="text-xs text-gray-500">Findings</div>
         </div>
       </div>
+
+      {summary?.aiSummary && (
+        <div className="mb-8 rounded-lg border border-gray-200 bg-white p-4 dark:border-gray-700 dark:bg-gray-900">
+          <h2 className="mb-2 text-sm font-semibold uppercase tracking-wide text-gray-500 dark:text-gray-400">
+            Summary
+          </h2>
+          <p className="text-sm leading-6 text-gray-700 dark:text-gray-300">{summary.aiSummary}</p>
+        </div>
+      )}
+
+      {expertiseEntries.length > 0 && (
+        <div className="mb-8">
+          <h2 className="mb-4 text-lg font-semibold text-gray-900 dark:text-gray-100">
+            Findings by Expertise
+          </h2>
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
+            {expertiseEntries.map(([name, counts]) => (
+              <div
+                key={name}
+                className="rounded-lg border border-gray-200 bg-white p-4 dark:border-gray-700 dark:bg-gray-900"
+              >
+                <div className="text-sm font-medium capitalize text-gray-900 dark:text-gray-100">
+                  {name}
+                </div>
+                <div className="mt-3 flex gap-4 text-xs">
+                  <span className="text-red-600 dark:text-red-400">
+                    {counts.errors} error{counts.errors === 1 ? '' : 's'}
+                  </span>
+                  <span className="text-amber-600 dark:text-amber-400">
+                    {counts.warnings} warning{counts.warnings === 1 ? '' : 's'}
+                  </span>
+                  <span className="text-gray-500 dark:text-gray-400">{counts.findings} total</span>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {summary?.recentFindings?.length ? (
+        <div className="mb-8">
+          <h2 className="mb-4 text-lg font-semibold text-gray-900 dark:text-gray-100">
+            Recent Findings
+          </h2>
+          <div className="space-y-3">
+            {summary.recentFindings.slice(0, 6).map(finding => (
+              <div
+                key={finding.id}
+                className="rounded-lg border border-gray-200 bg-white p-4 dark:border-gray-700 dark:bg-gray-900"
+              >
+                <div className="flex items-start justify-between gap-3">
+                  <div>
+                    <div className="text-sm font-medium text-gray-900 dark:text-gray-100">
+                      {finding.title}
+                    </div>
+                    <div className="mt-1 text-xs text-gray-500 dark:text-gray-400">
+                      {finding.description}
+                    </div>
+                  </div>
+                  <div className="shrink-0 text-[11px] capitalize text-gray-500 dark:text-gray-400">
+                    {finding.expertise ?? finding.type}
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      ) : null}
 
       <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">
         Explore Results

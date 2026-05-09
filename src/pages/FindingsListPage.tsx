@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useApi } from '@sudobility/building_blocks/firebase';
-import { useRunnerFindings } from '@sudobility/testomniac_client';
+import { useRunnerFindings, useRunFindings } from '@sudobility/testomniac_client';
 import type { TestRunFindingResponse } from '@sudobility/testomniac_types';
 import SEOHead from '@/components/SEOHead';
 import { CONSTANTS } from '../config/constants';
@@ -26,17 +26,28 @@ function FindingTypeBadge({ type }: { type: string }) {
 type FilterMode = 'all' | 'errors';
 
 export default function FindingsListPage() {
-  const { runnerId } = useParams<{ runnerId: string }>();
+  const { runnerId, runId } = useParams<{ runnerId: string; runId?: string }>();
   const { networkClient, token } = useApi();
   const [filter, setFilter] = useState<FilterMode>('all');
 
-  const { findings, isLoading, error } = useRunnerFindings({
+  const runnerFindingsQuery = useRunnerFindings({
     networkClient,
     baseUrl: CONSTANTS.API_URL,
     runnerId: Number(runnerId),
     token: token ?? '',
-    enabled: !!runnerId && !!token,
+    enabled: !!runnerId && !!token && !runId,
   });
+
+  const runFindingsQuery = useRunFindings({
+    networkClient,
+    baseUrl: CONSTANTS.API_URL,
+    runId: Number(runId),
+    token: token ?? '',
+    enabled: !!runId && !!token,
+  });
+  const findings = runId ? runFindingsQuery.findings : runnerFindingsQuery.findings;
+  const isLoading = runId ? runFindingsQuery.isLoading : runnerFindingsQuery.isLoading;
+  const error = runId ? runFindingsQuery.error : runnerFindingsQuery.error;
 
   const filteredFindings =
     filter === 'errors'
@@ -55,7 +66,14 @@ export default function FindingsListPage() {
     <div className="p-6">
       <SEOHead title="Findings" description="" noIndex />
       <div className="flex items-center justify-between mb-6">
-        <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">Findings</h1>
+        <div>
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">Findings</h1>
+          {runId && (
+            <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
+              Showing findings for run #{runId}.
+            </p>
+          )}
+        </div>
 
         {/* Filter toggle */}
         <div className="flex items-center rounded-lg border border-gray-200 dark:border-gray-700 overflow-hidden">

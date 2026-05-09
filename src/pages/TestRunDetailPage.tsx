@@ -1,6 +1,11 @@
 import { useParams } from 'react-router-dom';
 import { useApi } from '@sudobility/building_blocks/firebase';
-import { useRun, useTestRunFindings } from '@sudobility/testomniac_client';
+import {
+  useRun,
+  useRunSummary,
+  useTestCaseRun,
+  useTestRunFindings,
+} from '@sudobility/testomniac_client';
 import type { TestRunFindingResponse } from '@sudobility/testomniac_types';
 import { useLocalizedNavigate } from '../hooks/useLocalizedNavigate';
 import { CONSTANTS } from '../config/constants';
@@ -28,6 +33,12 @@ function FindingTypeBadge({ type }: { type: string }) {
   );
 }
 
+function formatMultilineLog(log: string | null | undefined): string | null {
+  if (!log) return null;
+  const trimmed = log.trim();
+  return trimmed.length > 0 ? trimmed : null;
+}
+
 export default function TestRunDetailPage() {
   const { entitySlug, runnerId, runId } = useParams<{
     entitySlug: string;
@@ -51,6 +62,13 @@ export default function TestRunDetailPage() {
     token: token ?? '',
     enabled: !!runId && !!token,
   });
+  const { summary } = useRunSummary({
+    networkClient,
+    baseUrl: CONSTANTS.API_URL,
+    runId: testRunId,
+    token: token ?? '',
+    enabled: !!runId && !!token,
+  });
 
   const { findings, isLoading, error } = useTestRunFindings({
     networkClient,
@@ -59,12 +77,23 @@ export default function TestRunDetailPage() {
     token: token ?? '',
     enabled: !!run?.testCaseRunId && !!token,
   });
+  const {
+    testCaseRun,
+    isLoading: isCaseRunLoading,
+    error: caseRunError,
+  } = useTestCaseRun({
+    networkClient,
+    baseUrl: CONSTANTS.API_URL,
+    testCaseRunId: run?.testCaseRunId ?? 0,
+    token: token ?? '',
+    enabled: !!run?.testCaseRunId && !!token,
+  });
 
-  if (runError || error) {
+  if (runError || error || caseRunError) {
     return (
       <div className="p-6">
         <div className="text-center text-red-600 dark:text-red-400 py-8">
-          Error: {runError || error}
+          Error: {runError || error || caseRunError}
         </div>
       </div>
     );
@@ -77,6 +106,13 @@ export default function TestRunDetailPage() {
       </div>
     );
   }
+
+  const isRootLikeRun = run.testCaseRunId === null;
+  const expertiseEntries = Object.entries(summary?.expertiseSummary ?? {}).sort(([left], [right]) =>
+    left.localeCompare(right)
+  );
+  const consoleLog = formatMultilineLog(testCaseRun?.consoleLog);
+  const networkLog = formatMultilineLog(testCaseRun?.networkLog);
 
   return (
     <div className="p-6">
@@ -117,6 +153,100 @@ export default function TestRunDetailPage() {
           </span>
         )}
       </div>
+
+      {isRootLikeRun && summary && (
+        <>
+          <div className="mb-8 grid grid-cols-2 gap-4 md:grid-cols-4">
+            <div className="rounded-lg border border-gray-200 p-4 dark:border-gray-700">
+              <div className="text-2xl font-bold text-gray-900 dark:text-gray-100">
+                {summary.pagesFound ?? 0}
+              </div>
+              <div className="text-xs text-gray-500">Pages Found</div>
+            </div>
+            <div className="rounded-lg border border-gray-200 p-4 dark:border-gray-700">
+              <div className="text-2xl font-bold text-gray-900 dark:text-gray-100">
+                {summary.pageStatesFound ?? 0}
+              </div>
+              <div className="text-xs text-gray-500">Page States</div>
+            </div>
+            <div className="rounded-lg border border-gray-200 p-4 dark:border-gray-700">
+              <div className="text-2xl font-bold text-gray-900 dark:text-gray-100">
+                {summary.testRunsCompleted ?? 0}
+              </div>
+              <div className="text-xs text-gray-500">Completed Runs</div>
+            </div>
+            <div className="rounded-lg border border-gray-200 p-4 dark:border-gray-700">
+              <div className="text-2xl font-bold text-red-600 dark:text-red-400">
+                {summary.totalFindings}
+              </div>
+              <div className="text-xs text-gray-500">Findings</div>
+            </div>
+          </div>
+
+          {summary.aiSummary && (
+            <div className="mb-8 rounded-lg border border-gray-200 bg-white p-4 dark:border-gray-700 dark:bg-gray-800">
+              <h2 className="mb-2 text-sm font-semibold uppercase tracking-wide text-gray-500 dark:text-gray-400">
+                Summary
+              </h2>
+              <p className="text-sm leading-6 text-gray-700 dark:text-gray-300">
+                {summary.aiSummary}
+              </p>
+            </div>
+          )}
+
+          <div className="mb-8 grid grid-cols-1 gap-3 sm:grid-cols-2">
+            <button
+              onClick={() => navigate(`${basePath}/runs/${runId}/pages`)}
+              className="rounded-lg border border-gray-200 bg-white p-4 text-left transition-colors hover:border-blue-300 dark:border-gray-700 dark:bg-gray-800 dark:hover:border-blue-600"
+            >
+              <div className="text-sm font-medium text-gray-900 dark:text-gray-100">Pages</div>
+              <div className="mt-1 text-xs text-gray-500 dark:text-gray-400">
+                Browse discovered pages and drill into captured page states.
+              </div>
+            </button>
+            <button
+              onClick={() => navigate(`${basePath}/runs/${runId}/issues`)}
+              className="rounded-lg border border-gray-200 bg-white p-4 text-left transition-colors hover:border-blue-300 dark:border-gray-700 dark:bg-gray-800 dark:hover:border-blue-600"
+            >
+              <div className="text-sm font-medium text-gray-900 dark:text-gray-100">Findings</div>
+              <div className="mt-1 text-xs text-gray-500 dark:text-gray-400">
+                Review grouped warnings and errors for this scan run.
+              </div>
+            </button>
+          </div>
+
+          {expertiseEntries.length > 0 && (
+            <div className="mb-8">
+              <h2 className="mb-4 text-lg font-semibold text-gray-900 dark:text-gray-100">
+                Findings by Expertise
+              </h2>
+              <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
+                {expertiseEntries.map(([name, counts]) => (
+                  <div
+                    key={name}
+                    className="rounded-lg border border-gray-200 bg-white p-4 dark:border-gray-700 dark:bg-gray-800"
+                  >
+                    <div className="text-sm font-medium capitalize text-gray-900 dark:text-gray-100">
+                      {name}
+                    </div>
+                    <div className="mt-3 flex gap-4 text-xs">
+                      <span className="text-red-600 dark:text-red-400">
+                        {counts.errors} error{counts.errors === 1 ? '' : 's'}
+                      </span>
+                      <span className="text-amber-600 dark:text-amber-400">
+                        {counts.warnings} warning{counts.warnings === 1 ? '' : 's'}
+                      </span>
+                      <span className="text-gray-500 dark:text-gray-400">
+                        {counts.findings} total
+                      </span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+        </>
+      )}
 
       {/* Findings */}
       <h2 className="text-sm font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-3">
@@ -171,6 +301,36 @@ export default function TestRunDetailPage() {
               </div>
             </div>
           ))}
+        </div>
+      )}
+
+      {run.testCaseRunId !== null && !isCaseRunLoading && (consoleLog || networkLog) && (
+        <div className="mt-8 space-y-6">
+          <h2 className="text-sm font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+            Runtime Signals
+          </h2>
+
+          {consoleLog && (
+            <div>
+              <h3 className="mb-2 text-sm font-medium text-gray-900 dark:text-gray-100">
+                Console Log
+              </h3>
+              <pre className="max-h-80 overflow-auto rounded-lg border border-gray-200 bg-gray-50 p-4 text-xs leading-5 text-gray-700 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300">
+                {consoleLog}
+              </pre>
+            </div>
+          )}
+
+          {networkLog && (
+            <div>
+              <h3 className="mb-2 text-sm font-medium text-gray-900 dark:text-gray-100">
+                Network Log
+              </h3>
+              <pre className="max-h-80 overflow-auto rounded-lg border border-gray-200 bg-gray-50 p-4 text-xs leading-5 text-gray-700 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300">
+                {networkLog}
+              </pre>
+            </div>
+          )}
         </div>
       )}
     </div>

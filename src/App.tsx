@@ -143,6 +143,19 @@ function AppRoutes() {
                   />
                   <Route path="runners/:runnerId/runs" element={<TestRunsListPage />} />
                   <Route path="runners/:runnerId/runs/:runId" element={<TestRunDetailPage />} />
+                  <Route path="runners/:runnerId/runs/:runId/pages" element={<PagesPage />} />
+                  <Route
+                    path="runners/:runnerId/runs/:runId/issues"
+                    element={<FindingsListPage />}
+                  />
+                  <Route
+                    path="runners/:runnerId/runs/:runId/pages/:pageId"
+                    element={<PageDetailPage />}
+                  />
+                  <Route
+                    path="runners/:runnerId/runs/:runId/pages/:pageId/states/:pageStateId"
+                    element={<PageStateDetailPage />}
+                  />
                   <Route
                     path="runners/:runnerId/runs/:runId/progress"
                     element={<ScanProgressPage />}
