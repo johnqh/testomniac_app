@@ -1,9 +1,7 @@
 const PHASES = [
-  { key: 'mouse_scanning', label: 'Scanning' },
-  { key: 'ai_analysis', label: 'AI Analysis' },
-  { key: 'input_scanning', label: 'Input Testing' },
-  { key: 'test_generation', label: 'Generating' },
-  { key: 'test_execution', label: 'Executing' },
+  { key: 'scanning', label: 'Scanning' },
+  { key: 'testing', label: 'Testing' },
+  { key: 'completed', label: 'Complete' },
 ];
 
 interface PhaseIndicatorProps {

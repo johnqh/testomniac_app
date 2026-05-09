@@ -2,10 +2,12 @@ import { useParams } from 'react-router-dom';
 import { useApi } from '@sudobility/building_blocks/firebase';
 import {
   useRun,
-  useRunSummary,
-  useRunScaffolds,
+  useRunNavigationMap,
   useRunPages,
   useRunPersonas,
+  useRunScaffolds,
+  useRunStructure,
+  useRunSummary,
   useRunTestCases,
   useRunTestRuns,
 } from '@sudobility/testomniac_client';
@@ -30,6 +32,8 @@ export default function RunDetailsPage() {
 
   const { run, isLoading, error } = useRun(queryConfig);
   const { summary } = useRunSummary(queryConfig);
+  const { navigationMap } = useRunNavigationMap(queryConfig);
+  const { structure } = useRunStructure(queryConfig);
   const { pages } = useRunPages(queryConfig);
   const { testCases } = useRunTestCases(queryConfig);
   const { testRuns } = useRunTestRuns(queryConfig);
@@ -39,7 +43,7 @@ export default function RunDetailsPage() {
   if (error) {
     return (
       <div className="p-6">
-        <div className="text-center text-red-600 dark:text-red-400 py-8">Error: {error}</div>
+        <div className="py-8 text-center text-red-600 dark:text-red-400">Error: {error}</div>
       </div>
     );
   }
@@ -47,54 +51,156 @@ export default function RunDetailsPage() {
   if (isLoading || !run) {
     return (
       <div className="p-6">
-        <div className="text-center text-gray-500 dark:text-gray-400 py-8">Loading run...</div>
+        <div className="py-8 text-center text-gray-500 dark:text-gray-400">Loading run...</div>
       </div>
     );
   }
 
-  const subPages = [
-    { label: 'Test Cases', path: `${basePath}/test-cases`, count: testCases.length },
-    { label: 'Test Runs', path: `${basePath}/test-runs`, count: testRuns.length },
-    { label: 'Issues', path: `${basePath}/issues`, count: summary?.totalFindings ?? 0 },
-    { label: 'Pages', path: `${basePath}/pages`, count: pages.length },
-    { label: 'Site Map', path: `${basePath}/map`, count: null },
-    { label: 'Scaffolds', path: `${basePath}/scaffolds`, count: scaffolds.length },
-    { label: 'Personas', path: `${basePath}/personas`, count: personas.length },
-  ];
   const expertiseEntries = Object.entries(summary?.expertiseSummary ?? {}).sort(([left], [right]) =>
     left.localeCompare(right)
   );
+  const suitesCount = structure?.suites.length ?? 0;
+  const caseRunsCount =
+    structure?.suites.reduce(
+      (total, suite) =>
+        total +
+        suite.testCases.reduce((suiteTotal, testCase) => suiteTotal + testCase.caseRuns.length, 0),
+      0
+    ) ?? 0;
+
+  const subPages = [
+    { label: 'Coverage', path: `${basePath}/test-runs`, count: caseRunsCount || testRuns.length },
+    { label: 'Test Cases', path: `${basePath}/test-cases`, count: testCases.length },
+    { label: 'Findings', path: `${basePath}/issues`, count: summary?.totalFindings ?? 0 },
+    { label: 'Pages', path: `${basePath}/pages`, count: pages.length },
+    {
+      label: 'Site Map',
+      path: `${basePath}/map`,
+      count: navigationMap?.discoveredPages.length ?? null,
+    },
+    { label: 'Scaffolds', path: `${basePath}/scaffolds`, count: scaffolds.length },
+    { label: 'Personas', path: `${basePath}/personas`, count: personas.length },
+  ];
 
   return (
     <div className="p-6">
       <SEOHead title={`Run #${runId}`} description="" noIndex />
-      <div className="flex items-center gap-3 mb-6">
+      <div className="mb-6 flex items-center gap-3">
         <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">Run #{runId}</h1>
         <StatusBadge status={run.status} size="md" />
       </div>
 
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-        <div className="p-4 rounded-lg border border-gray-200 dark:border-gray-700">
+      <div className="mb-8 grid grid-cols-2 gap-4 md:grid-cols-4">
+        <div className="rounded-lg border border-gray-200 p-4 dark:border-gray-700">
           <div className="text-2xl font-bold text-gray-900 dark:text-gray-100">
             {summary?.pagesFound ?? run.pagesFound ?? pages.length}
           </div>
-          <div className="text-xs text-gray-500">Pages Found</div>
+          <div className="text-xs text-gray-500">Pages</div>
         </div>
-        <div className="p-4 rounded-lg border border-gray-200 dark:border-gray-700">
-          <div className="text-2xl font-bold text-gray-900 dark:text-gray-100">
-            {testCases.length}
-          </div>
-          <div className="text-xs text-gray-500">Test Cases</div>
+        <div className="rounded-lg border border-gray-200 p-4 dark:border-gray-700">
+          <div className="text-2xl font-bold text-gray-900 dark:text-gray-100">{suitesCount}</div>
+          <div className="text-xs text-gray-500">Suites</div>
         </div>
-        <div className="p-4 rounded-lg border border-gray-200 dark:border-gray-700">
+        <div className="rounded-lg border border-gray-200 p-4 dark:border-gray-700">
           <div className="text-2xl font-bold text-green-600">
-            {summary?.testRunsCompleted ?? run.testRunsCompleted ?? testRuns.length}
+            {caseRunsCount ||
+              summary?.testRunsCompleted ||
+              run.testRunsCompleted ||
+              testRuns.length}
           </div>
-          <div className="text-xs text-gray-500">Test Runs</div>
+          <div className="text-xs text-gray-500">Case Runs</div>
         </div>
-        <div className="p-4 rounded-lg border border-gray-200 dark:border-gray-700">
+        <div className="rounded-lg border border-gray-200 p-4 dark:border-gray-700">
           <div className="text-2xl font-bold text-red-600">{summary?.totalFindings ?? 0}</div>
           <div className="text-xs text-gray-500">Findings</div>
+        </div>
+      </div>
+
+      <div className="mb-8 grid grid-cols-1 gap-4 lg:grid-cols-2">
+        <div className="rounded-lg border border-gray-200 bg-white p-4 dark:border-gray-700 dark:bg-gray-900">
+          <h2 className="mb-3 text-lg font-semibold text-gray-900 dark:text-gray-100">
+            Navigation Map
+          </h2>
+          <div className="space-y-2">
+            {(navigationMap?.discoveredPages ?? []).slice(0, 12).map(page => {
+              const visit = navigationMap?.pageVisits.find(
+                item => item.relativePath === page.relativePath
+              );
+              return (
+                <div
+                  key={page.id}
+                  className="rounded-md border border-gray-100 px-3 py-2 dark:border-gray-800"
+                >
+                  <div className="flex items-center justify-between gap-3">
+                    <span className="truncate text-sm text-gray-900 dark:text-gray-100">
+                      {page.relativePath}
+                    </span>
+                    <span className="shrink-0 text-xs text-blue-600 dark:text-blue-400">
+                      {visit?.status ?? 'discovered'}
+                    </span>
+                  </div>
+                  <div className="mt-1 text-xs text-gray-500 dark:text-gray-400">
+                    from {page.sourcePagePath || 'root'}
+                    {page.sourceLabel ? ` via ${page.sourceLabel}` : ''}
+                  </div>
+                </div>
+              );
+            })}
+            {(navigationMap?.discoveredPages.length ?? 0) === 0 && (
+              <div className="text-sm text-gray-500 dark:text-gray-400">No navigation map yet.</div>
+            )}
+          </div>
+        </div>
+
+        <div className="rounded-lg border border-gray-200 bg-white p-4 dark:border-gray-700 dark:bg-gray-900">
+          <h2 className="mb-3 text-lg font-semibold text-gray-900 dark:text-gray-100">
+            Coverage Tree
+          </h2>
+          {structure ? (
+            <div className="space-y-3">
+              <div className="rounded-md border border-gray-100 px-3 py-2 dark:border-gray-800">
+                <div className="text-sm font-medium text-gray-900 dark:text-gray-100">
+                  {structure.bundle.title}
+                </div>
+                <div className="mt-1 text-xs text-gray-500 dark:text-gray-400">
+                  Bundle run #{structure.bundleRun.id} · {structure.bundleRun.status}
+                </div>
+              </div>
+              {structure.suites.slice(0, 8).map(suite => (
+                <div
+                  key={suite.id}
+                  className="rounded-md border border-gray-100 px-3 py-2 dark:border-gray-800"
+                >
+                  <div className="flex items-center justify-between gap-3">
+                    <span className="text-sm text-gray-900 dark:text-gray-100">{suite.title}</span>
+                    <span className="text-xs text-green-600 dark:text-green-400">
+                      {suite.suiteRuns.map(run => run.status).join(', ') || 'pending'}
+                    </span>
+                  </div>
+                  <div className="mt-1 text-xs text-gray-500 dark:text-gray-400">
+                    {suite.testCases.length} case{suite.testCases.length === 1 ? '' : 's'}
+                  </div>
+                  <div className="mt-2 space-y-1">
+                    {suite.testCases.slice(0, 3).map(testCase => (
+                      <div
+                        key={testCase.id}
+                        className="rounded bg-gray-50 px-2 py-1 text-xs text-gray-600 dark:bg-gray-800 dark:text-gray-300"
+                      >
+                        {testCase.title}
+                        {testCase.dependencyTestCaseId
+                          ? ` · depends on #${testCase.dependencyTestCaseId}`
+                          : ''}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="text-sm text-gray-500 dark:text-gray-400">
+              No coverage structure yet.
+            </div>
+          )}
         </div>
       </div>
 
@@ -166,19 +272,19 @@ export default function RunDetailsPage() {
         </div>
       ) : null}
 
-      <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">
+      <h2 className="mb-4 text-lg font-semibold text-gray-900 dark:text-gray-100">
         Explore Results
       </h2>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
         {subPages.map(page => (
           <button
             key={page.path}
             onClick={() => navigate(page.path)}
-            className="p-4 text-left rounded-lg border border-gray-200 dark:border-gray-700 hover:border-blue-300 dark:hover:border-blue-600 transition-colors"
+            className="rounded-lg border border-gray-200 p-4 text-left transition-colors hover:border-blue-300 dark:border-gray-700 dark:hover:border-blue-600"
           >
             <div className="text-sm font-medium text-gray-900 dark:text-gray-100">{page.label}</div>
             {page.count !== null && (
-              <div className="text-xs text-gray-500 mt-1">{page.count} items</div>
+              <div className="mt-1 text-xs text-gray-500">{page.count} items</div>
             )}
           </button>
         ))}

@@ -23,7 +23,7 @@ export function LiveCounters({
       color: 'text-purple-600 dark:text-purple-400',
     },
     {
-      label: 'Test Runs',
+      label: 'Case Runs',
       value: testRunsCompleted,
       color: 'text-green-600 dark:text-green-400',
     },
