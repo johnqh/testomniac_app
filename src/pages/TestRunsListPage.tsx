@@ -19,19 +19,19 @@ function formatDate(dateStr: string | null): string {
 }
 
 export default function TestRunsListPage() {
-  const { entitySlug, runnerId } = useParams<{ entitySlug: string; runnerId: string }>();
+  const { entitySlug, envId } = useParams<{ entitySlug: string; envId: string }>();
   const { networkClient, token } = useApi();
   const { navigate } = useLocalizedNavigate();
 
   const { testRuns, isLoading, error } = useRunnerTestRuns({
     networkClient,
     baseUrl: CONSTANTS.API_URL,
-    runnerId: Number(runnerId),
+    runnerId: Number(envId),
     token: token ?? '',
-    enabled: !!runnerId && !!token,
+    enabled: !!envId && !!token,
   });
 
-  const basePath = `/dashboard/${entitySlug}/runners/${runnerId}`;
+  const basePath = `/dashboard/${entitySlug}/environments/${envId}`;
 
   if (error) {
     return (

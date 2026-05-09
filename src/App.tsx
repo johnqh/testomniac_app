@@ -129,60 +129,66 @@ function AppRoutes() {
                   <Route index element={<DashboardOverview />} />
                   <Route path="scan/new" element={<StartScanPage />} />
 
-                  {/* Runner dashboard routes */}
-                  <Route path="runners/:runnerId/bundles" element={<BundlesPage />} />
+                  {/* Environment dashboard routes */}
+                  <Route path="environments/:envId/bundles" element={<BundlesPage />} />
                   <Route
-                    path="runners/:runnerId/test-surfaces"
+                    path="environments/:envId/test-surfaces"
                     element={<TestSurfacesListPage />}
                   />
                   <Route
-                    path="runners/:runnerId/test-surfaces/:surfaceId"
+                    path="environments/:envId/test-surfaces/:surfaceId"
                     element={<TestSurfaceDetailPage />}
                   />
-                  <Route path="runners/:runnerId/test-elements" element={<TestElementsPage />} />
+                  <Route path="environments/:envId/test-elements" element={<TestElementsPage />} />
                   <Route
-                    path="runners/:runnerId/test-elements/:elementId"
+                    path="environments/:envId/test-elements/:elementId"
                     element={<TestElementDetailPage />}
                   />
-                  <Route path="runners/:runnerId/runs" element={<TestRunsListPage />} />
-                  <Route path="runners/:runnerId/runs/:runId" element={<TestRunDetailPage />} />
-                  <Route path="runners/:runnerId/runs/:runId/pages" element={<PagesPage />} />
+                  <Route path="environments/:envId/runs" element={<TestRunsListPage />} />
+                  <Route path="environments/:envId/runs/:runId" element={<TestRunDetailPage />} />
+                  <Route path="environments/:envId/runs/:runId/pages" element={<PagesPage />} />
                   <Route
-                    path="runners/:runnerId/runs/:runId/issues"
+                    path="environments/:envId/runs/:runId/issues"
                     element={<FindingsListPage />}
                   />
                   <Route
-                    path="runners/:runnerId/runs/:runId/pages/:pageId"
+                    path="environments/:envId/runs/:runId/pages/:pageId"
                     element={<PageDetailPage />}
                   />
                   <Route
-                    path="runners/:runnerId/runs/:runId/pages/:pageId/states/:pageStateId"
+                    path="environments/:envId/runs/:runId/pages/:pageId/states/:pageStateId"
                     element={<PageStateDetailPage />}
                   />
                   <Route
-                    path="runners/:runnerId/runs/:runId/progress"
+                    path="environments/:envId/runs/:runId/progress"
                     element={<ScanProgressPage />}
                   />
-                  <Route path="runners/:runnerId/test-scenarios" element={<TestScenariosPage />} />
                   <Route
-                    path="runners/:runnerId/test-scenarios/:scenarioId"
+                    path="environments/:envId/test-scenarios"
+                    element={<TestScenariosPage />}
+                  />
+                  <Route
+                    path="environments/:envId/test-scenarios/:scenarioId"
                     element={<TestScenarioDetailPage />}
                   />
-                  <Route path="runners/:runnerId/issues" element={<FindingsListPage />} />
-                  <Route path="runners/:runnerId/schedules" element={<SchedulesPage />} />
-                  <Route path="runners/:runnerId/settings" element={<RunnerSettingsPage />} />
+                  <Route path="environments/:envId/issues" element={<FindingsListPage />} />
+                  <Route path="environments/:envId/schedules" element={<SchedulesPage />} />
+                  <Route path="environments/:envId/settings" element={<RunnerSettingsPage />} />
 
-                  {/* Additional runner data routes */}
-                  <Route path="runners/:runnerId/pages" element={<PagesPage />} />
-                  <Route path="runners/:runnerId/pages/:pageId" element={<PageDetailPage />} />
+                  {/* Additional environment data routes */}
+                  <Route path="environments/:envId/pages" element={<PagesPage />} />
+                  <Route path="environments/:envId/pages/:pageId" element={<PageDetailPage />} />
                   <Route
-                    path="runners/:runnerId/pages/:pageId/states/:pageStateId"
+                    path="environments/:envId/pages/:pageId/states/:pageStateId"
                     element={<PageStateDetailPage />}
                   />
-                  <Route path="runners/:runnerId/graph" element={<RunnerGraphPage />} />
-                  <Route path="runners/:runnerId/pages/:pageId/graph" element={<PageGraphPage />} />
-                  <Route path="runners/:runnerId/scaffolds" element={<ScaffoldsPage />} />
-                  <Route path="runners/:runnerId/personas" element={<PersonasPage />} />
+                  <Route path="environments/:envId/graph" element={<RunnerGraphPage />} />
+                  <Route
+                    path="environments/:envId/pages/:pageId/graph"
+                    element={<PageGraphPage />}
+                  />
+                  <Route path="environments/:envId/scaffolds" element={<ScaffoldsPage />} />
+                  <Route path="environments/:envId/personas" element={<PersonasPage />} />
 
                   {/* Legacy run routes */}
                   <Route path="runs/:runId" element={<RunRedirect />} />

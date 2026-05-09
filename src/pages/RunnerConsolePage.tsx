@@ -99,11 +99,11 @@ function CogIcon() {
 }
 
 export default function RunnerConsolePage() {
-  const { entitySlug, runnerId } = useParams<{ entitySlug: string; runnerId: string }>();
+  const { entitySlug, envId } = useParams<{ entitySlug: string; envId: string }>();
   const { navigate } = useLocalizedNavigate();
   const location = useLocation();
 
-  const basePath = `/dashboard/${entitySlug}/runners/${runnerId}`;
+  const basePath = `/dashboard/${entitySlug}/environments/${envId}`;
 
   const currentWithoutLang = useMemo(() => {
     const langPrefix = location.pathname.match(/^\/[a-z]{2}(-[a-z]+)?\//)?.[0] || '/';
@@ -129,7 +129,7 @@ export default function RunnerConsolePage() {
             Runner Console
           </h2>
           <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5 truncate">
-            Runner #{runnerId}
+            Environment #{envId}
           </p>
         </div>
         <nav className="p-2 space-y-0.5">

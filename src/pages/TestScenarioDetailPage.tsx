@@ -7,23 +7,23 @@ import { useLocalizedNavigate } from '../hooks/useLocalizedNavigate';
 import { CONSTANTS } from '../config/constants';
 
 export default function TestScenarioDetailPage() {
-  const { entitySlug, runnerId, scenarioId } = useParams<{
+  const { entitySlug, envId, scenarioId } = useParams<{
     entitySlug: string;
-    runnerId: string;
+    envId: string;
     scenarioId: string;
   }>();
   const { networkClient, token } = useApi();
   const { navigate } = useLocalizedNavigate();
 
-  const basePath = `/dashboard/${entitySlug}/runners/${runnerId}`;
+  const basePath = `/dashboard/${entitySlug}/environments/${envId}`;
 
   // Fetch the scenario from the list (no single-get endpoint needed)
   const { testScenarios } = useRunnerTestScenarios({
     networkClient,
     baseUrl: CONSTANTS.API_URL,
-    runnerId: Number(runnerId),
+    runnerId: Number(envId),
     token: token ?? '',
-    enabled: !!runnerId && !!token,
+    enabled: !!envId && !!token,
   });
 
   const scenario = testScenarios.find(s => s.id === Number(scenarioId));

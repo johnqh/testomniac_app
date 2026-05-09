@@ -49,26 +49,26 @@ function layoutGraph(nodes: Node[], edges: Edge[]): Node[] {
 }
 
 export default function RunnerGraphPage() {
-  const { runnerId, entitySlug } = useParams<{ runnerId: string; entitySlug: string }>();
+  const { envId, entitySlug } = useParams<{ envId: string; entitySlug: string }>();
   const { networkClient, token } = useApi();
   const { navigate } = useLocalizedNavigate();
 
-  const numericRunnerId = Number(runnerId);
+  const numericEnvId = Number(envId);
 
   const { pages, isLoading: pagesLoading } = useRunnerPages({
     networkClient,
     baseUrl: CONSTANTS.API_URL,
-    runnerId: numericRunnerId,
+    runnerId: numericEnvId,
     token: token ?? '',
-    enabled: !!runnerId && !!token,
+    enabled: !!envId && !!token,
   });
 
   const { pageStates, isLoading: pageStatesLoading } = useRunnerPageStates({
     networkClient,
     baseUrl: CONSTANTS.API_URL,
-    runnerId: numericRunnerId,
+    runnerId: numericEnvId,
     token: token ?? '',
-    enabled: !!runnerId && !!token,
+    enabled: !!envId && !!token,
   });
 
   const isLoading = pagesLoading || pageStatesLoading;
@@ -110,9 +110,9 @@ export default function RunnerGraphPage() {
 
   const onNodeClick = useCallback(
     (_: React.MouseEvent, node: Node) => {
-      navigate(`/dashboard/${entitySlug}/runners/${runnerId}/pages/${node.id}`);
+      navigate(`/dashboard/${entitySlug}/environments/${envId}/pages/${node.id}`);
     },
-    [navigate, entitySlug, runnerId]
+    [navigate, entitySlug, envId]
   );
 
   if (isLoading) {

@@ -64,15 +64,15 @@ const columns = [
 ];
 
 export default function TestElementsPage() {
-  const { runnerId } = useParams<{ runnerId: string }>();
+  const { envId } = useParams<{ envId: string }>();
   const { networkClient, token } = useApi();
 
   const { testElements, isLoading, error } = useRunnerTestElements({
     networkClient,
     baseUrl: CONSTANTS.API_URL,
-    runnerId: Number(runnerId),
+    runnerId: Number(envId),
     token: token ?? '',
-    enabled: !!runnerId && !!token,
+    enabled: !!envId && !!token,
   });
 
   if (error) {

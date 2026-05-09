@@ -37,16 +37,16 @@ function PersonaUseCases({ personaId }: { personaId: number }) {
 }
 
 export default function PersonasPage() {
-  const { runnerId } = useParams<{ runnerId: string }>();
+  const { envId } = useParams<{ envId: string }>();
   const { networkClient, token } = useApi();
   const [expandedId, setExpandedId] = useState<number | null>(null);
 
   const { personas, isLoading, error } = useRunnerPersonas({
     networkClient,
     baseUrl: CONSTANTS.API_URL,
-    runnerId: Number(runnerId),
+    runnerId: Number(envId),
     token: token ?? '',
-    enabled: !!runnerId && !!token,
+    enabled: !!envId && !!token,
   });
 
   if (isLoading) {

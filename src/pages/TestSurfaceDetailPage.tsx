@@ -25,15 +25,15 @@ function FileIcon() {
 }
 
 export default function TestSurfaceDetailPage() {
-  const { entitySlug, runnerId, surfaceId } = useParams<{
+  const { entitySlug, envId, surfaceId } = useParams<{
     entitySlug: string;
-    runnerId: string;
+    envId: string;
     surfaceId: string;
   }>();
   const { networkClient, token } = useApi();
   const { navigate } = useLocalizedNavigate();
 
-  const basePath = `/dashboard/${entitySlug}/runners/${runnerId}`;
+  const basePath = `/dashboard/${entitySlug}/environments/${envId}`;
 
   const {
     testElements,

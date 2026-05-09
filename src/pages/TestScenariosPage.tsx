@@ -13,7 +13,7 @@ import { CONSTANTS } from '../config/constants';
 import { StatusBadge } from '../components/scanner/StatusBadge';
 
 export default function TestScenariosPage() {
-  const { entitySlug, runnerId } = useParams<{ entitySlug: string; runnerId: string }>();
+  const { entitySlug, envId } = useParams<{ entitySlug: string; envId: string }>();
   const { networkClient, token } = useApi();
   const { navigate } = useLocalizedNavigate();
   const [showForm, setShowForm] = useState(false);
@@ -24,31 +24,31 @@ export default function TestScenariosPage() {
   const { testScenarios, isLoading, error, refetch } = useRunnerTestScenarios({
     networkClient,
     baseUrl: CONSTANTS.API_URL,
-    runnerId: Number(runnerId),
+    runnerId: Number(envId),
     token: token ?? '',
-    enabled: !!runnerId && !!token,
+    enabled: !!envId && !!token,
   });
 
   const { createTestScenario, isCreating } = useCreateTestScenario({
     networkClient,
     baseUrl: CONSTANTS.API_URL,
-    runnerId: Number(runnerId),
+    runnerId: Number(envId),
     token: token ?? '',
   });
 
   const { deleteTestScenario } = useDeleteTestScenario({
     networkClient,
     baseUrl: CONSTANTS.API_URL,
-    runnerId: Number(runnerId),
+    runnerId: Number(envId),
     token: token ?? '',
   });
 
-  const basePath = `/dashboard/${entitySlug}/runners/${runnerId}`;
+  const basePath = `/dashboard/${entitySlug}/environments/${envId}`;
 
   const handleCreate = async () => {
     if (!title.trim() || !prompt.trim()) return;
     await createTestScenario({
-      runnerId: Number(runnerId),
+      runnerId: Number(envId),
       title: title.trim(),
       startingPath: startingPath.trim(),
       prompt: prompt.trim(),

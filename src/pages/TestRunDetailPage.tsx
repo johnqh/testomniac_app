@@ -40,15 +40,15 @@ function formatMultilineLog(log: string | null | undefined): string | null {
 }
 
 export default function TestRunDetailPage() {
-  const { entitySlug, runnerId, runId } = useParams<{
+  const { entitySlug, envId, runId } = useParams<{
     entitySlug: string;
-    runnerId: string;
+    envId: string;
     runId: string;
   }>();
   const { networkClient, token } = useApi();
   const { navigate } = useLocalizedNavigate();
 
-  const basePath = `/dashboard/${entitySlug}/runners/${runnerId}`;
+  const basePath = `/dashboard/${entitySlug}/environments/${envId}`;
   const testRunId = Number(runId);
 
   const {

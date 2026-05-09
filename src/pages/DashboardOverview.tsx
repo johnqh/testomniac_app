@@ -1,7 +1,7 @@
 import { useParams } from 'react-router-dom';
 import { useApi } from '@sudobility/building_blocks/firebase';
-import { useEntityProducts, useProductRunners } from '@sudobility/testomniac_client';
-import type { ProductSummaryResponse, RunnerResponse } from '@sudobility/testomniac_types';
+import { useEntityProducts, useProductEnvironments } from '@sudobility/testomniac_client';
+import type { ProductSummaryResponse, TestEnvironmentResponse } from '@sudobility/testomniac_types';
 import SEOHead from '@/components/SEOHead';
 import { useLocalizedNavigate } from '../hooks/useLocalizedNavigate';
 import { CONSTANTS } from '../config/constants';
@@ -33,30 +33,38 @@ function SectionLink({
   );
 }
 
-/** A single runner card with links to its dashboard sections. */
-function RunnerCard({ runner, basePath }: { runner: RunnerResponse; basePath: string }) {
+/** A single environment card with links to its dashboard sections. */
+function EnvironmentCard({
+  environment,
+  basePath,
+}: {
+  environment: TestEnvironmentResponse;
+  basePath: string;
+}) {
   const { navigate } = useLocalizedNavigate();
-  const runnerBasePath = `${basePath}/runners/${runner.id}`;
+  const envBasePath = `${basePath}/environments/${environment.id}`;
 
   const sections = [
     {
       label: 'Test Surfaces',
       description: 'Test surface hierarchy',
-      path: `${runnerBasePath}/test-surfaces`,
+      path: `${envBasePath}/test-surfaces`,
     },
-    { label: 'Test Runs', description: 'Execution results', path: `${runnerBasePath}/test-runs` },
-    { label: 'Findings', description: 'Errors and warnings', path: `${runnerBasePath}/findings` },
-    { label: 'Settings', description: 'Runner settings', path: `${runnerBasePath}/settings` },
+    { label: 'Test Runs', description: 'Execution results', path: `${envBasePath}/test-runs` },
+    { label: 'Findings', description: 'Errors and warnings', path: `${envBasePath}/findings` },
+    { label: 'Settings', description: 'Environment settings', path: `${envBasePath}/settings` },
   ];
 
   return (
     <div className="rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 overflow-hidden">
-      {/* Runner header */}
+      {/* Environment header */}
       <div className="px-5 py-4 border-b border-gray-100 dark:border-gray-700">
         <h3 className="text-base font-semibold text-gray-900 dark:text-gray-100 truncate">
-          {runner.title}
+          {environment.title}
         </h3>
-        <p className="text-sm text-gray-500 dark:text-gray-400 mt-0.5 truncate">{runner.type}</p>
+        <p className="text-sm text-gray-500 dark:text-gray-400 mt-0.5 truncate">
+          {environment.kind}
+        </p>
       </div>
 
       {/* Section links grid */}
@@ -74,7 +82,7 @@ function RunnerCard({ runner, basePath }: { runner: RunnerResponse; basePath: st
   );
 }
 
-/** Lists runners for a single product, with lazy loading. */
+/** Lists environments for a single product, with lazy loading. */
 function ProductSection({
   product,
   basePath,
@@ -84,7 +92,7 @@ function ProductSection({
 }) {
   const { networkClient, token } = useApi();
 
-  const { runners, isLoading, error } = useProductRunners({
+  const { environments, isLoading, error } = useProductEnvironments({
     networkClient,
     baseUrl: CONSTANTS.API_URL,
     productId: product.id,
@@ -99,24 +107,24 @@ function ProductSection({
       </h2>
 
       {isLoading && (
-        <div className="text-sm text-gray-500 dark:text-gray-400 py-4">Loading runners...</div>
+        <div className="text-sm text-gray-500 dark:text-gray-400 py-4">Loading environments...</div>
       )}
 
       {error && (
         <div className="text-sm text-red-600 dark:text-red-400 py-2">
-          Failed to load runners: {error}
+          Failed to load environments: {error}
         </div>
       )}
 
-      {!isLoading && !error && runners.length === 0 && (
+      {!isLoading && !error && environments.length === 0 && (
         <div className="text-sm text-gray-500 dark:text-gray-400 py-4 border border-dashed border-gray-200 dark:border-gray-700 rounded-lg text-center">
-          No runners in this product yet.
+          No environments in this product yet.
         </div>
       )}
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-        {runners.map((runner: RunnerResponse) => (
-          <RunnerCard key={runner.id} runner={runner} basePath={basePath} />
+        {environments.map((env: TestEnvironmentResponse) => (
+          <EnvironmentCard key={env.id} environment={env} basePath={basePath} />
         ))}
       </div>
     </section>

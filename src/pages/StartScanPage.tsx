@@ -32,9 +32,9 @@ export default function StartScanPage() {
       });
       const data = await response.json();
 
-      if (data.success && data.data?.testRunId && data.data?.runnerId) {
+      if (data.success && data.data?.testRunId && data.data?.testEnvironmentId) {
         navigate(
-          `/dashboard/${entitySlug}/runners/${data.data.runnerId}/runs/${data.data.testRunId}/progress`
+          `/dashboard/${entitySlug}/environments/${data.data.testEnvironmentId}/runs/${data.data.testRunId}/progress`
         );
       } else {
         setError(data.error || data.data?.message || 'Failed to start scan');

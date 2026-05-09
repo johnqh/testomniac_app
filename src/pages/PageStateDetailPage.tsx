@@ -11,10 +11,10 @@ import { CONSTANTS } from '../config/constants';
 type Tab = 'body' | 'content' | 'scaffolds';
 
 export default function PageStateDetailPage() {
-  const { pageStateId, pageId, runnerId } = useParams<{
+  const { pageStateId, pageId, envId } = useParams<{
     pageStateId: string;
     pageId: string;
-    runnerId: string;
+    envId: string;
   }>();
   const { networkClient, token } = useApi();
 
@@ -94,7 +94,7 @@ export default function PageStateDetailPage() {
             {state.sizeClass}
           </span>
           <span className="text-xs text-gray-500 dark:text-gray-400">
-            Runner #{runnerId} / Page #{pageId}
+            Environment #{envId} / Page #{pageId}
           </span>
           {state.capturedAt && (
             <span className="text-xs text-gray-500 dark:text-gray-400">

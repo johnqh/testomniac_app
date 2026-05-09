@@ -47,19 +47,19 @@ function PriorityBadge({ priority }: { priority: number }) {
 }
 
 export default function TestSurfacesListPage() {
-  const { entitySlug, runnerId } = useParams<{ entitySlug: string; runnerId: string }>();
+  const { entitySlug, envId } = useParams<{ entitySlug: string; envId: string }>();
   const { networkClient, token } = useApi();
   const { navigate } = useLocalizedNavigate();
 
   const { testSurfaces, isLoading, error } = useRunnerTestSurfaces({
     networkClient,
     baseUrl: CONSTANTS.API_URL,
-    runnerId: Number(runnerId),
+    runnerId: Number(envId),
     token: token ?? '',
-    enabled: !!runnerId && !!token,
+    enabled: !!envId && !!token,
   });
 
-  const basePath = `/dashboard/${entitySlug}/runners/${runnerId}`;
+  const basePath = `/dashboard/${entitySlug}/environments/${envId}`;
 
   if (error) {
     return (

@@ -38,7 +38,7 @@ export default function RunRedirect() {
 
   return (
     <Navigate
-      to={`/${currentLanguage}/dashboard/${entitySlug}/runners/${run.runnerId}/runs/${runId}`}
+      to={`/${currentLanguage}/dashboard/${entitySlug}/environments/${run.testEnvironmentId}/runs/${runId}`}
       replace
     />
   );

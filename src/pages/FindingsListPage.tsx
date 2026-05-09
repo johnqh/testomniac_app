@@ -26,16 +26,16 @@ function FindingTypeBadge({ type }: { type: string }) {
 type FilterMode = 'all' | 'errors';
 
 export default function FindingsListPage() {
-  const { runnerId, runId } = useParams<{ runnerId: string; runId?: string }>();
+  const { envId, runId } = useParams<{ envId: string; runId?: string }>();
   const { networkClient, token } = useApi();
   const [filter, setFilter] = useState<FilterMode>('all');
 
   const runnerFindingsQuery = useRunnerFindings({
     networkClient,
     baseUrl: CONSTANTS.API_URL,
-    runnerId: Number(runnerId),
+    runnerId: Number(envId),
     token: token ?? '',
-    enabled: !!runnerId && !!token && !runId,
+    enabled: !!envId && !!token && !runId,
   });
 
   const runFindingsQuery = useRunFindings({

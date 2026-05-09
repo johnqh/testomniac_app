@@ -54,9 +54,9 @@ function describeRecurrence(schedule: TestScheduleResponse) {
 }
 
 export default function SchedulesPage() {
-  const { runnerId } = useParams<{ runnerId: string }>();
+  const { envId } = useParams<{ envId: string }>();
   const { networkClient, token } = useApi();
-  const numericRunnerId = Number(runnerId);
+  const numericEnvId = Number(envId);
 
   const [showForm, setShowForm] = useState(false);
   const [title, setTitle] = useState('');
@@ -80,9 +80,9 @@ export default function SchedulesPage() {
   } = useRunnerSchedules({
     networkClient,
     baseUrl: CONSTANTS.API_URL,
-    runnerId: numericRunnerId,
+    runnerId: numericEnvId,
     token: token ?? '',
-    enabled: !!runnerId && !!token,
+    enabled: !!envId && !!token,
   });
 
   const {
@@ -92,9 +92,9 @@ export default function SchedulesPage() {
   } = useRunnerTestSurfaceBundles({
     networkClient,
     baseUrl: CONSTANTS.API_URL,
-    runnerId: numericRunnerId,
+    runnerId: numericEnvId,
     token: token ?? '',
-    enabled: !!runnerId && !!token,
+    enabled: !!envId && !!token,
   });
 
   const {
@@ -104,9 +104,9 @@ export default function SchedulesPage() {
   } = useRunnerTestSurfaces({
     networkClient,
     baseUrl: CONSTANTS.API_URL,
-    runnerId: numericRunnerId,
+    runnerId: numericEnvId,
     token: token ?? '',
-    enabled: !!runnerId && !!token,
+    enabled: !!envId && !!token,
   });
 
   const {
@@ -116,9 +116,9 @@ export default function SchedulesPage() {
   } = useRunnerTestElements({
     networkClient,
     baseUrl: CONSTANTS.API_URL,
-    runnerId: numericRunnerId,
+    runnerId: numericEnvId,
     token: token ?? '',
-    enabled: !!runnerId && !!token,
+    enabled: !!envId && !!token,
   });
 
   const {
@@ -129,7 +129,7 @@ export default function SchedulesPage() {
   } = useCreateTestSchedule({
     networkClient,
     baseUrl: CONSTANTS.API_URL,
-    runnerId: numericRunnerId,
+    runnerId: numericEnvId,
     token: token ?? '',
   });
 
@@ -175,7 +175,7 @@ export default function SchedulesPage() {
     if (!canCreate) return;
 
     const payload: CreateTestScheduleRequest = {
-      runnerId: numericRunnerId,
+      runnerId: numericEnvId,
       title: title.trim(),
       recurrenceType,
       timeOfDay,

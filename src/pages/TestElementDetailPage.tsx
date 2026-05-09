@@ -83,15 +83,15 @@ function ElementLinkRow({
 }
 
 export default function TestElementDetailPage() {
-  const { entitySlug, runnerId, elementId } = useParams<{
+  const { entitySlug, envId, elementId } = useParams<{
     entitySlug: string;
-    runnerId: string;
+    envId: string;
     elementId: string;
   }>();
   const { networkClient, token } = useApi();
   const { navigate } = useLocalizedNavigate();
 
-  const basePath = `/dashboard/${entitySlug}/runners/${runnerId}`;
+  const basePath = `/dashboard/${entitySlug}/environments/${envId}`;
   const numericElementId = Number(elementId);
 
   const { actions, isLoading, error } = useTestElementActions({
@@ -108,9 +108,9 @@ export default function TestElementDetailPage() {
   } = useRunnerTestElements({
     networkClient,
     baseUrl: CONSTANTS.API_URL,
-    runnerId: Number(runnerId),
+    runnerId: Number(envId),
     token: token ?? '',
-    enabled: !!runnerId && !!token,
+    enabled: !!envId && !!token,
   });
 
   const currentElement = useMemo(

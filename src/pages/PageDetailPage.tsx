@@ -1,19 +1,80 @@
+import { useState, useRef, useEffect, useMemo } from 'react';
 import { useParams } from 'react-router-dom';
 import { useApi } from '@sudobility/building_blocks/firebase';
-import { usePageStates, useRunPageSummary } from '@sudobility/testomniac_client';
+import {
+  usePageStates,
+  useRunPageSummary,
+  useEnvironmentTestElements,
+  useEnvironmentPages,
+  useCreateTestElementRun,
+} from '@sudobility/testomniac_client';
+import type { TestElementResponse } from '@sudobility/testomniac_types';
 import SEOHead from '@/components/SEOHead';
 import { CONSTANTS } from '../config/constants';
 import { useLocalizedNavigate } from '../hooks/useLocalizedNavigate';
 
 export default function PageDetailPage() {
-  const { pageId, runnerId, entitySlug, runId } = useParams<{
+  const { pageId, envId, entitySlug, runId } = useParams<{
     pageId: string;
-    runnerId: string;
+    envId: string;
     entitySlug: string;
     runId?: string;
   }>();
   const { networkClient, token } = useApi();
   const { navigate } = useLocalizedNavigate();
+
+  const numericPageId = Number(pageId);
+
+  const { pages: envPages } = useEnvironmentPages({
+    networkClient,
+    baseUrl: CONSTANTS.API_URL,
+    envId: Number(envId),
+    token: token ?? '',
+    enabled: !!envId && !!token,
+  });
+
+  const { testElements } = useEnvironmentTestElements({
+    networkClient,
+    baseUrl: CONSTANTS.API_URL,
+    envId: Number(envId),
+    token: token ?? '',
+    enabled: !!envId && !!token,
+  });
+
+  const { createRun } = useCreateTestElementRun({
+    networkClient,
+    baseUrl: CONSTANTS.API_URL,
+    token: token ?? '',
+  });
+
+  const pagePathById = useMemo(() => {
+    const map = new Map<number, string>();
+    for (const p of envPages) {
+      map.set(p.id, p.relativePath);
+    }
+    return map;
+  }, [envPages]);
+
+  const { startingElements, landingElements, onPageElements } = useMemo(() => {
+    const starting: TestElementResponse[] = [];
+    const landing: TestElementResponse[] = [];
+    const onPage: TestElementResponse[] = [];
+
+    for (const el of testElements) {
+      const isSource = el.pageId === numericPageId;
+      const isTarget = el.targetPageId === numericPageId;
+
+      if (isSource && isTarget) {
+        onPage.push(el);
+      } else if (isSource) {
+        starting.push(el);
+      } else if (isTarget) {
+        landing.push(el);
+      }
+    }
+
+    return { startingElements: starting, landingElements: landing, onPageElements: onPage };
+  }, [testElements, numericPageId]);
 
   const { pageStates, isLoading } = usePageStates({
     networkClient,
@@ -52,7 +113,7 @@ export default function PageDetailPage() {
         </div>
         <button
           onClick={() =>
-            navigate(`/dashboard/${entitySlug}/runners/${runnerId}/pages/${pageId}/graph`)
+            navigate(`/dashboard/${entitySlug}/environments/${envId}/pages/${pageId}/graph`)
           }
           className="px-4 py-2 text-sm rounded-lg border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
         >
@@ -184,8 +245,8 @@ export default function PageDetailPage() {
               onClick={() =>
                 navigate(
                   runId
-                    ? `/dashboard/${entitySlug}/runners/${runnerId}/runs/${runId}/pages/${pageId}/states/${state.id}`
-                    : `/dashboard/${entitySlug}/runners/${runnerId}/pages/${pageId}/states/${state.id}`
+                    ? `/dashboard/${entitySlug}/environments/${envId}/runs/${runId}/pages/${pageId}/states/${state.id}`
+                    : `/dashboard/${entitySlug}/environments/${envId}/pages/${pageId}/states/${state.id}`
                 )
               }
               className="text-left rounded-lg border border-gray-200 dark:border-gray-700 overflow-hidden hover:border-blue-300 dark:hover:border-blue-600 transition-colors"
@@ -222,6 +283,146 @@ export default function PageDetailPage() {
           ))}
         </div>
       )}
+
+      {/* Test Elements Section */}
+      {(startingElements.length > 0 || landingElements.length > 0 || onPageElements.length > 0) && (
+        <div className="mt-10">
+          <h2 className="mb-4 text-lg font-semibold text-gray-900 dark:text-gray-100">
+            Test Elements
+          </h2>
+
+          {onPageElements.length > 0 && (
+            <TestElementGroup
+              label="On this page"
+              elements={onPageElements}
+              pagePathById={pagePathById}
+              onTest={el => createRun({ testElementId: el.id })}
+            />
+          )}
+
+          {startingElements.length > 0 && (
+            <TestElementGroup
+              label="Starting from this page"
+              elements={startingElements}
+              pagePathById={pagePathById}
+              onTest={el => createRun({ testElementId: el.id })}
+            />
+          )}
+
+          {landingElements.length > 0 && (
+            <TestElementGroup
+              label="Landing on this page"
+              elements={landingElements}
+              pagePathById={pagePathById}
+              onTest={el => createRun({ testElementId: el.id })}
+            />
+          )}
+        </div>
+      )}
+    </div>
+  );
+}
+
+// --- Test Elements Sub-components ---
+
+function TestElementGroup({
+  label,
+  elements,
+  pagePathById,
+  onTest,
+}: {
+  label: string;
+  elements: TestElementResponse[];
+  pagePathById: Map<number, string>;
+  onTest: (el: TestElementResponse) => void;
+}) {
+  return (
+    <div className="mb-6">
+      <h3 className="mb-2 text-sm font-medium text-gray-500 dark:text-gray-400">{label}</h3>
+      <div className="space-y-1">
+        {elements.map(el => (
+          <TestElementRow
+            key={el.id}
+            element={el}
+            pagePathById={pagePathById}
+            onTest={() => onTest(el)}
+          />
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function TestElementRow({
+  element,
+  pagePathById,
+  onTest,
+}: {
+  element: TestElementResponse;
+  pagePathById: Map<number, string>;
+  onTest: () => void;
+}) {
+  const [menuOpen, setMenuOpen] = useState(false);
+  const menuRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!menuOpen) return;
+    function handleClickOutside(e: MouseEvent) {
+      if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
+        setMenuOpen(false);
+      }
+    }
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [menuOpen]);
+
+  const startPath = element.pageId != null ? pagePathById.get(element.pageId) : null;
+  const endPath = element.targetPageId != null ? pagePathById.get(element.targetPageId) : null;
+
+  return (
+    <div className="flex items-center justify-between rounded-lg border border-gray-200 bg-white px-4 py-3 dark:border-gray-700 dark:bg-gray-900">
+      <div className="flex items-center gap-3 min-w-0">
+        <div className="min-w-0">
+          <div className="text-sm font-medium text-gray-900 dark:text-gray-100 truncate">
+            {element.title}
+          </div>
+          <div className="mt-0.5 flex items-center gap-2 text-xs text-gray-500 dark:text-gray-400">
+            {startPath && <span className="truncate max-w-[200px]">{startPath}</span>}
+            {startPath && endPath && <span>&rarr;</span>}
+            {endPath && <span className="truncate max-w-[200px]">{endPath}</span>}
+          </div>
+        </div>
+      </div>
+      <div className="flex items-center gap-2 shrink-0">
+        <span className="rounded bg-blue-50 px-1.5 py-0.5 text-[11px] font-medium text-blue-700 dark:bg-blue-900/20 dark:text-blue-300">
+          {element.testType}
+        </span>
+        <div className="relative" ref={menuRef}>
+          <button
+            onClick={() => setMenuOpen(prev => !prev)}
+            className="rounded p-1 text-gray-400 hover:bg-gray-100 hover:text-gray-600 dark:hover:bg-gray-800 dark:hover:text-gray-300"
+          >
+            <svg className="h-4 w-4" fill="currentColor" viewBox="0 0 20 20">
+              <circle cx="10" cy="4" r="1.5" />
+              <circle cx="10" cy="10" r="1.5" />
+              <circle cx="10" cy="16" r="1.5" />
+            </svg>
+          </button>
+          {menuOpen && (
+            <div className="absolute right-0 top-full z-10 mt-1 w-32 rounded-lg border border-gray-200 bg-white py-1 shadow-lg dark:border-gray-700 dark:bg-gray-800">
+              <button
+                onClick={() => {
+                  setMenuOpen(false);
+                  onTest();
+                }}
+                className="w-full px-3 py-1.5 text-left text-sm text-gray-700 hover:bg-gray-50 dark:text-gray-300 dark:hover:bg-gray-700"
+              >
+                Test
+              </button>
+            </div>
+          )}
+        </div>
+      </div>
     </div>
   );
 }

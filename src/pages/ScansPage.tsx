@@ -35,16 +35,16 @@ function formatDate(iso: string | null): string {
 }
 
 export default function ScansPage() {
-  const { runnerId, entitySlug } = useParams<{ runnerId: string; entitySlug: string }>();
+  const { envId, entitySlug } = useParams<{ envId: string; entitySlug: string }>();
   const { networkClient, token } = useApi();
   const { navigate } = useLocalizedNavigate();
 
   const { scans, isLoading } = useRunnerScans({
     networkClient,
     baseUrl: CONSTANTS.API_URL,
-    runnerId: Number(runnerId),
+    runnerId: Number(envId),
     token: token ?? '',
-    enabled: !!runnerId && !!token,
+    enabled: !!envId && !!token,
   });
 
   const columns = [
@@ -54,7 +54,7 @@ export default function ScansPage() {
         <button
           onClick={() =>
             navigate(
-              `/dashboard/${entitySlug}/runners/${runnerId}/runs/${info.getValue()}/progress`
+              `/dashboard/${entitySlug}/environments/${envId}/runs/${info.getValue()}/progress`
             )
           }
           className="font-medium text-blue-600 dark:text-blue-400 hover:underline"

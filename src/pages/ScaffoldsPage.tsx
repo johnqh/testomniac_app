@@ -23,15 +23,15 @@ const SCAFFOLD_LABELS: Record<string, string> = {
 };
 
 export default function ScaffoldsPage() {
-  const { runnerId } = useParams<{ runnerId: string }>();
+  const { envId } = useParams<{ envId: string }>();
   const { networkClient, token } = useApi();
 
   const { scaffolds, isLoading, error } = useRunnerScaffolds({
     networkClient,
     baseUrl: CONSTANTS.API_URL,
-    runnerId: Number(runnerId),
+    runnerId: Number(envId),
     token: token ?? '',
-    enabled: !!runnerId && !!token,
+    enabled: !!envId && !!token,
   });
 
   if (isLoading) {

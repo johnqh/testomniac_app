@@ -8,7 +8,7 @@ import {
   SelectItem,
   SelectValue,
 } from '@sudobility/components';
-import { useEntityProducts, useProductRunners } from '@sudobility/testomniac_client';
+import { useEntityProducts, useProductEnvironments } from '@sudobility/testomniac_client';
 import { useLocalizedNavigate } from '../../hooks/useLocalizedNavigate';
 import { CONSTANTS } from '../../config/constants';
 
@@ -29,7 +29,7 @@ const MENU_ITEMS = [
 ];
 
 export function DashboardSidebar({ entitySlug }: DashboardSidebarProps) {
-  const { runnerId: routeRunnerId } = useParams<{ runnerId: string }>();
+  const { envId: routeEnvId } = useParams<{ envId: string }>();
   const { networkClient, token } = useApi();
   const { navigate } = useLocalizedNavigate();
   const location = useLocation();
@@ -48,7 +48,7 @@ export function DashboardSidebar({ entitySlug }: DashboardSidebarProps) {
     return null;
   }, [products]);
 
-  const { runners, isLoading: runnersLoading } = useProductRunners({
+  const { environments, isLoading: environmentsLoading } = useProductEnvironments({
     networkClient,
     baseUrl: CONSTANTS.API_URL,
     productId: Number(selectedProductId),
@@ -56,12 +56,12 @@ export function DashboardSidebar({ entitySlug }: DashboardSidebarProps) {
     enabled: !!selectedProductId && !!token,
   });
 
-  // Auto-select runner if only one exists and no runner in route
+  // Auto-select environment if only one exists and no environment in route
   useEffect(() => {
-    if (runners.length === 1 && !routeRunnerId) {
-      navigate(`/dashboard/${entitySlug}/runners/${runners[0].id}/bundles`);
+    if (environments.length === 1 && !routeEnvId) {
+      navigate(`/dashboard/${entitySlug}/environments/${environments[0].id}/bundles`);
     }
-  }, [runners, routeRunnerId, entitySlug, navigate]);
+  }, [environments, routeEnvId, entitySlug, navigate]);
 
   const handleProductChange = (value: string) => {
     if (value === 'new') {
@@ -69,12 +69,12 @@ export function DashboardSidebar({ entitySlug }: DashboardSidebarProps) {
     }
   };
 
-  const handleRunnerChange = (value: string) => {
+  const handleEnvironmentChange = (value: string) => {
     if (value === 'new') {
-      navigate(`/dashboard/${entitySlug}/runners/new`);
+      navigate(`/dashboard/${entitySlug}/environments/new`);
       return;
     }
-    navigate(`/dashboard/${entitySlug}/runners/${value}/bundles`);
+    navigate(`/dashboard/${entitySlug}/environments/${value}/bundles`);
   };
 
   // Active path detection
@@ -83,16 +83,16 @@ export function DashboardSidebar({ entitySlug }: DashboardSidebarProps) {
     return location.pathname.slice(langPrefix.length - 1);
   }, [location.pathname]);
 
-  const runnerBasePath = `/dashboard/${entitySlug}/runners/${routeRunnerId}`;
+  const envBasePath = `/dashboard/${entitySlug}/environments/${routeEnvId}`;
 
   const isActive = (menuPath: string) => {
-    const full = `${runnerBasePath}/${menuPath}`;
+    const full = `${envBasePath}/${menuPath}`;
     return currentPath === full || currentPath.startsWith(full + '/');
   };
 
   return (
     <div className="flex flex-col h-full bg-white dark:bg-gray-900 border-r border-gray-200 dark:border-gray-800">
-      {/* Product & Runner Selectors */}
+      {/* Product & Environment Selectors */}
       <div className="p-4 space-y-3 border-b border-gray-200 dark:border-gray-800">
         <div>
           <label className="text-xs font-medium text-gray-500 dark:text-gray-400 mb-1 block">
@@ -115,18 +115,20 @@ export function DashboardSidebar({ entitySlug }: DashboardSidebarProps) {
 
         <div>
           <label className="text-xs font-medium text-gray-500 dark:text-gray-400 mb-1 block">
-            Runner
+            Environment
           </label>
           <Select
-            value={routeRunnerId ?? undefined}
-            onValueChange={handleRunnerChange}
+            value={routeEnvId ?? undefined}
+            onValueChange={handleEnvironmentChange}
             disabled={!selectedProductId}
           >
             <SelectTrigger className="w-full">
-              <SelectValue placeholder={runnersLoading ? 'Loading...' : 'Select runner'} />
+              <SelectValue
+                placeholder={environmentsLoading ? 'Loading...' : 'Select environment'}
+              />
             </SelectTrigger>
             <SelectContent>
-              {runners.map(a => (
+              {environments.map(a => (
                 <SelectItem key={a.id} value={String(a.id)}>
                   {a.title}
                 </SelectItem>
@@ -138,12 +140,12 @@ export function DashboardSidebar({ entitySlug }: DashboardSidebarProps) {
       </div>
 
       {/* Navigation Menu */}
-      {routeRunnerId && (
+      {routeEnvId && (
         <nav className="flex-1 py-2 px-2 overflow-y-auto">
           {MENU_ITEMS.map(item => (
             <button
               key={item.path}
-              onClick={() => navigate(`${runnerBasePath}/${item.path}`)}
+              onClick={() => navigate(`${envBasePath}/${item.path}`)}
               className={`w-full text-left px-3 py-2 rounded-md text-sm font-medium transition-colors ${
                 isActive(item.path)
                   ? 'bg-blue-50 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300'
@@ -156,10 +158,10 @@ export function DashboardSidebar({ entitySlug }: DashboardSidebarProps) {
         </nav>
       )}
 
-      {!routeRunnerId && (
+      {!routeEnvId && (
         <div className="flex-1 flex items-center justify-center p-4">
           <p className="text-sm text-gray-500 dark:text-gray-400 text-center">
-            Select a product and runner to get started
+            Select a product and environment to get started
           </p>
         </div>
       )}
