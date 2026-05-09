@@ -1,8 +1,8 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useApi } from '@sudobility/building_blocks/firebase';
-import { useTestElementActions } from '@sudobility/testomniac_client';
-import type { TestActionResponse } from '@sudobility/testomniac_types';
+import { useRunnerTestElements, useTestElementActions } from '@sudobility/testomniac_client';
+import type { TestActionResponse, TestElementResponse } from '@sudobility/testomniac_types';
 import { useLocalizedNavigate } from '../hooks/useLocalizedNavigate';
 import { CONSTANTS } from '../config/constants';
 import { StatusBadge } from '../components/scanner/StatusBadge';
@@ -47,6 +47,41 @@ function ActionRow({ action }: { action: TestActionResponse }) {
   );
 }
 
+function ElementLinkRow({
+  element,
+  onClick,
+  relation,
+}: {
+  element: TestElementResponse;
+  onClick: () => void;
+  relation: string;
+}) {
+  return (
+    <button
+      onClick={onClick}
+      className="w-full text-left rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 px-4 py-3 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors"
+    >
+      <div className="flex items-start justify-between gap-3">
+        <div className="min-w-0">
+          <div className="text-xs uppercase tracking-wider text-gray-500 dark:text-gray-400">
+            {relation}
+          </div>
+          <div className="mt-1 text-sm font-medium text-gray-900 dark:text-gray-100 truncate">
+            {element.title}
+          </div>
+          <div className="mt-1 text-xs text-gray-500 dark:text-gray-400">
+            Test Element #{element.id}
+          </div>
+        </div>
+        <div className="flex items-center gap-2 flex-shrink-0">
+          <StatusBadge status={element.testType} />
+          <StatusBadge status={element.sizeClass} />
+        </div>
+      </div>
+    </button>
+  );
+}
+
 export default function TestElementDetailPage() {
   const { entitySlug, runnerId, elementId } = useParams<{
     entitySlug: string;
@@ -57,19 +92,50 @@ export default function TestElementDetailPage() {
   const { navigate } = useLocalizedNavigate();
 
   const basePath = `/dashboard/${entitySlug}/runners/${runnerId}`;
+  const numericElementId = Number(elementId);
 
   const { actions, isLoading, error } = useTestElementActions({
     networkClient,
     baseUrl: CONSTANTS.API_URL,
-    testElementId: Number(elementId),
+    testElementId: numericElementId,
     token: token ?? '',
     enabled: !!elementId && !!token,
   });
+  const {
+    testElements,
+    isLoading: elementsLoading,
+    error: elementsError,
+  } = useRunnerTestElements({
+    networkClient,
+    baseUrl: CONSTANTS.API_URL,
+    runnerId: Number(runnerId),
+    token: token ?? '',
+    enabled: !!runnerId && !!token,
+  });
 
-  if (error) {
+  const currentElement = useMemo(
+    () => testElements.find(element => element.id === numericElementId) ?? null,
+    [numericElementId, testElements]
+  );
+  const dependencyElement = useMemo(() => {
+    if (!currentElement?.dependencyTestElementId) return null;
+    return (
+      testElements.find(element => element.id === currentElement.dependencyTestElementId) ?? null
+    );
+  }, [currentElement, testElements]);
+  const dependentElements = useMemo(
+    () => testElements.filter(element => element.dependencyTestElementId === numericElementId),
+    [numericElementId, testElements]
+  );
+  const actionList = (actions as TestActionResponse[]).sort((a, b) => a.stepOrder - b.stepOrder);
+  const hasHoverAction = actionList.some(action => action.actionType === 'hover');
+  const actionError = error || elementsError;
+  const isPageLoading = isLoading || elementsLoading;
+
+  if (actionError) {
     return (
       <div className="p-6">
-        <div className="text-center text-red-600 dark:text-red-400 py-8">Error: {error}</div>
+        <div className="text-center text-red-600 dark:text-red-400 py-8">Error: {actionError}</div>
       </div>
     );
   }
@@ -97,6 +163,83 @@ export default function TestElementDetailPage() {
       {/* Metadata badges */}
       <div className="flex flex-wrap items-center gap-2 mb-6">
         <span className="text-xs text-gray-500 dark:text-gray-400">ID: {elementId}</span>
+        {currentElement && <StatusBadge status={currentElement.testType} />}
+        {currentElement && <StatusBadge status={currentElement.sizeClass} />}
+        {hasHoverAction && <StatusBadge status="hover" />}
+        {currentElement?.surfaceTags.map(tag => (
+          <StatusBadge key={tag} status={tag} />
+        ))}
+      </div>
+
+      {currentElement && (
+        <div className="grid gap-4 md:grid-cols-2 mb-8">
+          <div className="rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-4">
+            <div className="text-xs uppercase tracking-wider text-gray-500 dark:text-gray-400">
+              Starting State
+            </div>
+            <div className="mt-2 text-sm text-gray-900 dark:text-gray-100">
+              Path: {currentElement.startingPath || 'None'}
+            </div>
+            <div className="mt-1 text-sm text-gray-600 dark:text-gray-300">
+              Page state #{currentElement.startingPageStateId ?? 'none'}
+            </div>
+          </div>
+
+          <div className="rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-4">
+            <div className="text-xs uppercase tracking-wider text-gray-500 dark:text-gray-400">
+              Interaction Shape
+            </div>
+            <div className="mt-2 text-sm text-gray-900 dark:text-gray-100">
+              {hasHoverAction
+                ? 'This element includes a hover interaction.'
+                : 'No hover interaction is defined on this element.'}
+            </div>
+            <div className="mt-1 text-sm text-gray-600 dark:text-gray-300">
+              {actionList.length} action{actionList.length === 1 ? '' : 's'} in sequence
+            </div>
+          </div>
+        </div>
+      )}
+
+      <div className="grid gap-4 lg:grid-cols-2 mb-8">
+        <div>
+          <h2 className="text-sm font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-3">
+            Depends On
+          </h2>
+          {dependencyElement ? (
+            <ElementLinkRow
+              element={dependencyElement}
+              relation="Parent dependency"
+              onClick={() => navigate(`${basePath}/test-elements/${dependencyElement.id}`)}
+            />
+          ) : (
+            <div className="rounded-lg border border-dashed border-gray-200 dark:border-gray-700 p-4 text-sm text-gray-500 dark:text-gray-400">
+              This test element has no dependency.
+            </div>
+          )}
+        </div>
+
+        <div>
+          <h2 className="text-sm font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-3">
+            Depended On By
+          </h2>
+          {dependentElements.length === 0 ? (
+            <div className="rounded-lg border border-dashed border-gray-200 dark:border-gray-700 p-4 text-sm text-gray-500 dark:text-gray-400">
+              No other test elements currently depend on this one.
+            </div>
+          ) : (
+            <div className="space-y-2">
+              {dependentElements.map(element => (
+                <ElementLinkRow
+                  key={element.id}
+                  element={element}
+                  relation="Child dependency"
+                  onClick={() => navigate(`${basePath}/test-elements/${element.id}`)}
+                />
+              ))}
+            </div>
+          )}
+        </div>
       </div>
 
       {/* Actions list */}
@@ -104,13 +247,13 @@ export default function TestElementDetailPage() {
         Test Actions
       </h2>
 
-      {isLoading && (
+      {isPageLoading && (
         <div className="text-sm text-gray-500 dark:text-gray-400 py-8 text-center">
-          Loading actions...
+          Loading test element details...
         </div>
       )}
 
-      {!isLoading && actions.length === 0 && (
+      {!isPageLoading && actionList.length === 0 && (
         <div className="rounded-xl border border-dashed border-gray-200 dark:border-gray-700 p-8 text-center">
           <div className="text-sm text-gray-500 dark:text-gray-400">
             No actions defined for this test element.
@@ -118,13 +261,11 @@ export default function TestElementDetailPage() {
         </div>
       )}
 
-      {!isLoading && actions.length > 0 && (
+      {!isPageLoading && actionList.length > 0 && (
         <div className="space-y-2">
-          {(actions as TestActionResponse[])
-            .sort((a, b) => a.stepOrder - b.stepOrder)
-            .map(action => (
-              <ActionRow key={action.id} action={action} />
-            ))}
+          {actionList.map(action => (
+            <ActionRow key={action.id} action={action} />
+          ))}
         </div>
       )}
     </div>

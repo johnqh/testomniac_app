@@ -4,6 +4,24 @@ import { useRunnerScaffolds } from '@sudobility/testomniac_client';
 import SEOHead from '@/components/SEOHead';
 import { CONSTANTS } from '../config/constants';
 
+const SCAFFOLD_LABELS: Record<string, string> = {
+  topMenu: 'Top navigation',
+  footer: 'Footer',
+  breadcrumb: 'Breadcrumb',
+  leftMenu: 'Left navigation',
+  hamburgerMenu: 'Hamburger menu',
+  rightSidebar: 'Right sidebar',
+  searchBar: 'Search bar',
+  userMenu: 'User menu',
+  cookieBanner: 'Cookie banner',
+  chatWidget: 'Chat widget',
+  socialLinks: 'Social links',
+  skipNav: 'Skip navigation',
+  languageSwitcher: 'Language switcher',
+  announcementBar: 'Announcement bar',
+  backToTop: 'Back to top',
+};
+
 export default function ScaffoldsPage() {
   const { runnerId } = useParams<{ runnerId: string }>();
   const { networkClient, token } = useApi();
@@ -49,10 +67,10 @@ export default function ScaffoldsPage() {
               <div className="flex items-center justify-between">
                 <div>
                   <div className="text-sm font-medium text-gray-900 dark:text-gray-100">
-                    {scaffold.type}
+                    {SCAFFOLD_LABELS[scaffold.type] ?? scaffold.type}
                   </div>
                   <div className="text-xs font-mono text-gray-500 dark:text-gray-400 mt-0.5">
-                    Element #{scaffold.htmlElementId}
+                    {scaffold.type} · Element #{scaffold.htmlElementId}
                   </div>
                 </div>
                 {scaffold.htmlHash && (
