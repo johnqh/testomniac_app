@@ -40,9 +40,9 @@ function RunnerCard({ runner, basePath }: { runner: RunnerResponse; basePath: st
 
   const sections = [
     {
-      label: 'Test Suites',
-      description: 'Test suite hierarchy',
-      path: `${runnerBasePath}/test-suites`,
+      label: 'Test Surfaces',
+      description: 'Test surface hierarchy',
+      path: `${runnerBasePath}/test-surfaces`,
     },
     { label: 'Test Runs', description: 'Execution results', path: `${runnerBasePath}/test-runs` },
     { label: 'Findings', description: 'Errors and warnings', path: `${runnerBasePath}/findings` },

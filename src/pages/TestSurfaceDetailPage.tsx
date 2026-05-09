@@ -1,7 +1,7 @@
 import { useParams } from 'react-router-dom';
 import { useApi } from '@sudobility/building_blocks/firebase';
-import { useTestSuiteTestCases } from '@sudobility/testomniac_client';
-import type { TestCaseResponse } from '@sudobility/testomniac_types';
+import { useTestSurfaceTestElements } from '@sudobility/testomniac_client';
+import type { TestElementResponse } from '@sudobility/testomniac_types';
 import { useLocalizedNavigate } from '../hooks/useLocalizedNavigate';
 import { CONSTANTS } from '../config/constants';
 import { StatusBadge } from '../components/scanner/StatusBadge';
@@ -24,11 +24,11 @@ function FileIcon() {
   );
 }
 
-export default function TestSuiteDetailPage() {
-  const { entitySlug, runnerId, suiteId } = useParams<{
+export default function TestSurfaceDetailPage() {
+  const { entitySlug, runnerId, surfaceId } = useParams<{
     entitySlug: string;
     runnerId: string;
-    suiteId: string;
+    surfaceId: string;
   }>();
   const { networkClient, token } = useApi();
   const { navigate } = useLocalizedNavigate();
@@ -36,15 +36,15 @@ export default function TestSuiteDetailPage() {
   const basePath = `/dashboard/${entitySlug}/runners/${runnerId}`;
 
   const {
-    testCases,
+    testElements,
     isLoading: casesLoading,
     error: casesError,
-  } = useTestSuiteTestCases({
+  } = useTestSurfaceTestElements({
     networkClient,
     baseUrl: CONSTANTS.API_URL,
-    testSuiteId: Number(suiteId),
+    testSurfaceId: Number(surfaceId),
     token: token ?? '',
-    enabled: !!suiteId && !!token,
+    enabled: !!surfaceId && !!token,
   });
 
   const isLoading = casesLoading;
@@ -63,43 +63,43 @@ export default function TestSuiteDetailPage() {
       {/* Breadcrumb */}
       <nav className="flex items-center gap-1 text-sm text-gray-500 dark:text-gray-400 mb-4">
         <button
-          onClick={() => navigate(`${basePath}/test-suites`)}
+          onClick={() => navigate(`${basePath}/test-surfaces`)}
           className="hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
         >
-          Test Suites
+          Test Surfaces
         </button>
         <span>/</span>
-        <span className="text-gray-900 dark:text-gray-100 font-medium">Suite #{suiteId}</span>
+        <span className="text-gray-900 dark:text-gray-100 font-medium">Surface #{surfaceId}</span>
       </nav>
 
       <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-6">
-        Test Suite #{suiteId}
+        Test Surface #{surfaceId}
       </h1>
 
       {isLoading && (
         <div className="text-sm text-gray-500 dark:text-gray-400 py-8 text-center">Loading...</div>
       )}
 
-      {!isLoading && testCases.length === 0 && (
+      {!isLoading && testElements.length === 0 && (
         <div className="rounded-xl border border-dashed border-gray-200 dark:border-gray-700 p-8 text-center">
-          <div className="text-lg font-semibold text-gray-900 dark:text-gray-100">Empty suite</div>
+          <div className="text-lg font-semibold text-gray-900 dark:text-gray-100">Empty surface</div>
           <p className="text-sm text-gray-500 dark:text-gray-400 mt-2">
-            This test suite has no test cases.
+            This test surface has no test elements.
           </p>
         </div>
       )}
 
-      {/* Test cases */}
-      {testCases.length > 0 && (
+      {/* Test elements */}
+      {testElements.length > 0 && (
         <div>
           <h2 className="text-sm font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-3">
-            Test Cases
+            Test Elements
           </h2>
           <div className="space-y-2">
-            {testCases.map((tc: TestCaseResponse) => (
+            {testElements.map((tc: TestElementResponse) => (
               <button
                 key={tc.id}
-                onClick={() => navigate(`${basePath}/test-cases/${tc.id}`)}
+                onClick={() => navigate(`${basePath}/test-elements/${tc.id}`)}
                 className="w-full text-left flex items-center gap-3 px-4 py-3 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors"
               >
                 <FileIcon />

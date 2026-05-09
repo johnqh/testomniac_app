@@ -8,7 +8,7 @@ import {
   useRunScaffolds,
   useRunStructure,
   useRunSummary,
-  useRunTestCases,
+  useRunTestElements,
   useRunTestRuns,
 } from '@sudobility/testomniac_client';
 import SEOHead from '@/components/SEOHead';
@@ -35,7 +35,7 @@ export default function RunDetailsPage() {
   const { navigationMap } = useRunNavigationMap(queryConfig);
   const { structure } = useRunStructure(queryConfig);
   const { pages } = useRunPages(queryConfig);
-  const { testCases } = useRunTestCases(queryConfig);
+  const { testElements } = useRunTestElements(queryConfig);
   const { testRuns } = useRunTestRuns(queryConfig);
   const { personas } = useRunPersonas(queryConfig);
   const { scaffolds } = useRunScaffolds(queryConfig);
@@ -59,18 +59,18 @@ export default function RunDetailsPage() {
   const expertiseEntries = Object.entries(summary?.expertiseSummary ?? {}).sort(([left], [right]) =>
     left.localeCompare(right)
   );
-  const suitesCount = structure?.suites.length ?? 0;
-  const caseRunsCount =
-    structure?.suites.reduce(
-      (total, suite) =>
+  const surfacesCount = structure?.surfaces.length ?? 0;
+  const elementRunsCount =
+    structure?.surfaces.reduce(
+      (total, surface) =>
         total +
-        suite.testCases.reduce((suiteTotal, testCase) => suiteTotal + testCase.caseRuns.length, 0),
+        surface.testElements.reduce((surfaceTotal, testElement) => surfaceTotal + testElement.elementRuns.length, 0),
       0
     ) ?? 0;
 
   const subPages = [
-    { label: 'Coverage', path: `${basePath}/test-runs`, count: caseRunsCount || testRuns.length },
-    { label: 'Test Cases', path: `${basePath}/test-cases`, count: testCases.length },
+    { label: 'Coverage', path: `${basePath}/test-runs`, count: elementRunsCount || testRuns.length },
+    { label: 'Test Elements', path: `${basePath}/test-elements`, count: testElements.length },
     { label: 'Findings', path: `${basePath}/issues`, count: summary?.totalFindings ?? 0 },
     { label: 'Pages', path: `${basePath}/pages`, count: pages.length },
     {
@@ -98,12 +98,12 @@ export default function RunDetailsPage() {
           <div className="text-xs text-gray-500">Pages</div>
         </div>
         <div className="rounded-lg border border-gray-200 p-4 dark:border-gray-700">
-          <div className="text-2xl font-bold text-gray-900 dark:text-gray-100">{suitesCount}</div>
-          <div className="text-xs text-gray-500">Suites</div>
+          <div className="text-2xl font-bold text-gray-900 dark:text-gray-100">{surfacesCount}</div>
+          <div className="text-xs text-gray-500">Surfaces</div>
         </div>
         <div className="rounded-lg border border-gray-200 p-4 dark:border-gray-700">
           <div className="text-2xl font-bold text-green-600">
-            {caseRunsCount ||
+            {elementRunsCount ||
               summary?.testRunsCompleted ||
               run.testRunsCompleted ||
               testRuns.length}
@@ -166,29 +166,29 @@ export default function RunDetailsPage() {
                   Bundle run #{structure.bundleRun.id} · {structure.bundleRun.status}
                 </div>
               </div>
-              {structure.suites.slice(0, 8).map(suite => (
+              {structure.surfaces.slice(0, 8).map(surface => (
                 <div
-                  key={suite.id}
+                  key={surface.id}
                   className="rounded-md border border-gray-100 px-3 py-2 dark:border-gray-800"
                 >
                   <div className="flex items-center justify-between gap-3">
-                    <span className="text-sm text-gray-900 dark:text-gray-100">{suite.title}</span>
+                    <span className="text-sm text-gray-900 dark:text-gray-100">{surface.title}</span>
                     <span className="text-xs text-green-600 dark:text-green-400">
-                      {suite.suiteRuns.map(run => run.status).join(', ') || 'pending'}
+                      {surface.surfaceRuns.map(run => run.status).join(', ') || 'pending'}
                     </span>
                   </div>
                   <div className="mt-1 text-xs text-gray-500 dark:text-gray-400">
-                    {suite.testCases.length} case{suite.testCases.length === 1 ? '' : 's'}
+                    {surface.testElements.length} element{surface.testElements.length === 1 ? '' : 's'}
                   </div>
                   <div className="mt-2 space-y-1">
-                    {suite.testCases.slice(0, 3).map(testCase => (
+                    {surface.testElements.slice(0, 3).map(testElement => (
                       <div
-                        key={testCase.id}
+                        key={testElement.id}
                         className="rounded bg-gray-50 px-2 py-1 text-xs text-gray-600 dark:bg-gray-800 dark:text-gray-300"
                       >
-                        {testCase.title}
-                        {testCase.dependencyTestCaseId
-                          ? ` · depends on #${testCase.dependencyTestCaseId}`
+                        {testElement.title}
+                        {testElement.dependencyTestElementId
+                          ? ` · depends on #${testElement.dependencyTestElementId}`
                           : ''}
                       </div>
                     ))}

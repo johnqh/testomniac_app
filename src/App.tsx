@@ -23,7 +23,7 @@ const DashboardOverview = lazy(() => import('./pages/DashboardOverview'));
 const StartScanPage = lazy(() => import('./pages/StartScanPage'));
 const ScanProgressPage = lazy(() => import('./pages/ScanProgressPage'));
 const PublicScanProgressPage = lazy(() => import('./pages/PublicScanProgressPage'));
-const TestCasesPage = lazy(() => import('./pages/TestCasesPage'));
+const TestElementsPage = lazy(() => import('./pages/TestElementsPage'));
 const PagesPage = lazy(() => import('./pages/PagesPage'));
 const ScaffoldsPage = lazy(() => import('./pages/ScaffoldsPage'));
 const PersonasPage = lazy(() => import('./pages/PersonasPage'));
@@ -34,9 +34,9 @@ const PageGraphPage = lazy(() => import('./pages/PageGraphPage'));
 const RunRedirect = lazy(() => import('./pages/RunRedirect'));
 const BundlesPage = lazy(() => import('./pages/BundlesPage'));
 const SchedulesPage = lazy(() => import('./pages/SchedulesPage'));
-const TestSuitesListPage = lazy(() => import('./pages/TestSuitesListPage'));
-const TestSuiteDetailPage = lazy(() => import('./pages/TestSuiteDetailPage'));
-const TestCaseDetailPage = lazy(() => import('./pages/TestCaseDetailPage'));
+const TestSurfacesListPage = lazy(() => import('./pages/TestSurfacesListPage'));
+const TestSurfaceDetailPage = lazy(() => import('./pages/TestSurfaceDetailPage'));
+const TestElementDetailPage = lazy(() => import('./pages/TestElementDetailPage'));
 const TestRunsListPage = lazy(() => import('./pages/TestRunsListPage'));
 const TestRunDetailPage = lazy(() => import('./pages/TestRunDetailPage'));
 const FindingsListPage = lazy(() => import('./pages/FindingsListPage'));
@@ -131,15 +131,15 @@ function AppRoutes() {
 
                   {/* Runner dashboard routes */}
                   <Route path="runners/:runnerId/bundles" element={<BundlesPage />} />
-                  <Route path="runners/:runnerId/test-suites" element={<TestSuitesListPage />} />
+                  <Route path="runners/:runnerId/test-surfaces" element={<TestSurfacesListPage />} />
                   <Route
-                    path="runners/:runnerId/test-suites/:suiteId"
-                    element={<TestSuiteDetailPage />}
+                    path="runners/:runnerId/test-surfaces/:surfaceId"
+                    element={<TestSurfaceDetailPage />}
                   />
-                  <Route path="runners/:runnerId/test-cases" element={<TestCasesPage />} />
+                  <Route path="runners/:runnerId/test-elements" element={<TestElementsPage />} />
                   <Route
-                    path="runners/:runnerId/test-cases/:caseId"
-                    element={<TestCaseDetailPage />}
+                    path="runners/:runnerId/test-elements/:elementId"
+                    element={<TestElementDetailPage />}
                   />
                   <Route path="runners/:runnerId/runs" element={<TestRunsListPage />} />
                   <Route path="runners/:runnerId/runs/:runId" element={<TestRunDetailPage />} />

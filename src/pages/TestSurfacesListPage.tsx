@@ -1,7 +1,7 @@
 import { useParams } from 'react-router-dom';
 import { useApi } from '@sudobility/building_blocks/firebase';
-import { useRunnerTestSuites } from '@sudobility/testomniac_client';
-import type { TestSuiteResponse } from '@sudobility/testomniac_types';
+import { useRunnerTestSurfaces } from '@sudobility/testomniac_client';
+import type { TestSurfaceResponse } from '@sudobility/testomniac_types';
 import SEOHead from '@/components/SEOHead';
 import { useLocalizedNavigate } from '../hooks/useLocalizedNavigate';
 import { CONSTANTS } from '../config/constants';
@@ -46,12 +46,12 @@ function PriorityBadge({ priority }: { priority: number }) {
   );
 }
 
-export default function TestSuitesListPage() {
+export default function TestSurfacesListPage() {
   const { entitySlug, runnerId } = useParams<{ entitySlug: string; runnerId: string }>();
   const { networkClient, token } = useApi();
   const { navigate } = useLocalizedNavigate();
 
-  const { testSuites, isLoading, error } = useRunnerTestSuites({
+  const { testSurfaces, isLoading, error } = useRunnerTestSurfaces({
     networkClient,
     baseUrl: CONSTANTS.API_URL,
     runnerId: Number(runnerId),
@@ -71,48 +71,48 @@ export default function TestSuitesListPage() {
 
   return (
     <div className="p-6">
-      <SEOHead title="Test Suites" description="" noIndex />
-      <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-6">Test Suites</h1>
+      <SEOHead title="Test Surfaces" description="" noIndex />
+      <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-6">Test Surfaces</h1>
 
       {isLoading && (
         <div className="text-sm text-gray-500 dark:text-gray-400 py-8 text-center">
-          Loading test suites...
+          Loading test surfaces...
         </div>
       )}
 
-      {!isLoading && testSuites.length === 0 && (
+      {!isLoading && testSurfaces.length === 0 && (
         <div className="rounded-xl border border-dashed border-gray-200 dark:border-gray-700 p-8 text-center">
           <div className="text-lg font-semibold text-gray-900 dark:text-gray-100">
-            No test suites yet
+            No test surfaces yet
           </div>
           <p className="text-sm text-gray-500 dark:text-gray-400 mt-2">
-            Test suites will appear here after a scan generates them.
+            Test surfaces will appear here after a scan generates them.
           </p>
         </div>
       )}
 
-      {!isLoading && testSuites.length > 0 && (
+      {!isLoading && testSurfaces.length > 0 && (
         <div className="space-y-2">
-          {testSuites.map((suite: TestSuiteResponse) => (
+          {testSurfaces.map((surface: TestSurfaceResponse) => (
             <button
-              key={suite.id}
-              onClick={() => navigate(`${basePath}/test-suites/${suite.id}`)}
+              key={surface.id}
+              onClick={() => navigate(`${basePath}/test-surfaces/${surface.id}`)}
               className="w-full text-left flex items-center gap-3 px-4 py-3 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors"
             >
               <FolderIcon />
               <div className="flex-1 min-w-0">
                 <div className="text-sm font-medium text-gray-900 dark:text-gray-100 truncate">
-                  {suite.title}
+                  {surface.title}
                 </div>
-                {suite.description && (
+                {surface.description && (
                   <div className="text-xs text-gray-500 dark:text-gray-400 mt-0.5 truncate">
-                    {suite.description}
+                    {surface.description}
                   </div>
                 )}
               </div>
               <div className="flex items-center gap-2 flex-shrink-0">
-                <PriorityBadge priority={suite.priority} />
-                <StatusBadge status={suite.sizeClass} />
+                <PriorityBadge priority={surface.priority} />
+                <StatusBadge status={surface.sizeClass} />
               </div>
             </button>
           ))}

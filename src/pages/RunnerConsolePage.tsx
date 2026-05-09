@@ -114,7 +114,7 @@ export default function RunnerConsolePage() {
     currentWithoutLang === path || currentWithoutLang.startsWith(path + '/');
 
   const navItems = [
-    { label: 'Test Suites', path: `${basePath}/test-suites`, icon: <FolderIcon /> },
+    { label: 'Test Surfaces', path: `${basePath}/test-surfaces`, icon: <FolderIcon /> },
     { label: 'Test Runs', path: `${basePath}/test-runs`, icon: <PlayIcon /> },
     { label: 'Findings', path: `${basePath}/findings`, icon: <BugIcon /> },
     { label: 'Settings', path: `${basePath}/settings`, icon: <CogIcon /> },

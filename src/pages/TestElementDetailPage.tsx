@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useApi } from '@sudobility/building_blocks/firebase';
-import { useTestCaseActions } from '@sudobility/testomniac_client';
+import { useTestElementActions } from '@sudobility/testomniac_client';
 import type { TestActionResponse } from '@sudobility/testomniac_types';
 import { useLocalizedNavigate } from '../hooks/useLocalizedNavigate';
 import { CONSTANTS } from '../config/constants';
@@ -47,23 +47,23 @@ function ActionRow({ action }: { action: TestActionResponse }) {
   );
 }
 
-export default function TestCaseDetailPage() {
-  const { entitySlug, runnerId, caseId } = useParams<{
+export default function TestElementDetailPage() {
+  const { entitySlug, runnerId, elementId } = useParams<{
     entitySlug: string;
     runnerId: string;
-    caseId: string;
+    elementId: string;
   }>();
   const { networkClient, token } = useApi();
   const { navigate } = useLocalizedNavigate();
 
   const basePath = `/dashboard/${entitySlug}/runners/${runnerId}`;
 
-  const { actions, isLoading, error } = useTestCaseActions({
+  const { actions, isLoading, error } = useTestElementActions({
     networkClient,
     baseUrl: CONSTANTS.API_URL,
-    testCaseId: Number(caseId),
+    testElementId: Number(elementId),
     token: token ?? '',
-    enabled: !!caseId && !!token,
+    enabled: !!elementId && !!token,
   });
 
   if (error) {
@@ -79,22 +79,22 @@ export default function TestCaseDetailPage() {
       {/* Breadcrumb */}
       <nav className="flex items-center gap-1 text-sm text-gray-500 dark:text-gray-400 mb-4">
         <button
-          onClick={() => navigate(`${basePath}/test-suites`)}
+          onClick={() => navigate(`${basePath}/test-surfaces`)}
           className="hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
         >
-          Test Suites
+          Test Surfaces
         </button>
         <span>/</span>
-        <span className="text-gray-900 dark:text-gray-100 font-medium">Test Case #{caseId}</span>
+        <span className="text-gray-900 dark:text-gray-100 font-medium">Test Element #{elementId}</span>
       </nav>
 
       <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-2">
-        Test Case #{caseId}
+        Test Element #{elementId}
       </h1>
 
       {/* Metadata badges */}
       <div className="flex flex-wrap items-center gap-2 mb-6">
-        <span className="text-xs text-gray-500 dark:text-gray-400">ID: {caseId}</span>
+        <span className="text-xs text-gray-500 dark:text-gray-400">ID: {elementId}</span>
       </div>
 
       {/* Actions list */}
@@ -111,7 +111,7 @@ export default function TestCaseDetailPage() {
       {!isLoading && actions.length === 0 && (
         <div className="rounded-xl border border-dashed border-gray-200 dark:border-gray-700 p-8 text-center">
           <div className="text-sm text-gray-500 dark:text-gray-400">
-            No actions defined for this test case.
+            No actions defined for this test element.
           </div>
         </div>
       )}

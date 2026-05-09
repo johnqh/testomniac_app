@@ -1,22 +1,22 @@
 import { useParams } from 'react-router-dom';
 import { createColumnHelper } from '@tanstack/react-table';
 import { useApi } from '@sudobility/building_blocks/firebase';
-import { useRunnerTestCases } from '@sudobility/testomniac_client';
+import { useRunnerTestElements } from '@sudobility/testomniac_client';
 import SEOHead from '@/components/SEOHead';
 import { CONSTANTS } from '../config/constants';
 import { DataTable } from '../components/data/DataTable';
 import { StatusBadge } from '../components/scanner/StatusBadge';
 
-interface TestCaseRow {
+interface TestElementRow {
   id: number;
   name: string;
   testType: string;
   sizeClass: string;
   priority: string;
-  suiteTags: string[];
+  surfaceTags: string[];
 }
 
-const columnHelper = createColumnHelper<TestCaseRow>();
+const columnHelper = createColumnHelper<TestElementRow>();
 
 const columns = [
   columnHelper.accessor('name', {
@@ -43,7 +43,7 @@ const columns = [
       </span>
     ),
   }),
-  columnHelper.accessor('suiteTags', {
+  columnHelper.accessor('surfaceTags', {
     header: 'Tags',
     cell: info => (
       <div className="flex gap-1 flex-wrap">
@@ -63,11 +63,11 @@ const columns = [
   }),
 ];
 
-export default function TestCasesPage() {
+export default function TestElementsPage() {
   const { runnerId } = useParams<{ runnerId: string }>();
   const { networkClient, token } = useApi();
 
-  const { testCases, isLoading, error } = useRunnerTestCases({
+  const { testElements, isLoading, error } = useRunnerTestElements({
     networkClient,
     baseUrl: CONSTANTS.API_URL,
     runnerId: Number(runnerId),
@@ -85,10 +85,10 @@ export default function TestCasesPage() {
 
   return (
     <div className="p-6">
-      <SEOHead title="Test Cases" description="" noIndex />
-      <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-6">Test Cases</h1>
+      <SEOHead title="Test Elements" description="" noIndex />
+      <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-6">Test Elements</h1>
 
-      <DataTable data={testCases} columns={columns as never} isLoading={isLoading} />
+      <DataTable data={testElements} columns={columns as never} isLoading={isLoading} />
     </div>
   );
 }

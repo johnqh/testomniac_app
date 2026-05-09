@@ -16,7 +16,7 @@ export default function SchedulesPage() {
           No schedules yet
         </div>
         <p className="text-sm text-gray-500 dark:text-gray-400 mt-2">
-          Create a schedule to automatically run test suites, cases, or bundles on a recurring
+          Create a schedule to automatically run test surfaces, elements, or bundles on a recurring
           basis.
         </p>
       </div>

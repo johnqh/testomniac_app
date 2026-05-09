@@ -3,7 +3,7 @@ import { useApi } from '@sudobility/building_blocks/firebase';
 import {
   useRun,
   useRunSummary,
-  useTestCaseRun,
+  useTestElementRun,
   useTestRunFindings,
 } from '@sudobility/testomniac_client';
 import type { TestRunFindingResponse } from '@sudobility/testomniac_types';
@@ -73,27 +73,27 @@ export default function TestRunDetailPage() {
   const { findings, isLoading, error } = useTestRunFindings({
     networkClient,
     baseUrl: CONSTANTS.API_URL,
-    testCaseRunId: run?.testCaseRunId ?? 0,
+    testElementRunId: run?.testElementRunId ?? 0,
     token: token ?? '',
-    enabled: !!run?.testCaseRunId && !!token,
+    enabled: !!run?.testElementRunId && !!token,
   });
   const {
-    testCaseRun,
+    testElementRun,
     isLoading: isCaseRunLoading,
-    error: caseRunError,
-  } = useTestCaseRun({
+    error: elementRunError,
+  } = useTestElementRun({
     networkClient,
     baseUrl: CONSTANTS.API_URL,
-    testCaseRunId: run?.testCaseRunId ?? 0,
+    testElementRunId: run?.testElementRunId ?? 0,
     token: token ?? '',
-    enabled: !!run?.testCaseRunId && !!token,
+    enabled: !!run?.testElementRunId && !!token,
   });
 
-  if (runError || error || caseRunError) {
+  if (runError || error || elementRunError) {
     return (
       <div className="p-6">
         <div className="text-center text-red-600 dark:text-red-400 py-8">
-          Error: {runError || error || caseRunError}
+          Error: {runError || error || elementRunError}
         </div>
       </div>
     );
@@ -107,12 +107,12 @@ export default function TestRunDetailPage() {
     );
   }
 
-  const isRootLikeRun = run.testCaseRunId === null;
+  const isRootLikeRun = run.testElementRunId === null;
   const expertiseEntries = Object.entries(summary?.expertiseSummary ?? {}).sort(([left], [right]) =>
     left.localeCompare(right)
   );
-  const consoleLog = formatMultilineLog(testCaseRun?.consoleLog);
-  const networkLog = formatMultilineLog(testCaseRun?.networkLog);
+  const consoleLog = formatMultilineLog(testElementRun?.consoleLog);
+  const networkLog = formatMultilineLog(testElementRun?.networkLog);
 
   return (
     <div className="p-6">
@@ -253,22 +253,22 @@ export default function TestRunDetailPage() {
         Findings
       </h2>
 
-      {run.testCaseRunId === null && (
+      {run.testElementRunId === null && (
         <div className="rounded-xl border border-dashed border-gray-200 dark:border-gray-700 p-8 text-center">
           <div className="text-sm text-gray-500 dark:text-gray-400">
-            This test run tracks a suite or discovery workflow and does not map directly to a single
-            test case run.
+            This test run tracks a surface or discovery workflow and does not map directly to a single
+            test element run.
           </div>
         </div>
       )}
 
-      {run.testCaseRunId !== null && isLoading && (
+      {run.testElementRunId !== null && isLoading && (
         <div className="text-sm text-gray-500 dark:text-gray-400 py-8 text-center">
           Loading findings...
         </div>
       )}
 
-      {run.testCaseRunId !== null && !isLoading && findings.length === 0 && (
+      {run.testElementRunId !== null && !isLoading && findings.length === 0 && (
         <div className="rounded-xl border border-dashed border-gray-200 dark:border-gray-700 p-8 text-center">
           <div className="text-sm text-gray-500 dark:text-gray-400">
             No findings for this test run.
@@ -276,7 +276,7 @@ export default function TestRunDetailPage() {
         </div>
       )}
 
-      {run.testCaseRunId !== null && !isLoading && findings.length > 0 && (
+      {run.testElementRunId !== null && !isLoading && findings.length > 0 && (
         <div className="space-y-3">
           {(findings as TestRunFindingResponse[]).map(finding => (
             <div
@@ -304,7 +304,7 @@ export default function TestRunDetailPage() {
         </div>
       )}
 
-      {run.testCaseRunId !== null && !isCaseRunLoading && (consoleLog || networkLog) && (
+      {run.testElementRunId !== null && !isCaseRunLoading && (consoleLog || networkLog) && (
         <div className="mt-8 space-y-6">
           <h2 className="text-sm font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">
             Runtime Signals

@@ -71,9 +71,9 @@ export default function PageDetailPage() {
             </div>
             <div className="rounded-lg border border-gray-200 p-4 dark:border-gray-700">
               <div className="text-2xl font-bold text-gray-900 dark:text-gray-100">
-                {summary.testCasesCount}
+                {summary.testElementsCount}
               </div>
-              <div className="text-xs text-gray-500">Test Cases</div>
+              <div className="text-xs text-gray-500">Test Elements</div>
             </div>
             <div className="rounded-lg border border-gray-200 p-4 dark:border-gray-700">
               <div className="text-2xl font-bold text-red-600 dark:text-red-400">
@@ -83,7 +83,7 @@ export default function PageDetailPage() {
             </div>
             <div className="rounded-lg border border-gray-200 p-4 dark:border-gray-700">
               <div className="text-2xl font-bold text-gray-900 dark:text-gray-100">
-                {summary.testCaseRunsCount}
+                {summary.testElementRunsCount}
               </div>
               <div className="text-xs text-gray-500">Case Runs</div>
             </div>
@@ -137,16 +137,16 @@ export default function PageDetailPage() {
               <div className="space-y-4">
                 {summary.runtimeSignals.map(signal => (
                   <div
-                    key={signal.testCaseRunId}
+                    key={signal.testElementRunId}
                     className="rounded-lg border border-gray-200 bg-white p-4 dark:border-gray-700 dark:bg-gray-900"
                   >
                     <div className="mb-3 flex items-center justify-between gap-3">
                       <div>
                         <div className="text-sm font-medium text-gray-900 dark:text-gray-100">
-                          {signal.testCaseTitle ?? `Test Case #${signal.testCaseId}`}
+                          {signal.testElementTitle ?? `Test Element #${signal.testElementId}`}
                         </div>
                         <div className="mt-1 text-xs text-gray-500 dark:text-gray-400">
-                          Case run #{signal.testCaseRunId}
+                          Case run #{signal.testElementRunId}
                           {signal.completedAt
                             ? ` • ${new Date(signal.completedAt).toLocaleString()}`
                             : ''}
