@@ -74,7 +74,7 @@ src/
     ├── ScanProgressPage.tsx              # Authenticated scan progress
     ├── PublicScanProgressPage.tsx        # Public scan progress (no auth)
     ├── RunDetailsPage.tsx                # Individual run details
-    ├── TestCasesPage.tsx                 # Generated test cases list
+    ├── TestElementsPage.tsx                 # Generated test elements list
     ├── TestRunsPage.tsx                  # Test execution results
     ├── IssuesPage.tsx                    # Detected issues list
     ├── PagesPage.tsx                     # Discovered pages list
@@ -96,7 +96,7 @@ bun run preview        # Preview production build
 bun run typecheck      # TypeScript check
 bun run lint           # Run ESLint
 bun run format         # Format with Prettier
-bun run verify         # Run typecheck + lint + format:check (no test suite; relies on type checking)
+bun run verify         # Run typecheck + lint + format:check (no test surface; relies on type checking)
 ```
 
 ## Routing
@@ -119,7 +119,7 @@ Pages are lazy-loaded with React Suspense.
 - `/:lang/dashboard/:entitySlug/scan/new` — Start new scan
 - `/:lang/dashboard/:entitySlug/runs/:runId` — Run details
 - `/:lang/dashboard/:entitySlug/runs/:runId/progress` — Scan progress
-- `/:lang/dashboard/:entitySlug/runs/:runId/test-cases` — Test cases
+- `/:lang/dashboard/:entitySlug/runs/:runId/test-elements` — Test cases
 - `/:lang/dashboard/:entitySlug/runs/:runId/test-runs` — Test runs
 - `/:lang/dashboard/:entitySlug/runs/:runId/issues` — Issues
 - `/:lang/dashboard/:entitySlug/runs/:runId/pages` — Pages
