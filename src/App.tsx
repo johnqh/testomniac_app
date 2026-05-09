@@ -131,7 +131,10 @@ function AppRoutes() {
 
                   {/* Runner dashboard routes */}
                   <Route path="runners/:runnerId/bundles" element={<BundlesPage />} />
-                  <Route path="runners/:runnerId/test-surfaces" element={<TestSurfacesListPage />} />
+                  <Route
+                    path="runners/:runnerId/test-surfaces"
+                    element={<TestSurfacesListPage />}
+                  />
                   <Route
                     path="runners/:runnerId/test-surfaces/:surfaceId"
                     element={<TestSurfaceDetailPage />}

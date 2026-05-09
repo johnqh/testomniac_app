@@ -165,7 +165,8 @@ export default function PagesPage() {
                     return (
                       <div className="mt-2 text-[11px] text-gray-500 dark:text-gray-400">
                         {summary.errors} error{summary.errors === 1 ? '' : 's'} • {summary.warnings}{' '}
-                        warning{summary.warnings === 1 ? '' : 's'} • {summary.testElementsCount} case
+                        warning{summary.warnings === 1 ? '' : 's'} • {summary.testElementsCount}{' '}
+                        case
                         {summary.testElementsCount === 1 ? '' : 's'}
                       </div>
                     );

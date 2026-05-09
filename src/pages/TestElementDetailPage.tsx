@@ -85,7 +85,9 @@ export default function TestElementDetailPage() {
           Test Surfaces
         </button>
         <span>/</span>
-        <span className="text-gray-900 dark:text-gray-100 font-medium">Test Element #{elementId}</span>
+        <span className="text-gray-900 dark:text-gray-100 font-medium">
+          Test Element #{elementId}
+        </span>
       </nav>
 
       <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-2">

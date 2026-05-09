@@ -64,12 +64,19 @@ export default function RunDetailsPage() {
     structure?.surfaces.reduce(
       (total, surface) =>
         total +
-        surface.testElements.reduce((surfaceTotal, testElement) => surfaceTotal + testElement.elementRuns.length, 0),
+        surface.testElements.reduce(
+          (surfaceTotal, testElement) => surfaceTotal + testElement.elementRuns.length,
+          0
+        ),
       0
     ) ?? 0;
 
   const subPages = [
-    { label: 'Coverage', path: `${basePath}/test-runs`, count: elementRunsCount || testRuns.length },
+    {
+      label: 'Coverage',
+      path: `${basePath}/test-runs`,
+      count: elementRunsCount || testRuns.length,
+    },
     { label: 'Test Elements', path: `${basePath}/test-elements`, count: testElements.length },
     { label: 'Findings', path: `${basePath}/issues`, count: summary?.totalFindings ?? 0 },
     { label: 'Pages', path: `${basePath}/pages`, count: pages.length },
@@ -172,13 +179,16 @@ export default function RunDetailsPage() {
                   className="rounded-md border border-gray-100 px-3 py-2 dark:border-gray-800"
                 >
                   <div className="flex items-center justify-between gap-3">
-                    <span className="text-sm text-gray-900 dark:text-gray-100">{surface.title}</span>
+                    <span className="text-sm text-gray-900 dark:text-gray-100">
+                      {surface.title}
+                    </span>
                     <span className="text-xs text-green-600 dark:text-green-400">
                       {surface.surfaceRuns.map(run => run.status).join(', ') || 'pending'}
                     </span>
                   </div>
                   <div className="mt-1 text-xs text-gray-500 dark:text-gray-400">
-                    {surface.testElements.length} element{surface.testElements.length === 1 ? '' : 's'}
+                    {surface.testElements.length} element
+                    {surface.testElements.length === 1 ? '' : 's'}
                   </div>
                   <div className="mt-2 space-y-1">
                     {surface.testElements.slice(0, 3).map(testElement => (

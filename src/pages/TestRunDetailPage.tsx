@@ -256,8 +256,8 @@ export default function TestRunDetailPage() {
       {run.testElementRunId === null && (
         <div className="rounded-xl border border-dashed border-gray-200 dark:border-gray-700 p-8 text-center">
           <div className="text-sm text-gray-500 dark:text-gray-400">
-            This test run tracks a surface or discovery workflow and does not map directly to a single
-            test element run.
+            This test run tracks a surface or discovery workflow and does not map directly to a
+            single test element run.
           </div>
         </div>
       )}
