@@ -1,6 +1,6 @@
 {
   "webApp": {
-    "description": "Testomniac is an AI-powered web application testing platform that discovers pages, generates test cases, and finds issues automatically.",
+    "description": "Testomniac is an AI-powered web application testing platform that discovers pages, generates test elements, and finds issues automatically.",
     "features": [
       "AI-powered test generation",
       "Automated page discovery",
@@ -24,7 +24,7 @@
       },
       {
         "name": "Review Generated Tests",
-        "text": "Once the scan completes, review the AI-generated test cases, test suites, and personas created for your application."
+        "text": "Once the scan completes, review the AI-generated test elements, test surfaces, and personas created for your application."
       },
       {
         "name": "Analyze Results",
