@@ -7,6 +7,12 @@ import { useLocalizedNavigate } from '../hooks/useLocalizedNavigate';
 import { CONSTANTS } from '../config/constants';
 import { StatusBadge } from '../components/scanner/StatusBadge';
 
+type StoredStep = {
+  action?: {
+    playwrightCode?: string;
+  };
+};
+
 function ActionRow({ action }: { action: TestActionResponse }) {
   const [expanded, setExpanded] = useState(false);
 
@@ -127,6 +133,14 @@ export default function TestElementDetailPage() {
     () => testElements.filter(element => element.dependencyTestElementId === numericElementId),
     [numericElementId, testElements]
   );
+  const playwrightScript = useMemo(() => {
+    const steps = (currentElement?.stepsJson as StoredStep[] | null) ?? [];
+    const lines = steps
+      .map(step => step.action?.playwrightCode?.trim())
+      .filter((line): line is string => Boolean(line));
+
+    return lines.join('\n');
+  }, [currentElement]);
   const actionList = (actions as TestActionResponse[]).sort((a, b) => a.stepOrder - b.stepOrder);
   const hasHoverAction = actionList.some(action => action.actionType === 'hover');
   const actionError = error || elementsError;
@@ -246,6 +260,17 @@ export default function TestElementDetailPage() {
       <h2 className="text-sm font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-3">
         Test Actions
       </h2>
+
+      {!isPageLoading && playwrightScript && (
+        <div className="rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-4 mb-6">
+          <div className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-3">
+            Playwright Script
+          </div>
+          <pre className="text-xs font-mono text-gray-800 dark:text-gray-200 whitespace-pre-wrap break-words bg-gray-50 dark:bg-gray-900 rounded-md p-3 border border-gray-200 dark:border-gray-700 overflow-x-auto">
+            {playwrightScript}
+          </pre>
+        </div>
+      )}
 
       {isPageLoading && (
         <div className="text-sm text-gray-500 dark:text-gray-400 py-8 text-center">
