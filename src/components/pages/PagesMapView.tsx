@@ -1,4 +1,4 @@
-import { useMemo, useCallback } from 'react';
+import { useMemo, useCallback, useEffect } from 'react';
 import type { PageResponse, TestElementResponse } from '@sudobility/testomniac_types';
 import {
   ReactFlow,
@@ -119,11 +119,15 @@ interface PagesMapViewProps {
   testElements: TestElementResponse[];
   envId: string;
   entitySlug: string;
+  runId?: string;
 }
 
-export function PagesMapView({ pages, testElements, envId, entitySlug }: PagesMapViewProps) {
+export function PagesMapView({ pages, testElements, envId, entitySlug, runId }: PagesMapViewProps) {
   const { navigate } = useLocalizedNavigate();
   const { nodes: mapNodes, edges: mapEdges } = usePageMapData({ pages, testElements });
+  const pageBasePath = runId
+    ? `/dashboard/${entitySlug}/environments/${envId}/runs/${runId}/pages`
+    : `/dashboard/${entitySlug}/environments/${envId}/pages`;
 
   const { initialNodes, initialEdges } = useMemo(() => {
     if (mapNodes.length === 0) return { initialNodes: [], initialEdges: [] };
@@ -196,16 +200,21 @@ export function PagesMapView({ pages, testElements, envId, entitySlug }: PagesMa
     return { initialNodes: layoutNodes, initialEdges: rfEdges };
   }, [mapNodes, mapEdges]);
 
-  const [nodes, , onNodesChange] = useNodesState(initialNodes);
-  const [edges, , onEdgesChange] = useEdgesState(initialEdges);
+  const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
+  const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
+
+  useEffect(() => {
+    setNodes(initialNodes);
+    setEdges(initialEdges);
+  }, [initialNodes, initialEdges, setNodes, setEdges]);
 
   const handleNodeDoubleClick = useCallback(
     (_: React.MouseEvent, node: Node) => {
       if (node.type === 'pageNode' && node.data.pageId) {
-        navigate(`/dashboard/${entitySlug}/environments/${envId}/pages/${node.data.pageId}`);
+        navigate(`${pageBasePath}/${node.data.pageId}`);
       }
     },
-    [navigate, entitySlug, envId]
+    [navigate, pageBasePath]
   );
 
   if (mapNodes.length === 0) {

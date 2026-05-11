@@ -5,10 +5,14 @@ interface PagesListViewProps {
   pages: PageResponse[];
   envId: string;
   entitySlug: string;
+  runId?: string;
 }
 
-export function PagesListView({ pages, envId, entitySlug }: PagesListViewProps) {
+export function PagesListView({ pages, envId, entitySlug, runId }: PagesListViewProps) {
   const { navigate } = useLocalizedNavigate();
+  const basePath = runId
+    ? `/dashboard/${entitySlug}/environments/${envId}/runs/${runId}/pages`
+    : `/dashboard/${entitySlug}/environments/${envId}/pages`;
 
   const sorted = [...pages].sort((a, b) => a.relativePath.localeCompare(b.relativePath));
 
@@ -41,9 +45,7 @@ export function PagesListView({ pages, envId, entitySlug }: PagesListViewProps) 
             return (
               <tr
                 key={page.id}
-                onClick={() =>
-                  navigate(`/dashboard/${entitySlug}/environments/${envId}/pages/${page.id}`)
-                }
+                onClick={() => navigate(`${basePath}/${page.id}`)}
                 className="cursor-pointer border-b border-gray-100 dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors"
               >
                 <td className="px-3 py-2 text-gray-900 dark:text-gray-100">

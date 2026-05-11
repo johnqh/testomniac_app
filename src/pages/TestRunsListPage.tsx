@@ -89,7 +89,7 @@ export default function TestRunsListPage() {
               {testRuns.map((run: TestRunResponse) => (
                 <tr
                   key={run.id}
-                  onClick={() => navigate(`${basePath}/test-runs/${run.id}`)}
+                  onClick={() => navigate(`${basePath}/runs/${run.id}`)}
                   className="bg-white dark:bg-gray-900 hover:bg-gray-50 dark:hover:bg-gray-800 cursor-pointer transition-colors"
                 >
                   <td className="px-4 py-3 font-mono text-gray-900 dark:text-gray-100">

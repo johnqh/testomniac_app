@@ -39,6 +39,10 @@ const TestSurfaceDetailPage = lazy(() => import('./pages/TestSurfaceDetailPage')
 const TestElementDetailPage = lazy(() => import('./pages/TestElementDetailPage'));
 const TestRunsListPage = lazy(() => import('./pages/TestRunsListPage'));
 const TestRunDetailPage = lazy(() => import('./pages/TestRunDetailPage'));
+const RunSurfaceRunsPage = lazy(() => import('./pages/RunSurfaceRunsPage'));
+const RunSurfaceRunDetailPage = lazy(() => import('./pages/RunSurfaceRunDetailPage'));
+const RunTestElementRunsPage = lazy(() => import('./pages/RunTestElementRunsPage'));
+const RunTestElementRunDetailPage = lazy(() => import('./pages/RunTestElementRunDetailPage'));
 const FindingsListPage = lazy(() => import('./pages/FindingsListPage'));
 const TestScenariosPage = lazy(() => import('./pages/TestScenariosPage'));
 const TestScenarioDetailPage = lazy(() => import('./pages/TestScenarioDetailPage'));
@@ -146,6 +150,22 @@ function AppRoutes() {
                   />
                   <Route path="environments/:envId/runs" element={<TestRunsListPage />} />
                   <Route path="environments/:envId/runs/:runId" element={<TestRunDetailPage />} />
+                  <Route
+                    path="environments/:envId/runs/:runId/surface-runs"
+                    element={<RunSurfaceRunsPage />}
+                  />
+                  <Route
+                    path="environments/:envId/runs/:runId/surface-runs/:surfaceRunId"
+                    element={<RunSurfaceRunDetailPage />}
+                  />
+                  <Route
+                    path="environments/:envId/runs/:runId/surface-runs/:surfaceRunId/test-elements/:elementId"
+                    element={<RunTestElementRunsPage />}
+                  />
+                  <Route
+                    path="environments/:envId/runs/:runId/surface-runs/:surfaceRunId/test-elements/:elementId/element-runs/:elementRunId"
+                    element={<RunTestElementRunDetailPage />}
+                  />
                   <Route path="environments/:envId/runs/:runId/pages" element={<PagesPage />} />
                   <Route
                     path="environments/:envId/runs/:runId/issues"

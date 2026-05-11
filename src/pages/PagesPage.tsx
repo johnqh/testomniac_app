@@ -1,43 +1,70 @@
 import { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useApi } from '@sudobility/building_blocks/firebase';
-import { useEnvironmentPages, useEnvironmentTestElements } from '@sudobility/testomniac_client';
+import {
+  useEnvironmentPages,
+  useEnvironmentTestElements,
+  useRunPages,
+  useRunTestElements,
+} from '@sudobility/testomniac_client';
 import SEOHead from '@/components/SEOHead';
 import { CONSTANTS } from '../config/constants';
 import { PagesListView } from '../components/pages/PagesListView';
 import { PagesMapView } from '../components/pages/PagesMapView';
 
 export default function PagesPage() {
-  const { entitySlug, envId } = useParams<{
+  const { entitySlug, envId, runId } = useParams<{
     entitySlug: string;
     envId: string;
+    runId?: string;
   }>();
   const { networkClient, token } = useApi();
   const [view, setView] = useState<'list' | 'map'>('list');
 
-  const {
-    pages,
-    isLoading: pagesLoading,
-    error: pagesError,
-  } = useEnvironmentPages({
+  const runScoped = Boolean(runId);
+
+  const environmentPagesQuery = useEnvironmentPages({
     networkClient,
     baseUrl: CONSTANTS.API_URL,
     envId: Number(envId),
     token: token ?? '',
-    enabled: !!envId && !!token,
+    enabled: !!envId && !!token && !runScoped,
   });
 
-  const {
-    testElements,
-    isLoading: elementsLoading,
-    error: elementsError,
-  } = useEnvironmentTestElements({
+  const runPagesQuery = useRunPages({
+    networkClient,
+    baseUrl: CONSTANTS.API_URL,
+    runId: Number(runId),
+    token: token ?? '',
+    enabled: !!runId && !!token,
+  });
+
+  const environmentElementsQuery = useEnvironmentTestElements({
     networkClient,
     baseUrl: CONSTANTS.API_URL,
     envId: Number(envId),
     token: token ?? '',
-    enabled: !!envId && !!token,
+    enabled: !!envId && !!token && !runScoped,
   });
+
+  const runElementsQuery = useRunTestElements({
+    networkClient,
+    baseUrl: CONSTANTS.API_URL,
+    runId: Number(runId),
+    token: token ?? '',
+    enabled: !!runId && !!token,
+  });
+
+  const pages = runScoped ? runPagesQuery.pages : environmentPagesQuery.pages;
+  const testElements = runScoped
+    ? runElementsQuery.testElements
+    : environmentElementsQuery.testElements;
+  const pagesLoading = runScoped ? runPagesQuery.isLoading : environmentPagesQuery.isLoading;
+  const elementsLoading = runScoped
+    ? runElementsQuery.isLoading
+    : environmentElementsQuery.isLoading;
+  const pagesError = runScoped ? runPagesQuery.error : environmentPagesQuery.error;
+  const elementsError = runScoped ? runElementsQuery.error : environmentElementsQuery.error;
 
   const isLoading = pagesLoading || elementsLoading;
   const error = pagesError || elementsError;
@@ -62,7 +89,9 @@ export default function PagesPage() {
     <div className="p-6">
       <SEOHead title="Discovered Pages" description="" noIndex />
       <div className="mb-6 flex items-center justify-between">
-        <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">Discovered Pages</h1>
+        <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">
+          {runScoped ? `Run #${runId} Pages` : 'Discovered Pages'}
+        </h1>
         <div className="flex rounded-lg border border-gray-200 dark:border-gray-700">
           <button
             onClick={() => setView('list')}
@@ -90,13 +119,14 @@ export default function PagesPage() {
       {pages.length === 0 ? (
         <p className="text-gray-500 dark:text-gray-400">No pages discovered yet.</p>
       ) : view === 'list' ? (
-        <PagesListView pages={pages} envId={envId!} entitySlug={entitySlug!} />
+        <PagesListView pages={pages} envId={envId!} entitySlug={entitySlug!} runId={runId} />
       ) : (
         <PagesMapView
           pages={pages}
           testElements={testElements}
           envId={envId!}
           entitySlug={entitySlug!}
+          runId={runId}
         />
       )}
     </div>

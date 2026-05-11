@@ -7,6 +7,8 @@ import {
   useEnvironmentTestElements,
   useEnvironmentPages,
   useCreateTestElementRun,
+  useRunPages,
+  useRunTestElements,
 } from '@sudobility/testomniac_client';
 import type { TestElementResponse } from '@sudobility/testomniac_types';
 import SEOHead from '@/components/SEOHead';
@@ -25,21 +27,42 @@ export default function PageDetailPage() {
 
   const numericPageId = Number(pageId);
 
-  const { pages: envPages } = useEnvironmentPages({
+  const runScoped = Boolean(runId);
+
+  const envPagesQuery = useEnvironmentPages({
     networkClient,
     baseUrl: CONSTANTS.API_URL,
     envId: Number(envId),
     token: token ?? '',
-    enabled: !!envId && !!token,
+    enabled: !!envId && !!token && !runScoped,
   });
 
-  const { testElements } = useEnvironmentTestElements({
+  const runPagesQuery = useRunPages({
+    networkClient,
+    baseUrl: CONSTANTS.API_URL,
+    runId: Number(runId),
+    token: token ?? '',
+    enabled: !!runId && !!token,
+  });
+
+  const envElementsQuery = useEnvironmentTestElements({
     networkClient,
     baseUrl: CONSTANTS.API_URL,
     envId: Number(envId),
     token: token ?? '',
-    enabled: !!envId && !!token,
+    enabled: !!envId && !!token && !runScoped,
   });
+
+  const runElementsQuery = useRunTestElements({
+    networkClient,
+    baseUrl: CONSTANTS.API_URL,
+    runId: Number(runId),
+    token: token ?? '',
+    enabled: !!runId && !!token,
+  });
+
+  const envPages = runScoped ? runPagesQuery.pages : envPagesQuery.pages;
+  const testElements = runScoped ? runElementsQuery.testElements : envElementsQuery.testElements;
 
   const { createRun } = useCreateTestElementRun({
     networkClient,

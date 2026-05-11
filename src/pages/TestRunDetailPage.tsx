@@ -3,10 +3,12 @@ import { useApi } from '@sudobility/building_blocks/firebase';
 import {
   useRun,
   useRunSummary,
+  useRunStructure,
   useTestElementRun,
   useTestRunFindings,
 } from '@sudobility/testomniac_client';
 import type { TestRunFindingResponse } from '@sudobility/testomniac_types';
+import BackLink from '../components/navigation/BackLink';
 import { useLocalizedNavigate } from '../hooks/useLocalizedNavigate';
 import { CONSTANTS } from '../config/constants';
 import { StatusBadge } from '../components/scanner/StatusBadge';
@@ -69,6 +71,13 @@ export default function TestRunDetailPage() {
     token: token ?? '',
     enabled: !!runId && !!token,
   });
+  const { structure } = useRunStructure({
+    networkClient,
+    baseUrl: CONSTANTS.API_URL,
+    runId: testRunId,
+    token: token ?? '',
+    enabled: !!runId && !!token,
+  });
 
   const { findings, isLoading, error } = useTestRunFindings({
     networkClient,
@@ -111,18 +120,28 @@ export default function TestRunDetailPage() {
   const expertiseEntries = Object.entries(summary?.expertiseSummary ?? {}).sort(([left], [right]) =>
     left.localeCompare(right)
   );
+  const surfaceCoverage =
+    structure?.surfaces.map(surface => ({
+      id: surface.id,
+      title: surface.title,
+      surfaceRunId: surface.surfaceRuns[0]?.id ?? null,
+      status: surface.surfaceRuns[0]?.status ?? 'pending',
+      elementCount: surface.testElements.length,
+    })) ?? [];
   const consoleLog = formatMultilineLog(testElementRun?.consoleLog);
   const networkLog = formatMultilineLog(testElementRun?.networkLog);
 
   return (
     <div className="p-6">
+      <BackLink label="Back to Runs" onClick={() => navigate(`${basePath}/runs`)} />
+
       {/* Breadcrumb */}
       <nav className="flex items-center gap-1 text-sm text-gray-500 dark:text-gray-400 mb-4">
         <button
-          onClick={() => navigate(`${basePath}/test-runs`)}
+          onClick={() => navigate(`${basePath}/runs`)}
           className="hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
         >
-          Test Runs
+          Runs
         </button>
         <span>/</span>
         <span className="text-gray-900 dark:text-gray-100 font-medium">Run #{runId}</span>
@@ -194,7 +213,18 @@ export default function TestRunDetailPage() {
             </div>
           )}
 
-          <div className="mb-8 grid grid-cols-1 gap-3 sm:grid-cols-2">
+          <div className="mb-8 grid grid-cols-1 gap-3 sm:grid-cols-3">
+            <button
+              onClick={() => navigate(`${basePath}/runs/${runId}/surface-runs`)}
+              className="rounded-lg border border-gray-200 bg-white p-4 text-left transition-colors hover:border-blue-300 dark:border-gray-700 dark:bg-gray-800 dark:hover:border-blue-600"
+            >
+              <div className="text-sm font-medium text-gray-900 dark:text-gray-100">
+                Surface Runs
+              </div>
+              <div className="mt-1 text-xs text-gray-500 dark:text-gray-400">
+                Navigate the run hierarchy by surface run, then element runs and run details.
+              </div>
+            </button>
             <button
               onClick={() => navigate(`${basePath}/runs/${runId}/pages`)}
               className="rounded-lg border border-gray-200 bg-white p-4 text-left transition-colors hover:border-blue-300 dark:border-gray-700 dark:bg-gray-800 dark:hover:border-blue-600"
@@ -214,6 +244,42 @@ export default function TestRunDetailPage() {
               </div>
             </button>
           </div>
+
+          {surfaceCoverage.length > 0 && (
+            <div className="mb-8">
+              <h2 className="mb-4 text-lg font-semibold text-gray-900 dark:text-gray-100">
+                Coverage Tree
+              </h2>
+              <div className="space-y-3">
+                {surfaceCoverage.map(surface => (
+                  <button
+                    key={surface.id}
+                    onClick={() =>
+                      surface.surfaceRunId != null &&
+                      navigate(`${basePath}/runs/${runId}/surface-runs/${surface.surfaceRunId}`)
+                    }
+                    disabled={surface.surfaceRunId == null}
+                    className="w-full rounded-lg border border-gray-200 bg-white p-4 text-left transition-colors hover:border-blue-300 disabled:cursor-default disabled:hover:border-gray-200 dark:border-gray-700 dark:bg-gray-800 dark:hover:border-blue-600 dark:disabled:hover:border-gray-700"
+                  >
+                    <div className="flex items-start justify-between gap-3">
+                      <div className="min-w-0">
+                        <div className="text-sm font-medium text-gray-900 dark:text-gray-100">
+                          {surface.title}
+                        </div>
+                        <div className="mt-1 text-xs text-gray-500 dark:text-gray-400">
+                          {surface.elementCount} test element
+                          {surface.elementCount === 1 ? '' : 's'}
+                        </div>
+                      </div>
+                      <div className="shrink-0">
+                        <StatusBadge status={surface.status} />
+                      </div>
+                    </div>
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
 
           {expertiseEntries.length > 0 && (
             <div className="mb-8">
