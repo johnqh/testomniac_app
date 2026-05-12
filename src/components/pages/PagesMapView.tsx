@@ -1,5 +1,5 @@
 import { useMemo, useCallback, useEffect } from 'react';
-import type { PageResponse, TestElementResponse } from '@sudobility/testomniac_types';
+import type { PageResponse, TestInteractionResponse } from '@sudobility/testomniac_types';
 import {
   ReactFlow,
   Background,
@@ -123,7 +123,7 @@ function layoutGraph(nodes: Node[], edges: Edge[]): Node[] {
 
 interface PagesMapViewProps {
   pages: PageResponse[];
-  testElements: TestElementResponse[];
+  testInteractions: TestInteractionResponse[];
   envId: string;
   entitySlug: string;
   runId?: string;
@@ -150,7 +150,13 @@ function normalizePath(path: string | null | undefined): string | null {
   }
 }
 
-export function PagesMapView({ pages, testElements, envId, entitySlug, runId }: PagesMapViewProps) {
+export function PagesMapView({
+  pages,
+  testInteractions,
+  envId,
+  entitySlug,
+  runId,
+}: PagesMapViewProps) {
   const { navigate } = useLocalizedNavigate();
   const pageBasePath = runId
     ? `/dashboard/${entitySlug}/environments/${envId}/runs/${runId}/pages`
@@ -165,7 +171,7 @@ export function PagesMapView({ pages, testElements, envId, entitySlug, runId }: 
       if (routeKey) pageIdByPath.set(routeKey, page.id);
     }
 
-    const rawEdges = testElements
+    const rawEdges = testInteractions
       .filter(element => MAP_TEST_TYPES.has(element.testType))
       .map(element => {
         const normalizedStartingPath = normalizePath(element.startingPath);
@@ -182,7 +188,7 @@ export function PagesMapView({ pages, testElements, envId, entitySlug, runId }: 
           id: String(element.id),
           sourcePageId,
           targetPageId,
-          testElementId: element.id,
+          testInteractionId: element.id,
           testType: element.testType,
           title: element.title,
         };
@@ -203,10 +209,10 @@ export function PagesMapView({ pages, testElements, envId, entitySlug, runId }: 
         return true;
       });
 
-    const hiddenInteractionCount = testElements.filter(
+    const hiddenInteractionCount = testInteractions.filter(
       element =>
         element.testType === 'interaction' &&
-        !rawEdges.some(edge => edge.testElementId === element.id)
+        !rawEdges.some(edge => edge.testInteractionId === element.id)
     ).length;
 
     const edgeMap = new Map<
@@ -255,11 +261,11 @@ export function PagesMapView({ pages, testElements, envId, entitySlug, runId }: 
       relativePath: page.relativePath,
       routeKey: page.routeKey,
       isExternal: page.relativePath.startsWith('http'),
-      testElementCount: countMap.get(page.id) ?? 0,
+      testInteractionCount: countMap.get(page.id) ?? 0,
     }));
 
     return { mapNodes: nodes, mapEdges: edges, hiddenInteractionCount };
-  }, [pages, testElements]);
+  }, [pages, testInteractions]);
 
   const { initialNodes, initialEdges } = useMemo(() => {
     if (mapNodes.length === 0) return { initialNodes: [], initialEdges: [] };

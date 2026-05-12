@@ -1,13 +1,13 @@
 import { useParams } from 'react-router-dom';
 import { createColumnHelper } from '@tanstack/react-table';
 import { useApi } from '@sudobility/building_blocks/firebase';
-import { useEnvironmentTestElements } from '@sudobility/testomniac_client';
+import { useEnvironmentTestInteractions } from '@sudobility/testomniac_client';
 import SEOHead from '@/components/SEOHead';
 import { CONSTANTS } from '../config/constants';
 import { DataTable } from '../components/data/DataTable';
 import { StatusBadge } from '../components/scanner/StatusBadge';
 
-interface TestElementRow {
+interface TestInteractionRow {
   id: number;
   name: string;
   testType: string;
@@ -16,7 +16,7 @@ interface TestElementRow {
   surfaceTags: string[];
 }
 
-const columnHelper = createColumnHelper<TestElementRow>();
+const columnHelper = createColumnHelper<TestInteractionRow>();
 
 const columns = [
   columnHelper.accessor('name', {
@@ -63,11 +63,11 @@ const columns = [
   }),
 ];
 
-export default function TestElementsPage() {
+export default function TestInteractionsPage() {
   const { envId } = useParams<{ envId: string }>();
   const { networkClient, token } = useApi();
 
-  const { testElements, isLoading, error } = useEnvironmentTestElements({
+  const { testInteractions, isLoading, error } = useEnvironmentTestInteractions({
     networkClient,
     baseUrl: CONSTANTS.API_URL,
     envId: Number(envId),
@@ -85,10 +85,12 @@ export default function TestElementsPage() {
 
   return (
     <div className="p-6">
-      <SEOHead title="Test Elements" description="" noIndex />
-      <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-6">Test Elements</h1>
+      <SEOHead title="Test Interactions" description="" noIndex />
+      <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-6">
+        Test Interactions
+      </h1>
 
-      <DataTable data={testElements} columns={columns as never} isLoading={isLoading} />
+      <DataTable data={testInteractions} columns={columns as never} isLoading={isLoading} />
     </div>
   );
 }

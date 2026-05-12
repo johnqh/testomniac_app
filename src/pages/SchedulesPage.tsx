@@ -4,7 +4,7 @@ import {
   useCreateTestSchedule,
   useRunnerSchedules,
   useRunnerTestSurfaceBundles,
-  useEnvironmentTestElements,
+  useEnvironmentTestInteractions,
   useEnvironmentTestSurfaces,
 } from '@sudobility/testomniac_client';
 import type { CreateTestScheduleRequest, TestScheduleResponse } from '@sudobility/testomniac_types';
@@ -35,7 +35,7 @@ const DAY_OPTIONS = [
 function describeScheduleTarget(schedule: TestScheduleResponse) {
   if (schedule.testSurfaceBundleId) return `Bundle #${schedule.testSurfaceBundleId}`;
   if (schedule.testSurfaceId) return `Surface #${schedule.testSurfaceId}`;
-  if (schedule.testElementId) return `Element #${schedule.testElementId}`;
+  if (schedule.testInteractionId) return `Element #${schedule.testInteractionId}`;
   return 'Unknown target';
 }
 
@@ -116,10 +116,10 @@ export default function SchedulesPage() {
   });
 
   const {
-    testElements,
+    testInteractions,
     isLoading: elementsLoading,
     error: elementsError,
-  } = useEnvironmentTestElements({
+  } = useEnvironmentTestInteractions({
     networkClient,
     baseUrl: CONSTANTS.API_URL,
     envId: numericEnvId,
@@ -197,7 +197,7 @@ export default function SchedulesPage() {
       discovery,
       ...(targetKind === 'bundle' ? { testSurfaceBundleId: Number(selectedBundleId) } : {}),
       ...(targetKind === 'surface' ? { testSurfaceId: Number(selectedSurfaceId) } : {}),
-      ...(targetKind === 'element' ? { testElementId: Number(selectedElementId) } : {}),
+      ...(targetKind === 'element' ? { testInteractionId: Number(selectedElementId) } : {}),
       ...(recurrenceType === 'weekly' ? { dayOfWeek: Number(dayOfWeek) } : {}),
     };
 
@@ -308,8 +308,8 @@ export default function SchedulesPage() {
                 onChange={e => setSelectedElementId(e.target.value)}
                 className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 text-sm"
               >
-                <option value="">Select a test element</option>
-                {testElements.map(element => (
+                <option value="">Select a test interaction</option>
+                {testInteractions.map(element => (
                   <option key={element.id} value={element.id}>
                     #{element.id} {element.title}
                   </option>

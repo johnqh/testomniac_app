@@ -1,7 +1,7 @@
 import { useParams } from 'react-router-dom';
 import { useApi } from '@sudobility/building_blocks/firebase';
-import { useTestSurfaceTestElements } from '@sudobility/testomniac_client';
-import type { TestElementResponse } from '@sudobility/testomniac_types';
+import { useTestSurfaceTestInteractions } from '@sudobility/testomniac_client';
+import type { TestInteractionResponse } from '@sudobility/testomniac_types';
 import { useLocalizedNavigate } from '../hooks/useLocalizedNavigate';
 import { CONSTANTS } from '../config/constants';
 import { StatusBadge } from '../components/scanner/StatusBadge';
@@ -36,10 +36,10 @@ export default function TestSurfaceDetailPage() {
   const basePath = `/dashboard/${entitySlug}/environments/${envId}`;
 
   const {
-    testElements,
+    testInteractions,
     isLoading: casesLoading,
     error: casesError,
-  } = useTestSurfaceTestElements({
+  } = useTestSurfaceTestInteractions({
     networkClient,
     baseUrl: CONSTANTS.API_URL,
     testSurfaceId: Number(surfaceId),
@@ -80,28 +80,28 @@ export default function TestSurfaceDetailPage() {
         <div className="text-sm text-gray-500 dark:text-gray-400 py-8 text-center">Loading...</div>
       )}
 
-      {!isLoading && testElements.length === 0 && (
+      {!isLoading && testInteractions.length === 0 && (
         <div className="rounded-xl border border-dashed border-gray-200 dark:border-gray-700 p-8 text-center">
           <div className="text-lg font-semibold text-gray-900 dark:text-gray-100">
             Empty surface
           </div>
           <p className="text-sm text-gray-500 dark:text-gray-400 mt-2">
-            This test surface has no test elements.
+            This test surface has no test interactions.
           </p>
         </div>
       )}
 
       {/* Test elements */}
-      {testElements.length > 0 && (
+      {testInteractions.length > 0 && (
         <div>
           <h2 className="text-sm font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-3">
-            Test Elements
+            Test Interactions
           </h2>
           <div className="space-y-2">
-            {testElements.map((tc: TestElementResponse) => (
+            {testInteractions.map((tc: TestInteractionResponse) => (
               <button
                 key={tc.id}
-                onClick={() => navigate(`${basePath}/test-elements/${tc.id}`)}
+                onClick={() => navigate(`${basePath}/test-interactions/${tc.id}`)}
                 className="w-full text-left flex items-center gap-3 px-4 py-3 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors"
               >
                 <FileIcon />

@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom';
 import { useApi } from '@sudobility/building_blocks/firebase';
 import {
   useRunStructure,
-  useTestElementRun,
+  useTestInteractionRun,
   useTestRunFindings,
 } from '@sudobility/testomniac_client';
 import SEOHead from '@/components/SEOHead';
@@ -23,7 +23,7 @@ function formatMultilineLog(log: string | null | undefined): string | null {
   return trimmed.length > 0 ? trimmed : null;
 }
 
-export default function RunTestElementRunDetailPage() {
+export default function RunTestInteractionRunDetailPage() {
   const { entitySlug, envId, runId, surfaceRunId, elementId, elementRunId } = useParams<{
     entitySlug: string;
     envId: string;
@@ -46,17 +46,17 @@ export default function RunTestElementRunDetailPage() {
     token: token ?? '',
     enabled: !!runId && !!token,
   });
-  const { testElementRun, isLoading, error } = useTestElementRun({
+  const { testInteractionRun, isLoading, error } = useTestInteractionRun({
     networkClient,
     baseUrl: CONSTANTS.API_URL,
-    testElementRunId: Number(elementRunId),
+    testInteractionRunId: Number(elementRunId),
     token: token ?? '',
     enabled: !!elementRunId && !!token,
   });
   const { findings } = useTestRunFindings({
     networkClient,
     baseUrl: CONSTANTS.API_URL,
-    testElementRunId: Number(elementRunId),
+    testInteractionRunId: Number(elementRunId),
     token: token ?? '',
     enabled: !!elementRunId && !!token,
   });
@@ -66,11 +66,13 @@ export default function RunTestElementRunDetailPage() {
     structure?.surfaces.find(candidate =>
       candidate.surfaceRuns.some(run => run.id === Number(surfaceRunId))
     ) ?? null;
-  const testElement =
-    surface?.testElements.find(candidate => candidate.id === Number(elementId)) ?? null;
+  const testInteraction =
+    surface?.testInteractions.find(candidate => candidate.id === Number(elementId)) ?? null;
   const inlineRun = useMemo(
-    () => testElement?.elementRuns.find(candidate => candidate.id === Number(elementRunId)) ?? null,
-    [testElement, elementRunId]
+    () =>
+      testInteraction?.interactionRuns.find(candidate => candidate.id === Number(elementRunId)) ??
+      null,
+    [testInteraction, elementRunId]
   );
 
   const pageError = structureError || error;
@@ -78,20 +80,20 @@ export default function RunTestElementRunDetailPage() {
     return <div className="p-6 text-center text-red-600 dark:text-red-400">Error: {pageError}</div>;
   }
 
-  if (isLoading || structureLoading || !testElementRun) {
+  if (isLoading || structureLoading || !testInteractionRun) {
     return <div className="p-6 text-center text-gray-500 dark:text-gray-400">Loading...</div>;
   }
 
-  const consoleLog = formatMultilineLog(testElementRun.consoleLog);
-  const networkLog = formatMultilineLog(testElementRun.networkLog);
+  const consoleLog = formatMultilineLog(testInteractionRun.consoleLog);
+  const networkLog = formatMultilineLog(testInteractionRun.networkLog);
 
   return (
     <div className="p-6">
-      <SEOHead title={`Element Run #${elementRunId}`} description="" noIndex />
+      <SEOHead title={`Interaction Run #${elementRunId}`} description="" noIndex />
       <BackLink
-        label={`Back to ${testElement?.title ?? `Test Element #${elementId}`}`}
+        label={`Back to ${testInteraction?.title ?? `Test Interaction #${elementId}`}`}
         onClick={() =>
-          navigate(`${basePath}/surface-runs/${surfaceRunId}/test-elements/${elementId}`)
+          navigate(`${basePath}/surface-runs/${surfaceRunId}/test-interactions/${elementId}`)
         }
       />
       <nav className="mb-4 flex items-center gap-1 text-sm text-gray-500 dark:text-gray-400">
@@ -118,11 +120,11 @@ export default function RunTestElementRunDetailPage() {
         <span>/</span>
         <button
           onClick={() =>
-            navigate(`${basePath}/surface-runs/${surfaceRunId}/test-elements/${elementId}`)
+            navigate(`${basePath}/surface-runs/${surfaceRunId}/test-interactions/${elementId}`)
           }
           className="hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
         >
-          {testElement?.title ?? `Test Element #${elementId}`}
+          {testInteraction?.title ?? `Test Interaction #${elementId}`}
         </button>
         <span>/</span>
         <span className="text-gray-900 dark:text-gray-100 font-medium">Run #{elementRunId}</span>
@@ -130,10 +132,10 @@ export default function RunTestElementRunDetailPage() {
 
       <div className="mb-6 flex flex-wrap items-center gap-3">
         <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">
-          Element Run #{elementRunId}
+          Interaction Run #{elementRunId}
         </h1>
-        <StatusBadge status={testElementRun.status} />
-        {testElement && <StatusBadge status={testElement.testType} />}
+        <StatusBadge status={testInteractionRun.status} />
+        {testInteraction && <StatusBadge status={testInteraction.testType} />}
       </div>
 
       <div className="mb-8 grid grid-cols-2 gap-4 md:grid-cols-4">
@@ -145,48 +147,48 @@ export default function RunTestElementRunDetailPage() {
         </div>
         <div className="rounded-lg border border-gray-200 p-4 dark:border-gray-700">
           <div className="text-2xl font-bold text-gray-900 dark:text-gray-100">
-            {testElementRun.durationMs ?? '-'}
+            {testInteractionRun.durationMs ?? '-'}
           </div>
           <div className="text-xs text-gray-500">Duration (ms)</div>
         </div>
         <div className="rounded-lg border border-gray-200 p-4 dark:border-gray-700">
           <div className="text-sm font-medium text-gray-900 dark:text-gray-100">
-            {formatDate(testElementRun.startedAt)}
+            {formatDate(testInteractionRun.startedAt)}
           </div>
           <div className="text-xs text-gray-500">Started</div>
         </div>
         <div className="rounded-lg border border-gray-200 p-4 dark:border-gray-700">
           <div className="text-sm font-medium text-gray-900 dark:text-gray-100">
-            {formatDate(testElementRun.completedAt)}
+            {formatDate(testInteractionRun.completedAt)}
           </div>
           <div className="text-xs text-gray-500">Completed</div>
         </div>
       </div>
 
-      {testElementRun.errorMessage && (
+      {testInteractionRun.errorMessage && (
         <div className="mb-6 rounded-lg border border-red-200 bg-red-50 p-4 text-sm whitespace-pre-wrap text-red-700 dark:border-red-800 dark:bg-red-900/20 dark:text-red-300">
-          {testElementRun.errorMessage}
+          {testInteractionRun.errorMessage}
         </div>
       )}
 
-      {testElementRun.expectedOutcome && (
+      {testInteractionRun.expectedOutcome && (
         <div className="mb-6 rounded-lg border border-gray-200 bg-white p-4 dark:border-gray-700 dark:bg-gray-900">
           <h2 className="mb-2 text-sm font-semibold uppercase tracking-wide text-gray-500 dark:text-gray-400">
             Expected Outcome
           </h2>
           <pre className="whitespace-pre-wrap text-xs text-gray-700 dark:text-gray-300">
-            {testElementRun.expectedOutcome}
+            {testInteractionRun.expectedOutcome}
           </pre>
         </div>
       )}
 
-      {testElementRun.observedOutcome && (
+      {testInteractionRun.observedOutcome && (
         <div className="mb-6 rounded-lg border border-gray-200 bg-white p-4 dark:border-gray-700 dark:bg-gray-900">
           <h2 className="mb-2 text-sm font-semibold uppercase tracking-wide text-gray-500 dark:text-gray-400">
             Observed Outcome
           </h2>
           <pre className="whitespace-pre-wrap text-xs text-gray-700 dark:text-gray-300">
-            {testElementRun.observedOutcome}
+            {testInteractionRun.observedOutcome}
           </pre>
         </div>
       )}
@@ -197,7 +199,7 @@ export default function RunTestElementRunDetailPage() {
         </h2>
         {findings.length === 0 ? (
           <div className="rounded-lg border border-dashed border-gray-200 p-4 text-sm text-gray-500 dark:border-gray-700 dark:text-gray-400">
-            No findings for this element run.
+            No findings for this interaction run.
           </div>
         ) : (
           <div className="space-y-3">

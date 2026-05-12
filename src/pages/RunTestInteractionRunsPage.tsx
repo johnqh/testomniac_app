@@ -13,7 +13,7 @@ function formatDuration(ms: number | null): string {
   return `${(ms / 1000).toFixed(1)}s`;
 }
 
-export default function RunTestElementRunsPage() {
+export default function RunTestInteractionRunsPage() {
   const { entitySlug, envId, runId, surfaceRunId, elementId } = useParams<{
     entitySlug: string;
     envId: string;
@@ -37,8 +37,8 @@ export default function RunTestElementRunsPage() {
     structure?.surfaces.find(candidate =>
       candidate.surfaceRuns.some(run => run.id === Number(surfaceRunId))
     ) ?? null;
-  const testElement =
-    surface?.testElements.find(candidate => candidate.id === Number(elementId)) ?? null;
+  const testInteraction =
+    surface?.testInteractions.find(candidate => candidate.id === Number(elementId)) ?? null;
 
   if (error) {
     return <div className="p-6 text-center text-red-600 dark:text-red-400">Error: {error}</div>;
@@ -48,7 +48,7 @@ export default function RunTestElementRunsPage() {
     return <div className="p-6 text-center text-gray-500 dark:text-gray-400">Loading...</div>;
   }
 
-  if (!surface || !testElement) {
+  if (!surface || !testInteraction) {
     return (
       <div className="p-6 text-center text-gray-500 dark:text-gray-400">
         Test element not found.
@@ -58,7 +58,7 @@ export default function RunTestElementRunsPage() {
 
   return (
     <div className="p-6">
-      <SEOHead title={`${testElement.title} Runs`} description="" noIndex />
+      <SEOHead title={`${testInteraction.title} Runs`} description="" noIndex />
       <BackLink
         label={`Back to ${surface.title}`}
         onClick={() => navigate(`${basePath}/surface-runs/${surfaceRunId}`)}
@@ -85,17 +85,21 @@ export default function RunTestElementRunsPage() {
           {surface.title}
         </button>
         <span>/</span>
-        <span className="text-gray-900 dark:text-gray-100 font-medium">{testElement.title}</span>
+        <span className="text-gray-900 dark:text-gray-100 font-medium">
+          {testInteraction.title}
+        </span>
       </nav>
 
       <div className="mb-6 flex items-center gap-3">
-        <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">{testElement.title}</h1>
-        <StatusBadge status={testElement.testType} />
+        <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">
+          {testInteraction.title}
+        </h1>
+        <StatusBadge status={testInteraction.testType} />
       </div>
 
-      {testElement.elementRuns.length === 0 ? (
+      {testInteraction.interactionRuns.length === 0 ? (
         <div className="rounded-xl border border-dashed border-gray-200 dark:border-gray-700 p-8 text-center text-gray-500 dark:text-gray-400">
-          No element runs found.
+          No interaction runs found.
         </div>
       ) : (
         <div className="overflow-x-auto rounded-lg border border-gray-200 dark:border-gray-700">
@@ -117,12 +121,12 @@ export default function RunTestElementRunsPage() {
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
-              {testElement.elementRuns.map(elementRun => (
+              {testInteraction.interactionRuns.map(elementRun => (
                 <tr
                   key={elementRun.id}
                   onClick={() =>
                     navigate(
-                      `${basePath}/surface-runs/${surfaceRunId}/test-elements/${elementId}/element-runs/${elementRun.id}`
+                      `${basePath}/surface-runs/${surfaceRunId}/test-interactions/${elementId}/element-runs/${elementRun.id}`
                     )
                   }
                   className="cursor-pointer bg-white transition-colors hover:bg-gray-50 dark:bg-gray-900 dark:hover:bg-gray-800"

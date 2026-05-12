@@ -109,51 +109,51 @@
 
 | # | Find | Replace |
 |---|------|---------|
-| 1 | `TestScenarioSequenceTestCaseLinkResponse` | `TestScenarioSequenceTestElementLinkResponse` |
-| 2 | `TestScenarioSequenceTestCaseLinkRequest` | `TestScenarioSequenceTestElementLinkRequest` |
-| 3 | `test_scenario_sequence_test_cases` | `test_scenario_sequence_test_elements` |
-| 4 | `test-scenario-sequence-test-cases` | `test-scenario-sequence-test-elements` |
-| 5 | `testScenarioSequenceTestCases` | `testScenarioSequenceTestElements` |
-| 6 | `TestScenarioSequenceTestCases` | `TestScenarioSequenceTestElements` |
-| 7 | `FindTestCaseByActionsRequest` | `FindTestElementByActionsRequest` |
-| 8 | `CreateTestCaseActionRequest` | `CreateTestElementActionRequest` |
-| 9 | `LegacyInsertTestCaseRequest` | `LegacyInsertTestElementRequest` |
-| 10 | `CompleteTestCaseRunRequest` | `CompleteTestElementRunRequest` |
-| 11 | `TestCaseActionResponse` | `TestElementActionResponse` |
-| 12 | `CreateTestCaseRunRequest` | `CreateTestElementRunRequest` |
-| 13 | `InsertTestCaseRequest` | `InsertTestElementRequest` |
-| 14 | `TestCaseRunResponse` | `TestElementRunResponse` |
-| 15 | `LegacyGeneratedTestCase` | `LegacyGeneratedTestElement` |
-| 16 | `TestCaseResponse` | `TestElementResponse` |
-| 17 | `GeneratedTestCase` | `GeneratedTestElement` |
-| 18 | `PasswordTestCase` | `PasswordTestElement` |
-| 19 | `LegacyTestCase` | `LegacyTestElement` |
-| 20 | `TestCaseRow` | `TestElementRow` |
-| 21 | `dependency_test_case_id` | `dependency_test_element_id` |
-| 22 | `dependencyTestCaseId` | `dependencyTestElementId` |
-| 23 | `testCaseStepUniqueIdx` | `testElementStepUniqueIdx` |
+| 1 | `TestScenarioSequenceTestCaseLinkResponse` | `TestScenarioSequenceTestInteractionLinkResponse` |
+| 2 | `TestScenarioSequenceTestCaseLinkRequest` | `TestScenarioSequenceTestInteractionLinkRequest` |
+| 3 | `test_scenario_sequence_test_cases` | `test_scenario_sequence_test_interactions` |
+| 4 | `test-scenario-sequence-test-cases` | `test-scenario-sequence-test-interactions` |
+| 5 | `testScenarioSequenceTestCases` | `testScenarioSequenceTestInteractions` |
+| 6 | `TestScenarioSequenceTestCases` | `TestScenarioSequenceTestInteractions` |
+| 7 | `FindTestCaseByActionsRequest` | `FindTestInteractionByActionsRequest` |
+| 8 | `CreateTestCaseActionRequest` | `CreateTestInteractionActionRequest` |
+| 9 | `LegacyInsertTestCaseRequest` | `LegacyInsertTestInteractionRequest` |
+| 10 | `CompleteTestCaseRunRequest` | `CompleteTestInteractionRunRequest` |
+| 11 | `TestCaseActionResponse` | `TestInteractionActionResponse` |
+| 12 | `CreateTestCaseRunRequest` | `CreateTestInteractionRunRequest` |
+| 13 | `InsertTestCaseRequest` | `InsertTestInteractionRequest` |
+| 14 | `TestCaseRunResponse` | `TestInteractionRunResponse` |
+| 15 | `LegacyGeneratedTestCase` | `LegacyGeneratedTestInteraction` |
+| 16 | `TestCaseResponse` | `TestInteractionResponse` |
+| 17 | `GeneratedTestCase` | `GeneratedTestInteraction` |
+| 18 | `PasswordTestCase` | `PasswordTestInteraction` |
+| 19 | `LegacyTestCase` | `LegacyTestInteraction` |
+| 20 | `TestCaseRow` | `TestInteractionRow` |
+| 21 | `dependency_test_case_id` | `dependency_test_interaction_id` |
+| 22 | `dependencyTestCaseId` | `dependencyTestInteractionId` |
+| 23 | `testCaseStepUniqueIdx` | `testInteractionStepUniqueIdx` |
 | 24 | `sequenceCaseUniqueIdx` | `sequenceElementUniqueIdx` |
-| 25 | `test_case_actions` | `test_element_actions` |
-| 26 | `test_case_run_id` | `test_element_run_id` |
-| 27 | `test_case_runs` | `test_element_runs` |
-| 28 | `test_case_id` | `test_element_id` |
-| 29 | `test-case-runs` | `test-element-runs` |
-| 30 | `test-cases` | `test-elements` |
-| 31 | `test_cases` | `test_elements` |
-| 32 | `testCaseRunId` | `testElementRunId` |
-| 33 | `testCaseRunsCount` | `testElementRunsCount` |
-| 34 | `testCaseTitle` | `testElementTitle` |
-| 35 | `testCaseById` | `testElementById` |
-| 36 | `testCaseRun` | `testElementRun` |
-| 37 | `testCaseIds` | `testElementIds` |
-| 38 | `testCaseId` | `testElementId` |
-| 39 | `testCasesRes` | `testElementsRes` |
-| 40 | `testCasesCount` | `testElementsCount` |
-| 41 | `testCases` | `testElements` |
-| 42 | `testCase` | `testElement` |
-| 43 | `TestCase` | `TestElement` |
-| 44 | `test_case_passed` | `test_element_passed` |
-| 45 | `test_case_failed` | `test_element_failed` |
+| 25 | `test_case_actions` | `test_interaction_actions` |
+| 26 | `test_case_run_id` | `test_interaction_run_id` |
+| 27 | `test_case_runs` | `test_interaction_runs` |
+| 28 | `test_case_id` | `test_interaction_id` |
+| 29 | `test-case-runs` | `test-interaction-runs` |
+| 30 | `test-cases` | `test-interactions` |
+| 31 | `test_cases` | `test_interactions` |
+| 32 | `testCaseRunId` | `testInteractionRunId` |
+| 33 | `testCaseRunsCount` | `testInteractionRunsCount` |
+| 34 | `testCaseTitle` | `testInteractionTitle` |
+| 35 | `testCaseById` | `testInteractionById` |
+| 36 | `testCaseRun` | `testInteractionRun` |
+| 37 | `testCaseIds` | `testInteractionIds` |
+| 38 | `testCaseId` | `testInteractionId` |
+| 39 | `testCasesRes` | `testInteractionsRes` |
+| 40 | `testCasesCount` | `testInteractionsCount` |
+| 41 | `testCases` | `testInteractions` |
+| 42 | `testCase` | `testInteraction` |
+| 43 | `TestCase` | `TestInteraction` |
+| 44 | `test_case_passed` | `test_interaction_passed` |
+| 45 | `test_case_failed` | `test_interaction_failed` |
 | 46 | `caseRunById` | `elementRunById` |
 | 47 | `caseRunError` | `elementRunError` |
 | 48 | `caseRunsCount` | `elementRunsCount` |
@@ -167,12 +167,12 @@
 | 56 | `pendingCases` | `pendingElements` |
 | 57 | `passwordCases` | `passwordElements` |
 | 58 | `suiteCases` | `surfaceElements` |
-| 59 | `currentTestCaseId` | `currentTestElementId` |
-| 60 | `test-case-executor` | `test-element-executor` |
-| 61 | `tca_test_case_idx` | `tea_test_element_idx` |
+| 59 | `currentTestCaseId` | `currentTestInteractionId` |
+| 60 | `test-case-executor` | `test-interaction-executor` |
+| 61 | `tca_test_case_idx` | `tea_test_interaction_idx` |
 | 62 | `test_actions_case_step` | `test_actions_element_step` |
 | 63 | `scenario_seq_cases` | `scenario_seq_elements` |
-| 64 | `dependencyRunByTestCaseId` | `dependencyRunByTestElementId` |
+| 64 | `dependencyRunByTestCaseId` | `dependencyRunByTestInteractionId` |
 | 65 | `loadRunCaseContext` | `loadRunElementContext` |
 
 **UI string replacements (context-sensitive, do manually):**
@@ -186,11 +186,11 @@
 - `"case"` → `"element"` (only when used as count suffix for test cases)
 
 **Cross-rename patterns (both Suite→Surface AND Case→Element):**
-- `getTestCasesByTestSuite` → `getTestElementsByTestSurface`
-- `getTestSuiteTestCases` → `getTestSurfaceTestElements`
-- `useTestSuiteTestCases` → `useTestSurfaceTestElements`
-- `testSuiteTestCases` → `testSurfaceTestElements` (query key)
-- `UseTestSuiteTestCasesConfig` → `UseTestSurfaceTestElementsConfig`
+- `getTestCasesByTestSuite` → `getTestInteractionsByTestSurface`
+- `getTestSuiteTestCases` → `getTestSurfaceTestInteractions`
+- `useTestSuiteTestCases` → `useTestSurfaceTestInteractions`
+- `testSuiteTestCases` → `testSurfaceTestInteractions` (query key)
+- `UseTestSuiteTestCasesConfig` → `UseTestSurfaceTestInteractionsConfig`
 - `"This test suite has no test cases"` → `"This test surface has no test elements"`
 - `"test suites, cases, or bundles"` → `"test surfaces, elements, or bundles"`
 
@@ -233,7 +233,7 @@ Fix any remaining occurrences.
 
 ```bash
 cd /Users/johnhuang/projects/testomniac_types
-git add -A && git commit -m "refactor: rename TestSuite→TestSurface, TestCase→TestElement in types"
+git add -A && git commit -m "refactor: rename TestSuite→TestSurface, TestCase→TestInteraction in types"
 ```
 
 ---
@@ -256,17 +256,17 @@ ALTER TABLE testomniac.test_suite_bundle_runs RENAME TO test_surface_bundle_runs
 ALTER TABLE testomniac.test_suite_bundle_suites RENAME TO test_surface_bundle_surfaces;
 
 -- Rename tables: Case → Element
-ALTER TABLE testomniac.test_cases RENAME TO test_elements;
-ALTER TABLE testomniac.test_case_runs RENAME TO test_element_runs;
-ALTER TABLE testomniac.test_scenario_sequence_test_cases RENAME TO test_scenario_sequence_test_elements;
+ALTER TABLE testomniac.test_cases RENAME TO test_interactions;
+ALTER TABLE testomniac.test_case_runs RENAME TO test_interaction_runs;
+ALTER TABLE testomniac.test_scenario_sequence_test_cases RENAME TO test_scenario_sequence_test_interactions;
 
 -- Rename columns in test_surfaces (was test_suites)
 ALTER TABLE testomniac.test_surfaces RENAME COLUMN suite_tags TO surface_tags;
 
--- Rename columns in test_elements (was test_cases)
-ALTER TABLE testomniac.test_elements RENAME COLUMN test_suite_id TO test_surface_id;
-ALTER TABLE testomniac.test_elements RENAME COLUMN suite_tags TO surface_tags;
-ALTER TABLE testomniac.test_elements RENAME COLUMN dependency_test_case_id TO dependency_test_element_id;
+-- Rename columns in test_interactions (was test_cases)
+ALTER TABLE testomniac.test_interactions RENAME COLUMN test_suite_id TO test_surface_id;
+ALTER TABLE testomniac.test_interactions RENAME COLUMN suite_tags TO surface_tags;
+ALTER TABLE testomniac.test_interactions RENAME COLUMN dependency_test_case_id TO dependency_test_interaction_id;
 
 -- Rename columns in test_surface_bundle_surfaces (was test_suite_bundle_suites)
 ALTER TABLE testomniac.test_surface_bundle_surfaces RENAME COLUMN test_suite_bundle_id TO test_surface_bundle_id;
@@ -279,35 +279,35 @@ ALTER TABLE testomniac.test_surface_bundle_runs RENAME COLUMN test_suite_bundle_
 ALTER TABLE testomniac.test_surface_runs RENAME COLUMN test_suite_id TO test_surface_id;
 ALTER TABLE testomniac.test_surface_runs RENAME COLUMN test_suite_bundle_run_id TO test_surface_bundle_run_id;
 
--- Rename columns in test_element_runs (was test_case_runs)
-ALTER TABLE testomniac.test_element_runs RENAME COLUMN test_suite_run_id TO test_surface_run_id;
-ALTER TABLE testomniac.test_element_runs RENAME COLUMN test_case_id TO test_element_id;
+-- Rename columns in test_interaction_runs (was test_case_runs)
+ALTER TABLE testomniac.test_interaction_runs RENAME COLUMN test_suite_run_id TO test_surface_run_id;
+ALTER TABLE testomniac.test_interaction_runs RENAME COLUMN test_case_id TO test_interaction_id;
 
 -- Rename columns in test_runs
 ALTER TABLE testomniac.test_runs RENAME COLUMN test_suite_run_id TO test_surface_run_id;
 ALTER TABLE testomniac.test_runs RENAME COLUMN test_suite_bundle_run_id TO test_surface_bundle_run_id;
-ALTER TABLE testomniac.test_runs RENAME COLUMN test_case_run_id TO test_element_run_id;
+ALTER TABLE testomniac.test_runs RENAME COLUMN test_case_run_id TO test_interaction_run_id;
 
 -- Rename columns in test_run_findings
-ALTER TABLE testomniac.test_run_findings RENAME COLUMN test_case_run_id TO test_element_run_id;
+ALTER TABLE testomniac.test_run_findings RENAME COLUMN test_case_run_id TO test_interaction_run_id;
 
 -- Rename columns in issues (if exists)
-ALTER TABLE testomniac.issues RENAME COLUMN test_case_id TO test_element_id;
-ALTER TABLE testomniac.issues RENAME COLUMN test_case_run_id TO test_element_run_id;
+ALTER TABLE testomniac.issues RENAME COLUMN test_case_id TO test_interaction_id;
+ALTER TABLE testomniac.issues RENAME COLUMN test_case_run_id TO test_interaction_run_id;
 
 -- Rename columns in test_actions
-ALTER TABLE testomniac.test_actions RENAME COLUMN test_case_id TO test_element_id;
+ALTER TABLE testomniac.test_actions RENAME COLUMN test_case_id TO test_interaction_id;
 
 -- Rename columns in test_schedules
 ALTER TABLE testomniac.test_schedules RENAME COLUMN test_suite_id TO test_surface_id;
 ALTER TABLE testomniac.test_schedules RENAME COLUMN test_suite_bundle_id TO test_surface_bundle_id;
-ALTER TABLE testomniac.test_schedules RENAME COLUMN test_case_id TO test_element_id;
+ALTER TABLE testomniac.test_schedules RENAME COLUMN test_case_id TO test_interaction_id;
 
 -- Rename columns in test_activities
 ALTER TABLE testomniac.test_activities RENAME COLUMN test_suite_id TO test_surface_id;
 
--- Rename columns in test_scenario_sequence_test_elements (was test_scenario_sequence_test_cases)
-ALTER TABLE testomniac.test_scenario_sequence_test_elements RENAME COLUMN test_case_id TO test_element_id;
+-- Rename columns in test_scenario_sequence_test_interactions (was test_scenario_sequence_test_cases)
+ALTER TABLE testomniac.test_scenario_sequence_test_interactions RENAME COLUMN test_case_id TO test_interaction_id;
 
 -- Rename columns in page_views (if test_case_id exists)
 -- (Check if this column exists before running)
@@ -418,7 +418,7 @@ git add -A && git commit -m "refactor: rename suite→surface, case→element in
 - Modify: `/Users/johnhuang/projects/testomniac_runner_service/src/index.ts`
 - Modify: any test files containing "suite" or "case"
 - Rename: `src/generation/suite-tagger.ts` → `src/generation/surface-tagger.ts`
-- Rename: `src/orchestrator/test-case-executor.ts` → `src/orchestrator/test-element-executor.ts`
+- Rename: `src/orchestrator/test-case-executor.ts` → `src/orchestrator/test-interaction-executor.ts`
 
 - [ ] **Step 1: Apply Suite → Surface replacements across all source files**
 
@@ -433,14 +433,14 @@ Apply all Case→Element patterns. Key files: `client.ts` (9 API methods + 7 pat
 ```bash
 cd /Users/johnhuang/projects/testomniac_runner_service
 git mv src/generation/suite-tagger.ts src/generation/surface-tagger.ts
-git mv src/orchestrator/test-case-executor.ts src/orchestrator/test-element-executor.ts
+git mv src/orchestrator/test-case-executor.ts src/orchestrator/test-interaction-executor.ts
 ```
 
 - [ ] **Step 4: Update imports referencing renamed files**
 
 Update all import paths that reference the old file names:
 - `./suite-tagger` → `./surface-tagger`
-- `./test-case-executor` → `./test-element-executor`
+- `./test-case-executor` → `./test-interaction-executor`
 
 - [ ] **Step 5: Verify**
 
@@ -486,7 +486,7 @@ git add -A && git commit -m "refactor: rename suite→surface, case→element in
 
 Apply all Suite→Surface patterns across all files. Key changes in `TestomniacClient.ts`:
 - Method: `getRunnerTestSuites` → `getRunnerTestSurfaces`
-- Method: `getTestSuiteTestCases` → `getTestSurfaceTestElements`
+- Method: `getTestSuiteTestCases` → `getTestSurfaceTestInteractions`
 - URL: `/test-suites/` → `/test-surfaces/`
 
 Key changes in `types.ts`:
@@ -496,9 +496,9 @@ Key changes in `types.ts`:
 - [ ] **Step 2: Apply Case → Element replacements**
 
 Apply all Case→Element patterns. **Skip UseCase/use_case/useCaseId patterns.** Key changes:
-- Methods: `getRunTestCases` → `getRunTestElements`, etc.
-- URLs: `/test-cases/` → `/test-elements/`, `/test-case-runs/` → `/test-element-runs/`
-- Query keys: `runTestCases` → `runTestElements`, etc.
+- Methods: `getRunTestCases` → `getRunTestInteractions`, etc.
+- URLs: `/test-cases/` → `/test-interactions/`, `/test-case-runs/` → `/test-interaction-runs/`
+- Query keys: `runTestCases` → `runTestInteractions`, etc.
 - Properties: `testCasesCount`, `testCaseRunId`, `caseRuns`, etc.
 
 - [ ] **Step 3: Rename hook files**
@@ -507,12 +507,12 @@ Apply all Case→Element patterns. **Skip UseCase/use_case/useCaseId patterns.**
 cd /Users/johnhuang/projects/testomniac_client
 git mv src/hooks/useTestSuiteChildSuites.ts src/hooks/useTestSurfaceChildSurfaces.ts
 git mv src/hooks/useRunnerTestSuites.ts src/hooks/useRunnerTestSurfaces.ts
-git mv src/hooks/useTestSuiteTestCases.ts src/hooks/useTestSurfaceTestElements.ts
-git mv src/hooks/useRunTestCases.ts src/hooks/useRunTestElements.ts
-git mv src/hooks/useRunnerTestCases.ts src/hooks/useRunnerTestElements.ts
-git mv src/hooks/useTestCaseActions.ts src/hooks/useTestElementActions.ts
-git mv src/hooks/useTestCaseRun.ts src/hooks/useTestElementRun.ts
-git mv src/hooks/useTestScenarioSequenceTestCases.ts src/hooks/useTestScenarioSequenceTestElements.ts
+git mv src/hooks/useTestSuiteTestCases.ts src/hooks/useTestSurfaceTestInteractions.ts
+git mv src/hooks/useRunTestCases.ts src/hooks/useRunTestInteractions.ts
+git mv src/hooks/useRunnerTestCases.ts src/hooks/useRunnerTestInteractions.ts
+git mv src/hooks/useTestCaseActions.ts src/hooks/useTestInteractionActions.ts
+git mv src/hooks/useTestCaseRun.ts src/hooks/useTestInteractionRun.ts
+git mv src/hooks/useTestScenarioSequenceTestCases.ts src/hooks/useTestScenarioSequenceTestInteractions.ts
 ```
 
 - [ ] **Step 4: Update imports in hooks/index.ts and src/index.ts**
@@ -550,7 +550,7 @@ Key changes: `onTestSuiteCreated` → `onTestSurfaceCreated`, `suiteId` → `sur
 
 - [ ] **Step 2: Apply Case → Element replacements**
 
-Key changes: `testCaseId` → `testElementId`, `testCaseRun` → `testElementRun`, `executeTestCase` → `executeTestElement`, `PasswordTestCase` → `PasswordTestElement`, `onTestCaseRunCompleted` → `onTestElementRunCompleted`.
+Key changes: `testCaseId` → `testInteractionId`, `testCaseRun` → `testInteractionRun`, `executeTestCase` → `executeTestInteraction`, `PasswordTestCase` → `PasswordTestInteraction`, `onTestCaseRunCompleted` → `onTestInteractionRunCompleted`.
 
 - [ ] **Step 3: Verify**
 
@@ -582,7 +582,7 @@ Key changes: `suitesCreated` → `surfacesCreated`, `'test_suite_created'` → `
 
 - [ ] **Step 2: Apply Case → Element replacements**
 
-Key changes in `useRunManager.ts`: `testCases` → `testElements`, `testCasesRes` → `testElementsRes`, `getRunTestCases` → `getRunTestElements`, `TestCaseResponse` → `TestElementResponse`.
+Key changes in `useRunManager.ts`: `testCases` → `testInteractions`, `testCasesRes` → `testInteractionsRes`, `getRunTestCases` → `getRunTestInteractions`, `TestCaseResponse` → `TestInteractionResponse`.
 
 - [ ] **Step 3: Verify**
 
@@ -615,9 +615,9 @@ Key changes in `SidePanel.tsx`: `testSuiteBundleId` → `testSurfaceBundleId`, `
 
 - [ ] **Step 2: Apply Case → Element replacements**
 
-Key changes in `background/index.ts`: `onTestCaseRunCompleted` → `onTestElementRunCompleted`, `'test_case_passed'` → `'test_element_passed'`, `'test_case_failed'` → `'test_element_failed'`.
+Key changes in `background/index.ts`: `onTestCaseRunCompleted` → `onTestInteractionRunCompleted`, `'test_case_passed'` → `'test_interaction_passed'`, `'test_case_failed'` → `'test_interaction_failed'`.
 
-Key changes in `SidePanel.tsx`: `testCases` → `testElements`, `dependencyTestCaseId` → `dependencyTestElementId`, `caseRuns` → `elementRuns`, `caseRun` → `elementRun`.
+Key changes in `SidePanel.tsx`: `testCases` → `testInteractions`, `dependencyTestCaseId` → `dependencyTestInteractionId`, `caseRuns` → `elementRuns`, `caseRun` → `elementRun`.
 
 - [ ] **Step 3: Update UI strings in SidePanel.tsx**
 
@@ -660,23 +660,23 @@ git add -A && git commit -m "refactor: rename suite→surface, case→element in
 - Modify: `/Users/johnhuang/projects/testomniac_app/src/pages/RunnerConsolePage.tsx`
 - Rename: `TestSuitesListPage.tsx` → `TestSurfacesListPage.tsx`
 - Rename: `TestSuiteDetailPage.tsx` → `TestSurfaceDetailPage.tsx`
-- Rename: `TestCasesPage.tsx` → `TestElementsPage.tsx`
-- Rename: `TestCaseDetailPage.tsx` → `TestElementDetailPage.tsx`
+- Rename: `TestCasesPage.tsx` → `TestInteractionsPage.tsx`
+- Rename: `TestCaseDetailPage.tsx` → `TestInteractionDetailPage.tsx`
 
 - [ ] **Step 1: Apply Suite → Surface replacements across all files**
 
 Apply all Suite→Surface patterns. Key changes:
 - Route paths: `test-suites` → `test-surfaces`
 - Component names: `TestSuitesListPage` → `TestSurfacesListPage`, `TestSuiteDetailPage` → `TestSurfaceDetailPage`
-- Hook imports: `useRunnerTestSuites` → `useRunnerTestSurfaces`, `useTestSuiteTestCases` → `useTestSurfaceTestElements`
+- Hook imports: `useRunnerTestSuites` → `useRunnerTestSurfaces`, `useTestSuiteTestCases` → `useTestSurfaceTestInteractions`
 - Variables: `suiteId`, `testSuites`, `suite.*`
 
 - [ ] **Step 2: Apply Case → Element replacements across all files**
 
 Apply all Case→Element patterns. Key changes:
-- Route paths: `test-cases` → `test-elements`
-- Component names: `TestCasesPage` → `TestElementsPage`, `TestCaseDetailPage` → `TestElementDetailPage`
-- Hook imports: `useRunnerTestCases` → `useRunnerTestElements`, etc.
+- Route paths: `test-cases` → `test-interactions`
+- Component names: `TestCasesPage` → `TestInteractionsPage`, `TestCaseDetailPage` → `TestInteractionDetailPage`
+- Hook imports: `useRunnerTestCases` → `useRunnerTestInteractions`, etc.
 - Variables: `testCases`, `caseId`, `testCaseRunId`, etc.
 
 - [ ] **Step 3: Update all UI strings**
@@ -693,8 +693,8 @@ Carefully update user-visible text:
 cd /Users/johnhuang/projects/testomniac_app
 git mv src/pages/TestSuitesListPage.tsx src/pages/TestSurfacesListPage.tsx
 git mv src/pages/TestSuiteDetailPage.tsx src/pages/TestSurfaceDetailPage.tsx
-git mv src/pages/TestCasesPage.tsx src/pages/TestElementsPage.tsx
-git mv src/pages/TestCaseDetailPage.tsx src/pages/TestElementDetailPage.tsx
+git mv src/pages/TestCasesPage.tsx src/pages/TestInteractionsPage.tsx
+git mv src/pages/TestCaseDetailPage.tsx src/pages/TestInteractionDetailPage.tsx
 ```
 
 - [ ] **Step 5: Update imports in App.tsx referencing renamed files**
@@ -702,8 +702,8 @@ git mv src/pages/TestCaseDetailPage.tsx src/pages/TestElementDetailPage.tsx
 Update the lazy import paths:
 - `./pages/TestSuitesListPage` → `./pages/TestSurfacesListPage`
 - `./pages/TestSuiteDetailPage` → `./pages/TestSurfaceDetailPage`
-- `./pages/TestCasesPage` → `./pages/TestElementsPage`
-- `./pages/TestCaseDetailPage` → `./pages/TestElementDetailPage`
+- `./pages/TestCasesPage` → `./pages/TestInteractionsPage`
+- `./pages/TestCaseDetailPage` → `./pages/TestInteractionDetailPage`
 
 - [ ] **Step 6: Verify**
 

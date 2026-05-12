@@ -1,8 +1,11 @@
 import { useMemo, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useApi } from '@sudobility/building_blocks/firebase';
-import { useEnvironmentTestElements, useTestElementActions } from '@sudobility/testomniac_client';
-import type { TestActionResponse, TestElementResponse } from '@sudobility/testomniac_types';
+import {
+  useEnvironmentTestInteractions,
+  useTestInteractionActions,
+} from '@sudobility/testomniac_client';
+import type { TestActionResponse, TestInteractionResponse } from '@sudobility/testomniac_types';
 import { useLocalizedNavigate } from '../hooks/useLocalizedNavigate';
 import { CONSTANTS } from '../config/constants';
 import { StatusBadge } from '../components/scanner/StatusBadge';
@@ -58,7 +61,7 @@ function ElementLinkRow({
   onClick,
   relation,
 }: {
-  element: TestElementResponse;
+  element: TestInteractionResponse;
   onClick: () => void;
   relation: string;
 }) {
@@ -76,7 +79,7 @@ function ElementLinkRow({
             {element.title}
           </div>
           <div className="mt-1 text-xs text-gray-500 dark:text-gray-400">
-            Test Element #{element.id}
+            Test Interaction #{element.id}
           </div>
         </div>
         <div className="flex items-center gap-2 flex-shrink-0">
@@ -88,7 +91,7 @@ function ElementLinkRow({
   );
 }
 
-export default function TestElementDetailPage() {
+export default function TestInteractionDetailPage() {
   const { entitySlug, envId, elementId } = useParams<{
     entitySlug: string;
     envId: string;
@@ -100,18 +103,18 @@ export default function TestElementDetailPage() {
   const basePath = `/dashboard/${entitySlug}/environments/${envId}`;
   const numericElementId = Number(elementId);
 
-  const { actions, isLoading, error } = useTestElementActions({
+  const { actions, isLoading, error } = useTestInteractionActions({
     networkClient,
     baseUrl: CONSTANTS.API_URL,
-    testElementId: numericElementId,
+    testInteractionId: numericElementId,
     token: token ?? '',
     enabled: !!elementId && !!token,
   });
   const {
-    testElements,
+    testInteractions,
     isLoading: elementsLoading,
     error: elementsError,
-  } = useEnvironmentTestElements({
+  } = useEnvironmentTestInteractions({
     networkClient,
     baseUrl: CONSTANTS.API_URL,
     envId: Number(envId),
@@ -120,18 +123,20 @@ export default function TestElementDetailPage() {
   });
 
   const currentElement = useMemo(
-    () => testElements.find(element => element.id === numericElementId) ?? null,
-    [numericElementId, testElements]
+    () => testInteractions.find(element => element.id === numericElementId) ?? null,
+    [numericElementId, testInteractions]
   );
   const dependencyElement = useMemo(() => {
-    if (!currentElement?.dependencyTestElementId) return null;
+    if (!currentElement?.dependencyTestInteractionId) return null;
     return (
-      testElements.find(element => element.id === currentElement.dependencyTestElementId) ?? null
+      testInteractions.find(element => element.id === currentElement.dependencyTestInteractionId) ??
+      null
     );
-  }, [currentElement, testElements]);
+  }, [currentElement, testInteractions]);
   const dependentElements = useMemo(
-    () => testElements.filter(element => element.dependencyTestElementId === numericElementId),
-    [numericElementId, testElements]
+    () =>
+      testInteractions.filter(element => element.dependencyTestInteractionId === numericElementId),
+    [numericElementId, testInteractions]
   );
   const playwrightScript = useMemo(() => {
     const steps = (currentElement?.stepsJson as StoredStep[] | null) ?? [];
@@ -166,12 +171,12 @@ export default function TestElementDetailPage() {
         </button>
         <span>/</span>
         <span className="text-gray-900 dark:text-gray-100 font-medium">
-          Test Element #{elementId}
+          Test Interaction #{elementId}
         </span>
       </nav>
 
       <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-2">
-        Test Element #{elementId}
+        Test Interaction #{elementId}
       </h1>
 
       {/* Metadata badges */}
@@ -224,11 +229,11 @@ export default function TestElementDetailPage() {
             <ElementLinkRow
               element={dependencyElement}
               relation="Parent dependency"
-              onClick={() => navigate(`${basePath}/test-elements/${dependencyElement.id}`)}
+              onClick={() => navigate(`${basePath}/test-interactions/${dependencyElement.id}`)}
             />
           ) : (
             <div className="rounded-lg border border-dashed border-gray-200 dark:border-gray-700 p-4 text-sm text-gray-500 dark:text-gray-400">
-              This test element has no dependency.
+              This test interaction has no dependency.
             </div>
           )}
         </div>
@@ -239,7 +244,7 @@ export default function TestElementDetailPage() {
           </h2>
           {dependentElements.length === 0 ? (
             <div className="rounded-lg border border-dashed border-gray-200 dark:border-gray-700 p-4 text-sm text-gray-500 dark:text-gray-400">
-              No other test elements currently depend on this one.
+              No other test interactions currently depend on this one.
             </div>
           ) : (
             <div className="space-y-2">
@@ -248,7 +253,7 @@ export default function TestElementDetailPage() {
                   key={element.id}
                   element={element}
                   relation="Child dependency"
-                  onClick={() => navigate(`${basePath}/test-elements/${element.id}`)}
+                  onClick={() => navigate(`${basePath}/test-interactions/${element.id}`)}
                 />
               ))}
             </div>
@@ -274,14 +279,14 @@ export default function TestElementDetailPage() {
 
       {isPageLoading && (
         <div className="text-sm text-gray-500 dark:text-gray-400 py-8 text-center">
-          Loading test element details...
+          Loading test interaction details...
         </div>
       )}
 
       {!isPageLoading && actionList.length === 0 && (
         <div className="rounded-xl border border-dashed border-gray-200 dark:border-gray-700 p-8 text-center">
           <div className="text-sm text-gray-500 dark:text-gray-400">
-            No actions defined for this test element.
+            No actions defined for this test interaction.
           </div>
         </div>
       )}

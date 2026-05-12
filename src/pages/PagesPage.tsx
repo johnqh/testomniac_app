@@ -3,9 +3,9 @@ import { useParams } from 'react-router-dom';
 import { useApi } from '@sudobility/building_blocks/firebase';
 import {
   useEnvironmentPages,
-  useEnvironmentTestElements,
+  useEnvironmentTestInteractions,
   useRunPages,
-  useRunTestElements,
+  useRunTestInteractions,
 } from '@sudobility/testomniac_client';
 import SEOHead from '@/components/SEOHead';
 import { CONSTANTS } from '../config/constants';
@@ -39,7 +39,7 @@ export default function PagesPage() {
     enabled: !!runId && !!token,
   });
 
-  const environmentElementsQuery = useEnvironmentTestElements({
+  const environmentElementsQuery = useEnvironmentTestInteractions({
     networkClient,
     baseUrl: CONSTANTS.API_URL,
     envId: Number(envId),
@@ -47,7 +47,7 @@ export default function PagesPage() {
     enabled: !!envId && !!token && !runScoped,
   });
 
-  const runElementsQuery = useRunTestElements({
+  const runElementsQuery = useRunTestInteractions({
     networkClient,
     baseUrl: CONSTANTS.API_URL,
     runId: Number(runId),
@@ -56,9 +56,9 @@ export default function PagesPage() {
   });
 
   const pages = runScoped ? runPagesQuery.pages : environmentPagesQuery.pages;
-  const testElements = runScoped
-    ? runElementsQuery.testElements
-    : environmentElementsQuery.testElements;
+  const testInteractions = runScoped
+    ? runElementsQuery.testInteractions
+    : environmentElementsQuery.testInteractions;
   const pagesLoading = runScoped ? runPagesQuery.isLoading : environmentPagesQuery.isLoading;
   const elementsLoading = runScoped
     ? runElementsQuery.isLoading
@@ -123,7 +123,7 @@ export default function PagesPage() {
       ) : (
         <PagesMapView
           pages={pages}
-          testElements={testElements}
+          testInteractions={testInteractions}
           envId={envId!}
           entitySlug={entitySlug!}
           runId={runId}

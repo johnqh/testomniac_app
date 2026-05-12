@@ -4,7 +4,7 @@ import {
   useRun,
   useRunSummary,
   useRunStructure,
-  useTestElementRun,
+  useTestInteractionRun,
   useTestRunFindings,
 } from '@sudobility/testomniac_client';
 import type { TestRunFindingResponse } from '@sudobility/testomniac_types';
@@ -82,20 +82,20 @@ export default function TestRunDetailPage() {
   const { findings, isLoading, error } = useTestRunFindings({
     networkClient,
     baseUrl: CONSTANTS.API_URL,
-    testElementRunId: run?.testElementRunId ?? 0,
+    testInteractionRunId: run?.testInteractionRunId ?? 0,
     token: token ?? '',
-    enabled: !!run?.testElementRunId && !!token,
+    enabled: !!run?.testInteractionRunId && !!token,
   });
   const {
-    testElementRun,
+    testInteractionRun,
     isLoading: isCaseRunLoading,
     error: elementRunError,
-  } = useTestElementRun({
+  } = useTestInteractionRun({
     networkClient,
     baseUrl: CONSTANTS.API_URL,
-    testElementRunId: run?.testElementRunId ?? 0,
+    testInteractionRunId: run?.testInteractionRunId ?? 0,
     token: token ?? '',
-    enabled: !!run?.testElementRunId && !!token,
+    enabled: !!run?.testInteractionRunId && !!token,
   });
 
   if (runError || error || elementRunError) {
@@ -116,7 +116,7 @@ export default function TestRunDetailPage() {
     );
   }
 
-  const isRootLikeRun = run.testElementRunId === null;
+  const isRootLikeRun = run.testInteractionRunId === null;
   const expertiseEntries = Object.entries(summary?.expertiseSummary ?? {}).sort(([left], [right]) =>
     left.localeCompare(right)
   );
@@ -126,10 +126,10 @@ export default function TestRunDetailPage() {
       title: surface.title,
       surfaceRunId: surface.surfaceRuns[0]?.id ?? null,
       status: surface.surfaceRuns[0]?.status ?? 'pending',
-      elementCount: surface.testElements.length,
+      interactionCount: surface.testInteractions.length,
     })) ?? [];
-  const consoleLog = formatMultilineLog(testElementRun?.consoleLog);
-  const networkLog = formatMultilineLog(testElementRun?.networkLog);
+  const consoleLog = formatMultilineLog(testInteractionRun?.consoleLog);
+  const networkLog = formatMultilineLog(testInteractionRun?.networkLog);
 
   return (
     <div className="p-6">
@@ -222,7 +222,7 @@ export default function TestRunDetailPage() {
                 Surface Runs
               </div>
               <div className="mt-1 text-xs text-gray-500 dark:text-gray-400">
-                Navigate the run hierarchy by surface run, then element runs and run details.
+                Navigate the run hierarchy by surface run, then interaction runs and run details.
               </div>
             </button>
             <button
@@ -267,8 +267,8 @@ export default function TestRunDetailPage() {
                           {surface.title}
                         </div>
                         <div className="mt-1 text-xs text-gray-500 dark:text-gray-400">
-                          {surface.elementCount} test element
-                          {surface.elementCount === 1 ? '' : 's'}
+                          {surface.interactionCount} test interaction
+                          {surface.interactionCount === 1 ? '' : 's'}
                         </div>
                       </div>
                       <div className="shrink-0">
@@ -319,22 +319,22 @@ export default function TestRunDetailPage() {
         Findings
       </h2>
 
-      {run.testElementRunId === null && (
+      {run.testInteractionRunId === null && (
         <div className="rounded-xl border border-dashed border-gray-200 dark:border-gray-700 p-8 text-center">
           <div className="text-sm text-gray-500 dark:text-gray-400">
             This test run tracks a surface or discovery workflow and does not map directly to a
-            single test element run.
+            single test interaction run.
           </div>
         </div>
       )}
 
-      {run.testElementRunId !== null && isLoading && (
+      {run.testInteractionRunId !== null && isLoading && (
         <div className="text-sm text-gray-500 dark:text-gray-400 py-8 text-center">
           Loading findings...
         </div>
       )}
 
-      {run.testElementRunId !== null && !isLoading && findings.length === 0 && (
+      {run.testInteractionRunId !== null && !isLoading && findings.length === 0 && (
         <div className="rounded-xl border border-dashed border-gray-200 dark:border-gray-700 p-8 text-center">
           <div className="text-sm text-gray-500 dark:text-gray-400">
             No findings for this test run.
@@ -342,7 +342,7 @@ export default function TestRunDetailPage() {
         </div>
       )}
 
-      {run.testElementRunId !== null && !isLoading && findings.length > 0 && (
+      {run.testInteractionRunId !== null && !isLoading && findings.length > 0 && (
         <div className="space-y-3">
           {(findings as TestRunFindingResponse[]).map(finding => (
             <div
@@ -370,7 +370,7 @@ export default function TestRunDetailPage() {
         </div>
       )}
 
-      {run.testElementRunId !== null && !isCaseRunLoading && (consoleLog || networkLog) && (
+      {run.testInteractionRunId !== null && !isCaseRunLoading && (consoleLog || networkLog) && (
         <div className="mt-8 space-y-6">
           <h2 className="text-sm font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">
             Runtime Signals

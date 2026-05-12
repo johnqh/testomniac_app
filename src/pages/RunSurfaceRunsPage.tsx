@@ -108,7 +108,7 @@ export default function RunSurfaceRunsPage() {
                     <StatusBadge status={surfaceRun.status} />
                   </td>
                   <td className="px-4 py-3 text-gray-600 dark:text-gray-400">
-                    {surface.testElements.length}
+                    {surface.testInteractions.length}
                   </td>
                   <td className="px-4 py-3 text-gray-600 dark:text-gray-400">
                     {formatDate(surfaceRun.startedAt)}

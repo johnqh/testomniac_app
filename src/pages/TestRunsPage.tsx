@@ -9,7 +9,7 @@ import { StatusBadge } from '../components/scanner/StatusBadge';
 
 interface TestRunRow {
   id: number;
-  testElementId: number;
+  testInteractionId: number;
   screen: string;
   status: string;
   durationMs: number | null;
@@ -19,8 +19,8 @@ interface TestRunRow {
 const columnHelper = createColumnHelper<TestRunRow>();
 
 const columns = [
-  columnHelper.accessor('testElementId', {
-    header: 'Test Element',
+  columnHelper.accessor('testInteractionId', {
+    header: 'Test Interaction',
     cell: info => (
       <span className="font-medium text-gray-900 dark:text-gray-100">#{info.getValue()}</span>
     ),

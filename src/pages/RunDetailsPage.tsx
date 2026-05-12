@@ -8,7 +8,7 @@ import {
   useRunScaffolds,
   useRunStructure,
   useRunSummary,
-  useRunTestElements,
+  useRunTestInteractions,
   useRunTestRuns,
 } from '@sudobility/testomniac_client';
 import SEOHead from '@/components/SEOHead';
@@ -35,7 +35,7 @@ export default function RunDetailsPage() {
   const { navigationMap } = useRunNavigationMap(queryConfig);
   const { structure } = useRunStructure(queryConfig);
   const { pages } = useRunPages(queryConfig);
-  const { testElements } = useRunTestElements(queryConfig);
+  const { testInteractions } = useRunTestInteractions(queryConfig);
   const { testRuns } = useRunTestRuns(queryConfig);
   const { personas } = useRunPersonas(queryConfig);
   const { scaffolds } = useRunScaffolds(queryConfig);
@@ -60,12 +60,12 @@ export default function RunDetailsPage() {
     left.localeCompare(right)
   );
   const surfacesCount = structure?.surfaces.length ?? 0;
-  const elementRunsCount =
+  const interactionRunsCount =
     structure?.surfaces.reduce(
       (total, surface) =>
         total +
-        surface.testElements.reduce(
-          (surfaceTotal, testElement) => surfaceTotal + testElement.elementRuns.length,
+        surface.testInteractions.reduce(
+          (surfaceTotal, testInteraction) => surfaceTotal + testInteraction.interactionRuns.length,
           0
         ),
       0
@@ -75,9 +75,13 @@ export default function RunDetailsPage() {
     {
       label: 'Coverage',
       path: `${basePath}/test-runs`,
-      count: elementRunsCount || testRuns.length,
+      count: interactionRunsCount || testRuns.length,
     },
-    { label: 'Test Elements', path: `${basePath}/test-elements`, count: testElements.length },
+    {
+      label: 'Test Interactions',
+      path: `${basePath}/test-interactions`,
+      count: testInteractions.length,
+    },
     { label: 'Findings', path: `${basePath}/issues`, count: summary?.totalFindings ?? 0 },
     { label: 'Pages', path: `${basePath}/pages`, count: pages.length },
     {
@@ -110,7 +114,7 @@ export default function RunDetailsPage() {
         </div>
         <div className="rounded-lg border border-gray-200 p-4 dark:border-gray-700">
           <div className="text-2xl font-bold text-green-600">
-            {elementRunsCount ||
+            {interactionRunsCount ||
               summary?.testRunsCompleted ||
               run.testRunsCompleted ||
               testRuns.length}
@@ -187,18 +191,18 @@ export default function RunDetailsPage() {
                     </span>
                   </div>
                   <div className="mt-1 text-xs text-gray-500 dark:text-gray-400">
-                    {surface.testElements.length} element
-                    {surface.testElements.length === 1 ? '' : 's'}
+                    {surface.testInteractions.length} element
+                    {surface.testInteractions.length === 1 ? '' : 's'}
                   </div>
                   <div className="mt-2 space-y-1">
-                    {surface.testElements.slice(0, 3).map(testElement => (
+                    {surface.testInteractions.slice(0, 3).map(testInteraction => (
                       <div
-                        key={testElement.id}
+                        key={testInteraction.id}
                         className="rounded bg-gray-50 px-2 py-1 text-xs text-gray-600 dark:bg-gray-800 dark:text-gray-300"
                       >
-                        {testElement.title}
-                        {testElement.dependencyTestElementId
-                          ? ` · depends on #${testElement.dependencyTestElementId}`
+                        {testInteraction.title}
+                        {testInteraction.dependencyTestInteractionId
+                          ? ` · depends on #${testInteraction.dependencyTestInteractionId}`
                           : ''}
                       </div>
                     ))}

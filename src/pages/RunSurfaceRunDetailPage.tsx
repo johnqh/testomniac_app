@@ -76,34 +76,38 @@ export default function RunSurfaceRunDetailPage() {
 
       <div className="mb-6 rounded-lg border border-gray-200 bg-white p-4 dark:border-gray-700 dark:bg-gray-900">
         <div className="text-sm text-gray-600 dark:text-gray-300">
-          Surface run #{selectedRun.id} with {match.testElements.length} test elements.
+          Surface run #{selectedRun.id} with {match.testInteractions.length} test interactions.
         </div>
       </div>
 
       <div className="space-y-3">
-        {match.testElements.map(testElement => (
+        {match.testInteractions.map(testInteraction => (
           <button
-            key={testElement.id}
+            key={testInteraction.id}
             onClick={() =>
-              navigate(`${basePath}/surface-runs/${surfaceRunId}/test-elements/${testElement.id}`)
+              navigate(
+                `${basePath}/surface-runs/${surfaceRunId}/test-interactions/${testInteraction.id}`
+              )
             }
             className="w-full rounded-lg border border-gray-200 bg-white p-4 text-left transition-colors hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-900 dark:hover:bg-gray-800"
           >
             <div className="flex items-start justify-between gap-3">
               <div className="min-w-0">
                 <div className="text-sm font-medium text-gray-900 dark:text-gray-100">
-                  {testElement.title}
+                  {testInteraction.title}
                 </div>
                 <div className="mt-1 text-xs text-gray-500 dark:text-gray-400">
-                  {testElement.elementRuns.length} element run
-                  {testElement.elementRuns.length === 1 ? '' : 's'}
+                  {testInteraction.interactionRuns.length} interaction run
+                  {testInteraction.interactionRuns.length === 1 ? '' : 's'}
                 </div>
               </div>
               <div className="flex shrink-0 items-center gap-2">
-                <StatusBadge status={testElement.testType} />
+                <StatusBadge status={testInteraction.testType} />
                 <StatusBadge
                   status={
-                    testElement.elementRuns[0]?.status ?? match.surfaceRuns[0]?.status ?? 'pending'
+                    testInteraction.interactionRuns[0]?.status ??
+                    match.surfaceRuns[0]?.status ??
+                    'pending'
                   }
                 />
               </div>

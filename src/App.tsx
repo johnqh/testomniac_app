@@ -23,7 +23,7 @@ const DashboardOverview = lazy(() => import('./pages/DashboardOverview'));
 const StartScanPage = lazy(() => import('./pages/StartScanPage'));
 const ScanProgressPage = lazy(() => import('./pages/ScanProgressPage'));
 const PublicScanProgressPage = lazy(() => import('./pages/PublicScanProgressPage'));
-const TestElementsPage = lazy(() => import('./pages/TestElementsPage'));
+const TestInteractionsPage = lazy(() => import('./pages/TestInteractionsPage'));
 const PagesPage = lazy(() => import('./pages/PagesPage'));
 const ScaffoldsPage = lazy(() => import('./pages/ScaffoldsPage'));
 const PersonasPage = lazy(() => import('./pages/PersonasPage'));
@@ -36,13 +36,15 @@ const BundlesPage = lazy(() => import('./pages/BundlesPage'));
 const SchedulesPage = lazy(() => import('./pages/SchedulesPage'));
 const TestSurfacesListPage = lazy(() => import('./pages/TestSurfacesListPage'));
 const TestSurfaceDetailPage = lazy(() => import('./pages/TestSurfaceDetailPage'));
-const TestElementDetailPage = lazy(() => import('./pages/TestElementDetailPage'));
+const TestInteractionDetailPage = lazy(() => import('./pages/TestInteractionDetailPage'));
 const TestRunsListPage = lazy(() => import('./pages/TestRunsListPage'));
 const TestRunDetailPage = lazy(() => import('./pages/TestRunDetailPage'));
 const RunSurfaceRunsPage = lazy(() => import('./pages/RunSurfaceRunsPage'));
 const RunSurfaceRunDetailPage = lazy(() => import('./pages/RunSurfaceRunDetailPage'));
-const RunTestElementRunsPage = lazy(() => import('./pages/RunTestElementRunsPage'));
-const RunTestElementRunDetailPage = lazy(() => import('./pages/RunTestElementRunDetailPage'));
+const RunTestInteractionRunsPage = lazy(() => import('./pages/RunTestInteractionRunsPage'));
+const RunTestInteractionRunDetailPage = lazy(
+  () => import('./pages/RunTestInteractionRunDetailPage')
+);
 const FindingsListPage = lazy(() => import('./pages/FindingsListPage'));
 const TestScenariosPage = lazy(() => import('./pages/TestScenariosPage'));
 const TestScenarioDetailPage = lazy(() => import('./pages/TestScenarioDetailPage'));
@@ -143,10 +145,13 @@ function AppRoutes() {
                     path="environments/:envId/test-surfaces/:surfaceId"
                     element={<TestSurfaceDetailPage />}
                   />
-                  <Route path="environments/:envId/test-elements" element={<TestElementsPage />} />
                   <Route
-                    path="environments/:envId/test-elements/:elementId"
-                    element={<TestElementDetailPage />}
+                    path="environments/:envId/test-interactions"
+                    element={<TestInteractionsPage />}
+                  />
+                  <Route
+                    path="environments/:envId/test-interactions/:elementId"
+                    element={<TestInteractionDetailPage />}
                   />
                   <Route path="environments/:envId/runs" element={<TestRunsListPage />} />
                   <Route path="environments/:envId/runs/:runId" element={<TestRunDetailPage />} />
@@ -159,12 +164,12 @@ function AppRoutes() {
                     element={<RunSurfaceRunDetailPage />}
                   />
                   <Route
-                    path="environments/:envId/runs/:runId/surface-runs/:surfaceRunId/test-elements/:elementId"
-                    element={<RunTestElementRunsPage />}
+                    path="environments/:envId/runs/:runId/surface-runs/:surfaceRunId/test-interactions/:elementId"
+                    element={<RunTestInteractionRunsPage />}
                   />
                   <Route
-                    path="environments/:envId/runs/:runId/surface-runs/:surfaceRunId/test-elements/:elementId/element-runs/:elementRunId"
-                    element={<RunTestElementRunDetailPage />}
+                    path="environments/:envId/runs/:runId/surface-runs/:surfaceRunId/test-interactions/:elementId/element-runs/:elementRunId"
+                    element={<RunTestInteractionRunDetailPage />}
                   />
                   <Route path="environments/:envId/runs/:runId/pages" element={<PagesPage />} />
                   <Route

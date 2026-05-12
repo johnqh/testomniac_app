@@ -4,13 +4,13 @@ import { useApi } from '@sudobility/building_blocks/firebase';
 import {
   usePageStates,
   useRunPageSummary,
-  useEnvironmentTestElements,
+  useEnvironmentTestInteractions,
   useEnvironmentPages,
-  useCreateTestElementRun,
+  useCreateTestInteractionRun,
   useRunPages,
-  useRunTestElements,
+  useRunTestInteractions,
 } from '@sudobility/testomniac_client';
-import type { TestElementResponse } from '@sudobility/testomniac_types';
+import type { TestInteractionResponse } from '@sudobility/testomniac_types';
 import SEOHead from '@/components/SEOHead';
 import { CONSTANTS } from '../config/constants';
 import { useLocalizedNavigate } from '../hooks/useLocalizedNavigate';
@@ -45,7 +45,7 @@ export default function PageDetailPage() {
     enabled: !!runId && !!token,
   });
 
-  const envElementsQuery = useEnvironmentTestElements({
+  const envElementsQuery = useEnvironmentTestInteractions({
     networkClient,
     baseUrl: CONSTANTS.API_URL,
     envId: Number(envId),
@@ -53,7 +53,7 @@ export default function PageDetailPage() {
     enabled: !!envId && !!token && !runScoped,
   });
 
-  const runElementsQuery = useRunTestElements({
+  const runElementsQuery = useRunTestInteractions({
     networkClient,
     baseUrl: CONSTANTS.API_URL,
     runId: Number(runId),
@@ -62,9 +62,11 @@ export default function PageDetailPage() {
   });
 
   const envPages = runScoped ? runPagesQuery.pages : envPagesQuery.pages;
-  const testElements = runScoped ? runElementsQuery.testElements : envElementsQuery.testElements;
+  const testInteractions = runScoped
+    ? runElementsQuery.testInteractions
+    : envElementsQuery.testInteractions;
 
-  const { createRun } = useCreateTestElementRun({
+  const { createRun } = useCreateTestInteractionRun({
     networkClient,
     baseUrl: CONSTANTS.API_URL,
     token: token ?? '',
@@ -79,11 +81,11 @@ export default function PageDetailPage() {
   }, [envPages]);
 
   const { startingElements, landingElements, onPageElements } = useMemo(() => {
-    const starting: TestElementResponse[] = [];
-    const landing: TestElementResponse[] = [];
-    const onPage: TestElementResponse[] = [];
+    const starting: TestInteractionResponse[] = [];
+    const landing: TestInteractionResponse[] = [];
+    const onPage: TestInteractionResponse[] = [];
 
-    for (const el of testElements) {
+    for (const el of testInteractions) {
       const isSource = el.pageId === numericPageId;
       const isTarget = el.targetPageId === numericPageId;
 
@@ -97,7 +99,7 @@ export default function PageDetailPage() {
     }
 
     return { startingElements: starting, landingElements: landing, onPageElements: onPage };
-  }, [testElements, numericPageId]);
+  }, [testInteractions, numericPageId]);
 
   const { pageStates, isLoading } = usePageStates({
     networkClient,
@@ -155,9 +157,9 @@ export default function PageDetailPage() {
             </div>
             <div className="rounded-lg border border-gray-200 p-4 dark:border-gray-700">
               <div className="text-2xl font-bold text-gray-900 dark:text-gray-100">
-                {summary.testElementsCount}
+                {summary.testInteractionsCount}
               </div>
-              <div className="text-xs text-gray-500">Test Elements</div>
+              <div className="text-xs text-gray-500">Test Interactions</div>
             </div>
             <div className="rounded-lg border border-gray-200 p-4 dark:border-gray-700">
               <div className="text-2xl font-bold text-red-600 dark:text-red-400">
@@ -167,7 +169,7 @@ export default function PageDetailPage() {
             </div>
             <div className="rounded-lg border border-gray-200 p-4 dark:border-gray-700">
               <div className="text-2xl font-bold text-gray-900 dark:text-gray-100">
-                {summary.testElementRunsCount}
+                {summary.testInteractionRunsCount}
               </div>
               <div className="text-xs text-gray-500">Case Runs</div>
             </div>
@@ -221,16 +223,17 @@ export default function PageDetailPage() {
               <div className="space-y-4">
                 {summary.runtimeSignals.map(signal => (
                   <div
-                    key={signal.testElementRunId}
+                    key={signal.testInteractionRunId}
                     className="rounded-lg border border-gray-200 bg-white p-4 dark:border-gray-700 dark:bg-gray-900"
                   >
                     <div className="mb-3 flex items-center justify-between gap-3">
                       <div>
                         <div className="text-sm font-medium text-gray-900 dark:text-gray-100">
-                          {signal.testElementTitle ?? `Test Element #${signal.testElementId}`}
+                          {signal.testInteractionTitle ??
+                            `Test Interaction #${signal.testInteractionId}`}
                         </div>
                         <div className="mt-1 text-xs text-gray-500 dark:text-gray-400">
-                          Case run #{signal.testElementRunId}
+                          Case run #{signal.testInteractionRunId}
                           {signal.completedAt
                             ? ` • ${new Date(signal.completedAt).toLocaleString()}`
                             : ''}
@@ -307,37 +310,37 @@ export default function PageDetailPage() {
         </div>
       )}
 
-      {/* Test Elements Section */}
+      {/* Test Interactions Section */}
       {(startingElements.length > 0 || landingElements.length > 0 || onPageElements.length > 0) && (
         <div className="mt-10">
           <h2 className="mb-4 text-lg font-semibold text-gray-900 dark:text-gray-100">
-            Test Elements
+            Test Interactions
           </h2>
 
           {onPageElements.length > 0 && (
-            <TestElementGroup
+            <TestInteractionGroup
               label="On this page"
               elements={onPageElements}
               pagePathById={pagePathById}
-              onTest={el => createRun({ testElementId: el.id })}
+              onTest={el => createRun({ testInteractionId: el.id })}
             />
           )}
 
           {startingElements.length > 0 && (
-            <TestElementGroup
+            <TestInteractionGroup
               label="Starting from this page"
               elements={startingElements}
               pagePathById={pagePathById}
-              onTest={el => createRun({ testElementId: el.id })}
+              onTest={el => createRun({ testInteractionId: el.id })}
             />
           )}
 
           {landingElements.length > 0 && (
-            <TestElementGroup
+            <TestInteractionGroup
               label="Landing on this page"
               elements={landingElements}
               pagePathById={pagePathById}
-              onTest={el => createRun({ testElementId: el.id })}
+              onTest={el => createRun({ testInteractionId: el.id })}
             />
           )}
         </div>
@@ -346,25 +349,25 @@ export default function PageDetailPage() {
   );
 }
 
-// --- Test Elements Sub-components ---
+// --- Test Interactions Sub-components ---
 
-function TestElementGroup({
+function TestInteractionGroup({
   label,
   elements,
   pagePathById,
   onTest,
 }: {
   label: string;
-  elements: TestElementResponse[];
+  elements: TestInteractionResponse[];
   pagePathById: Map<number, string>;
-  onTest: (el: TestElementResponse) => void;
+  onTest: (el: TestInteractionResponse) => void;
 }) {
   return (
     <div className="mb-6">
       <h3 className="mb-2 text-sm font-medium text-gray-500 dark:text-gray-400">{label}</h3>
       <div className="space-y-1">
         {elements.map(el => (
-          <TestElementRow
+          <TestInteractionRow
             key={el.id}
             element={el}
             pagePathById={pagePathById}
@@ -376,12 +379,12 @@ function TestElementGroup({
   );
 }
 
-function TestElementRow({
+function TestInteractionRow({
   element,
   pagePathById,
   onTest,
 }: {
-  element: TestElementResponse;
+  element: TestInteractionResponse;
   pagePathById: Map<number, string>;
   onTest: () => void;
 }) {
