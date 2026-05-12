@@ -1,17 +1,17 @@
 import { useMemo, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { useApi } from '@sudobility/building_blocks/firebase';
 import {
   useCreateTestSchedule,
   useRunnerSchedules,
-  useRunnerTestElements,
   useRunnerTestSurfaceBundles,
-  useRunnerTestSurfaces,
+  useEnvironmentTestElements,
+  useEnvironmentTestSurfaces,
 } from '@sudobility/testomniac_client';
 import type { CreateTestScheduleRequest, TestScheduleResponse } from '@sudobility/testomniac_types';
 import SEOHead from '@/components/SEOHead';
 import { CONSTANTS } from '../config/constants';
 import { StatusBadge } from '../components/scanner/StatusBadge';
+import { useDashboardEnvironmentContext } from '../hooks/useDashboardEnvironmentContext';
 
 type TargetKind = 'bundle' | 'surface' | 'element';
 
@@ -55,8 +55,14 @@ function describeRecurrence(schedule: TestScheduleResponse) {
 
 export default function SchedulesPage() {
   const { envId } = useParams<{ envId: string }>();
-  const { networkClient, token } = useApi();
-  const numericEnvId = Number(envId);
+  const {
+    networkClient,
+    token,
+    primaryRunner,
+    envId: numericEnvId,
+    isLoading: contextLoading,
+    error: contextError,
+  } = useDashboardEnvironmentContext();
 
   const [showForm, setShowForm] = useState(false);
   const [title, setTitle] = useState('');
@@ -80,9 +86,9 @@ export default function SchedulesPage() {
   } = useRunnerSchedules({
     networkClient,
     baseUrl: CONSTANTS.API_URL,
-    runnerId: numericEnvId,
-    token: token ?? '',
-    enabled: !!envId && !!token,
+    runnerId: primaryRunner?.id ?? 0,
+    token,
+    enabled: !!envId && !!token && !!primaryRunner,
   });
 
   const {
@@ -92,20 +98,20 @@ export default function SchedulesPage() {
   } = useRunnerTestSurfaceBundles({
     networkClient,
     baseUrl: CONSTANTS.API_URL,
-    runnerId: numericEnvId,
-    token: token ?? '',
-    enabled: !!envId && !!token,
+    runnerId: primaryRunner?.id ?? 0,
+    token,
+    enabled: !!envId && !!token && !!primaryRunner,
   });
 
   const {
     testSurfaces,
     isLoading: surfacesLoading,
     error: surfacesError,
-  } = useRunnerTestSurfaces({
+  } = useEnvironmentTestSurfaces({
     networkClient,
     baseUrl: CONSTANTS.API_URL,
-    runnerId: numericEnvId,
-    token: token ?? '',
+    envId: numericEnvId,
+    token,
     enabled: !!envId && !!token,
   });
 
@@ -113,11 +119,11 @@ export default function SchedulesPage() {
     testElements,
     isLoading: elementsLoading,
     error: elementsError,
-  } = useRunnerTestElements({
+  } = useEnvironmentTestElements({
     networkClient,
     baseUrl: CONSTANTS.API_URL,
-    runnerId: numericEnvId,
-    token: token ?? '',
+    envId: numericEnvId,
+    token,
     enabled: !!envId && !!token,
   });
 
@@ -129,13 +135,20 @@ export default function SchedulesPage() {
   } = useCreateTestSchedule({
     networkClient,
     baseUrl: CONSTANTS.API_URL,
-    runnerId: numericEnvId,
-    token: token ?? '',
+    runnerId: primaryRunner?.id ?? 0,
+    token,
   });
 
   const pageError =
-    schedulesError || bundlesError || surfacesError || elementsError || createError || null;
-  const isLoading = schedulesLoading || bundlesLoading || surfacesLoading || elementsLoading;
+    contextError ||
+    schedulesError ||
+    bundlesError ||
+    surfacesError ||
+    elementsError ||
+    createError ||
+    null;
+  const isLoading =
+    contextLoading || schedulesLoading || bundlesLoading || surfacesLoading || elementsLoading;
 
   const selectedTargetId = useMemo(() => {
     if (targetKind === 'bundle') return selectedBundleId;
@@ -172,10 +185,10 @@ export default function SchedulesPage() {
   };
 
   const handleCreate = async () => {
-    if (!canCreate) return;
+    if (!canCreate || !primaryRunner) return;
 
     const payload: CreateTestScheduleRequest = {
-      runnerId: numericEnvId,
+      runnerId: primaryRunner.id,
       title: title.trim(),
       recurrenceType,
       timeOfDay,

@@ -43,7 +43,6 @@ export function DashboardSidebar({ entitySlug }: DashboardSidebarProps) {
     enabled: !!token,
   });
 
-  // Auto-select product if only one exists
   const selectedProductId = useMemo(() => {
     if (products.length === 1) return String(products[0].id);
     return null;
@@ -99,7 +98,7 @@ export function DashboardSidebar({ entitySlug }: DashboardSidebarProps) {
           <label className="text-xs font-medium text-gray-500 dark:text-gray-400 mb-1 block">
             Product
           </label>
-          <Select value={selectedProductId ?? undefined} onValueChange={handleProductChange}>
+          <Select value={selectedProductId ?? ''} onValueChange={handleProductChange}>
             <SelectTrigger className="w-full">
               <SelectValue placeholder={productsLoading ? 'Loading...' : 'Select product'} />
             </SelectTrigger>
@@ -119,7 +118,7 @@ export function DashboardSidebar({ entitySlug }: DashboardSidebarProps) {
             Environment
           </label>
           <Select
-            value={routeEnvId ?? undefined}
+            value={routeEnvId ?? ''}
             onValueChange={handleEnvironmentChange}
             disabled={!selectedProductId}
           >

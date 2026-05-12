@@ -24,7 +24,7 @@ BASE_DIR="$(cd "${SCRIPT_DIR}/.." && pwd)"
 PROJECTS=(
     "../testomniac_types:60"
     "../testomniac_api:0"
-    "../testomniac_runner_service:0"
+    "../testomniac_runner_service:60"
     "../testomniac_client:60"
     "../testomniac_runner:0"
     "../testomniac_lib:60"

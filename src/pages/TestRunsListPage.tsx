@@ -1,10 +1,8 @@
 import { useParams } from 'react-router-dom';
-import { useApi } from '@sudobility/building_blocks/firebase';
-import { useRunnerTestRuns } from '@sudobility/testomniac_client';
 import type { TestRunResponse } from '@sudobility/testomniac_types';
 import SEOHead from '@/components/SEOHead';
 import { useLocalizedNavigate } from '../hooks/useLocalizedNavigate';
-import { CONSTANTS } from '../config/constants';
+import { useDashboardEnvironmentContext } from '../hooks/useDashboardEnvironmentContext';
 import { StatusBadge } from '../components/scanner/StatusBadge';
 
 function formatDuration(ms: number | null): string {
@@ -20,16 +18,8 @@ function formatDate(dateStr: string | null): string {
 
 export default function TestRunsListPage() {
   const { entitySlug, envId } = useParams<{ entitySlug: string; envId: string }>();
-  const { networkClient, token } = useApi();
   const { navigate } = useLocalizedNavigate();
-
-  const { testRuns, isLoading, error } = useRunnerTestRuns({
-    networkClient,
-    baseUrl: CONSTANTS.API_URL,
-    runnerId: Number(envId),
-    token: token ?? '',
-    enabled: !!envId && !!token,
-  });
+  const { environmentRuns: testRuns, isLoading, error } = useDashboardEnvironmentContext();
 
   const basePath = `/dashboard/${entitySlug}/environments/${envId}`;
 

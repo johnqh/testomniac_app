@@ -1,10 +1,11 @@
 import { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useApi } from '@sudobility/building_blocks/firebase';
-import { useRunnerFindings, useRunFindings } from '@sudobility/testomniac_client';
+import { useRunFindings } from '@sudobility/testomniac_client';
 import type { TestRunFindingResponse } from '@sudobility/testomniac_types';
 import SEOHead from '@/components/SEOHead';
 import { CONSTANTS } from '../config/constants';
+import { useDashboardEnvironmentContext } from '../hooks/useDashboardEnvironmentContext';
 
 function FindingTypeBadge({ type }: { type: string }) {
   const colors =
@@ -26,28 +27,25 @@ function FindingTypeBadge({ type }: { type: string }) {
 type FilterMode = 'all' | 'errors';
 
 export default function FindingsListPage() {
-  const { envId, runId } = useParams<{ envId: string; runId?: string }>();
+  const { runId } = useParams<{ envId: string; runId?: string }>();
   const { networkClient, token } = useApi();
   const [filter, setFilter] = useState<FilterMode>('all');
-
-  const runnerFindingsQuery = useRunnerFindings({
-    networkClient,
-    baseUrl: CONSTANTS.API_URL,
-    runnerId: Number(envId),
-    token: token ?? '',
-    enabled: !!envId && !!token && !runId,
-  });
+  const {
+    latestRun,
+    isLoading: contextLoading,
+    error: contextError,
+  } = useDashboardEnvironmentContext();
 
   const runFindingsQuery = useRunFindings({
     networkClient,
     baseUrl: CONSTANTS.API_URL,
-    runId: Number(runId),
+    runId: Number(runId ?? latestRun?.id ?? 0),
     token: token ?? '',
-    enabled: !!runId && !!token,
+    enabled: !!token && !!(runId ?? latestRun?.id),
   });
-  const findings = runId ? runFindingsQuery.findings : runnerFindingsQuery.findings;
-  const isLoading = runId ? runFindingsQuery.isLoading : runnerFindingsQuery.isLoading;
-  const error = runId ? runFindingsQuery.error : runnerFindingsQuery.error;
+  const findings = runFindingsQuery.findings;
+  const isLoading = contextLoading || runFindingsQuery.isLoading;
+  const error = contextError || runFindingsQuery.error;
 
   const filteredFindings =
     filter === 'errors'
@@ -113,7 +111,7 @@ export default function FindingsListPage() {
           </div>
           <p className="text-sm text-gray-500 dark:text-gray-400 mt-2">
             {filter === 'errors'
-              ? 'There are no error-level findings for this runner.'
+              ? 'There are no error-level findings for this environment.'
               : 'Findings will appear here after test runs complete.'}
           </p>
         </div>

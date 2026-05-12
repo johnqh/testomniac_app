@@ -1,9 +1,10 @@
 import { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useApi } from '@sudobility/building_blocks/firebase';
-import { useRunnerPersonas, usePersonaUseCases } from '@sudobility/testomniac_client';
+import { usePersonaUseCases, useRunPersonas } from '@sudobility/testomniac_client';
 import SEOHead from '@/components/SEOHead';
 import { CONSTANTS } from '../config/constants';
+import { useDashboardEnvironmentContext } from '../hooks/useDashboardEnvironmentContext';
 
 function PersonaUseCases({ personaId }: { personaId: number }) {
   const { networkClient, token } = useApi();
@@ -40,16 +41,21 @@ export default function PersonasPage() {
   const { envId } = useParams<{ envId: string }>();
   const { networkClient, token } = useApi();
   const [expandedId, setExpandedId] = useState<number | null>(null);
+  const {
+    latestRun,
+    isLoading: contextLoading,
+    error: contextError,
+  } = useDashboardEnvironmentContext();
 
-  const { personas, isLoading, error } = useRunnerPersonas({
+  const { personas, isLoading, error } = useRunPersonas({
     networkClient,
     baseUrl: CONSTANTS.API_URL,
-    runnerId: Number(envId),
+    runId: latestRun?.id ?? 0,
     token: token ?? '',
-    enabled: !!envId && !!token,
+    enabled: !!envId && !!token && !!latestRun,
   });
 
-  if (isLoading) {
+  if (contextLoading || isLoading) {
     return (
       <div className="p-6">
         <div className="text-center text-gray-500 dark:text-gray-400 py-8">Loading...</div>
@@ -57,10 +63,12 @@ export default function PersonasPage() {
     );
   }
 
-  if (error) {
+  if (contextError || error) {
     return (
       <div className="p-6">
-        <div className="text-center text-red-600 dark:text-red-400 py-8">Error: {error}</div>
+        <div className="text-center text-red-600 dark:text-red-400 py-8">
+          Error: {contextError || error}
+        </div>
       </div>
     );
   }

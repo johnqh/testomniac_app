@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { useApi } from '@sudobility/building_blocks/firebase';
 import {
   useRunnerTestScenarios,
   useCreateTestScenario,
@@ -11,11 +10,18 @@ import SEOHead from '@/components/SEOHead';
 import { useLocalizedNavigate } from '../hooks/useLocalizedNavigate';
 import { CONSTANTS } from '../config/constants';
 import { StatusBadge } from '../components/scanner/StatusBadge';
+import { useDashboardEnvironmentContext } from '../hooks/useDashboardEnvironmentContext';
 
 export default function TestScenariosPage() {
   const { entitySlug, envId } = useParams<{ entitySlug: string; envId: string }>();
-  const { networkClient, token } = useApi();
   const { navigate } = useLocalizedNavigate();
+  const {
+    networkClient,
+    token,
+    primaryRunner,
+    isLoading: contextLoading,
+    error: contextError,
+  } = useDashboardEnvironmentContext();
   const [showForm, setShowForm] = useState(false);
   const [title, setTitle] = useState('');
   const [startingPath, setStartingPath] = useState('/');
@@ -24,31 +30,31 @@ export default function TestScenariosPage() {
   const { testScenarios, isLoading, error, refetch } = useRunnerTestScenarios({
     networkClient,
     baseUrl: CONSTANTS.API_URL,
-    runnerId: Number(envId),
-    token: token ?? '',
-    enabled: !!envId && !!token,
+    runnerId: primaryRunner?.id ?? 0,
+    token,
+    enabled: !!envId && !!token && !!primaryRunner,
   });
 
   const { createTestScenario, isCreating } = useCreateTestScenario({
     networkClient,
     baseUrl: CONSTANTS.API_URL,
-    runnerId: Number(envId),
-    token: token ?? '',
+    runnerId: primaryRunner?.id ?? 0,
+    token,
   });
 
   const { deleteTestScenario } = useDeleteTestScenario({
     networkClient,
     baseUrl: CONSTANTS.API_URL,
-    runnerId: Number(envId),
-    token: token ?? '',
+    runnerId: primaryRunner?.id ?? 0,
+    token,
   });
 
   const basePath = `/dashboard/${entitySlug}/environments/${envId}`;
 
   const handleCreate = async () => {
-    if (!title.trim() || !prompt.trim()) return;
+    if (!title.trim() || !prompt.trim() || !primaryRunner) return;
     await createTestScenario({
-      runnerId: Number(envId),
+      runnerId: primaryRunner.id,
       title: title.trim(),
       startingPath: startingPath.trim(),
       prompt: prompt.trim(),
@@ -65,10 +71,12 @@ export default function TestScenariosPage() {
     refetch();
   };
 
-  if (error) {
+  if (contextError || error) {
     return (
       <div className="p-6">
-        <div className="text-center text-red-600 dark:text-red-400 py-8">Error: {error}</div>
+        <div className="text-center text-red-600 dark:text-red-400 py-8">
+          Error: {contextError || error}
+        </div>
       </div>
     );
   }
@@ -134,7 +142,7 @@ export default function TestScenariosPage() {
         </div>
       )}
 
-      {isLoading && (
+      {(contextLoading || isLoading) && (
         <div className="text-sm text-gray-500 dark:text-gray-400 py-8 text-center">
           Loading test scenarios...
         </div>

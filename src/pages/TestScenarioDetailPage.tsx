@@ -1,10 +1,10 @@
 import { useParams } from 'react-router-dom';
-import { useApi } from '@sudobility/building_blocks/firebase';
 import { useRunnerTestScenarios, useTestScenarioSequences } from '@sudobility/testomniac_client';
 import type { TestScenarioSequenceResponse } from '@sudobility/testomniac_types';
 import SEOHead from '@/components/SEOHead';
 import { useLocalizedNavigate } from '../hooks/useLocalizedNavigate';
 import { CONSTANTS } from '../config/constants';
+import { useDashboardEnvironmentContext } from '../hooks/useDashboardEnvironmentContext';
 
 export default function TestScenarioDetailPage() {
   const { entitySlug, envId, scenarioId } = useParams<{
@@ -12,8 +12,13 @@ export default function TestScenarioDetailPage() {
     envId: string;
     scenarioId: string;
   }>();
-  const { networkClient, token } = useApi();
   const { navigate } = useLocalizedNavigate();
+  const {
+    networkClient,
+    token,
+    primaryRunner,
+    error: contextError,
+  } = useDashboardEnvironmentContext();
 
   const basePath = `/dashboard/${entitySlug}/environments/${envId}`;
 
@@ -21,9 +26,9 @@ export default function TestScenarioDetailPage() {
   const { testScenarios } = useRunnerTestScenarios({
     networkClient,
     baseUrl: CONSTANTS.API_URL,
-    runnerId: Number(envId),
-    token: token ?? '',
-    enabled: !!envId && !!token,
+    runnerId: primaryRunner?.id ?? 0,
+    token,
+    enabled: !!envId && !!token && !!primaryRunner,
   });
 
   const scenario = testScenarios.find(s => s.id === Number(scenarioId));
@@ -40,11 +45,11 @@ export default function TestScenarioDetailPage() {
     enabled: !!scenarioId && !!token,
   });
 
-  if (sequencesError) {
+  if (contextError || sequencesError) {
     return (
       <div className="p-6">
         <div className="text-center text-red-600 dark:text-red-400 py-8">
-          Error: {sequencesError}
+          Error: {contextError || sequencesError}
         </div>
       </div>
     );
