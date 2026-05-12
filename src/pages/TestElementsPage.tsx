@@ -1,7 +1,7 @@
 import { useParams } from 'react-router-dom';
 import { createColumnHelper } from '@tanstack/react-table';
 import { useApi } from '@sudobility/building_blocks/firebase';
-import { useRunnerTestElements } from '@sudobility/testomniac_client';
+import { useEnvironmentTestElements } from '@sudobility/testomniac_client';
 import SEOHead from '@/components/SEOHead';
 import { CONSTANTS } from '../config/constants';
 import { DataTable } from '../components/data/DataTable';
@@ -67,10 +67,10 @@ export default function TestElementsPage() {
   const { envId } = useParams<{ envId: string }>();
   const { networkClient, token } = useApi();
 
-  const { testElements, isLoading, error } = useRunnerTestElements({
+  const { testElements, isLoading, error } = useEnvironmentTestElements({
     networkClient,
     baseUrl: CONSTANTS.API_URL,
-    runnerId: Number(envId),
+    envId: Number(envId),
     token: token ?? '',
     enabled: !!envId && !!token,
   });

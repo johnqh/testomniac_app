@@ -1,6 +1,6 @@
 import { useParams } from 'react-router-dom';
 import { useApi } from '@sudobility/building_blocks/firebase';
-import { useRunnerTestSurfaces } from '@sudobility/testomniac_client';
+import { useEnvironmentTestSurfaces } from '@sudobility/testomniac_client';
 import type { TestSurfaceResponse } from '@sudobility/testomniac_types';
 import SEOHead from '@/components/SEOHead';
 import { useLocalizedNavigate } from '../hooks/useLocalizedNavigate';
@@ -51,10 +51,10 @@ export default function TestSurfacesListPage() {
   const { networkClient, token } = useApi();
   const { navigate } = useLocalizedNavigate();
 
-  const { testSurfaces, isLoading, error } = useRunnerTestSurfaces({
+  const { testSurfaces, isLoading, error } = useEnvironmentTestSurfaces({
     networkClient,
     baseUrl: CONSTANTS.API_URL,
-    runnerId: Number(envId),
+    envId: Number(envId),
     token: token ?? '',
     enabled: !!envId && !!token,
   });

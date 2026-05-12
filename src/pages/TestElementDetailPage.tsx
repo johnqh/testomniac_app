@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useApi } from '@sudobility/building_blocks/firebase';
-import { useRunnerTestElements, useTestElementActions } from '@sudobility/testomniac_client';
+import { useEnvironmentTestElements, useTestElementActions } from '@sudobility/testomniac_client';
 import type { TestActionResponse, TestElementResponse } from '@sudobility/testomniac_types';
 import { useLocalizedNavigate } from '../hooks/useLocalizedNavigate';
 import { CONSTANTS } from '../config/constants';
@@ -111,10 +111,10 @@ export default function TestElementDetailPage() {
     testElements,
     isLoading: elementsLoading,
     error: elementsError,
-  } = useRunnerTestElements({
+  } = useEnvironmentTestElements({
     networkClient,
     baseUrl: CONSTANTS.API_URL,
-    runnerId: Number(envId),
+    envId: Number(envId),
     token: token ?? '',
     enabled: !!envId && !!token,
   });
