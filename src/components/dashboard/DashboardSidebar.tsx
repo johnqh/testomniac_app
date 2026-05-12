@@ -18,6 +18,7 @@ interface DashboardSidebarProps {
 
 const MENU_ITEMS = [
   { label: 'Bundles', path: 'bundles' },
+  { label: 'Pages', path: 'pages' },
   { label: 'Surfaces', path: 'test-surfaces' },
   { label: 'Test Elements', path: 'test-elements' },
   { label: 'Scenarios', path: 'test-scenarios' },
