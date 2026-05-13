@@ -80,6 +80,21 @@ export default function ScaffoldsPage() {
                   <div className="text-xs font-mono text-gray-500 dark:text-gray-400 mt-0.5">
                     {scaffold.type} · Element #{scaffold.htmlElementId}
                   </div>
+                  {Array.isArray((scaffold as unknown as { pagePaths?: string[] }).pagePaths) &&
+                    (scaffold as unknown as { pagePaths: string[] }).pagePaths.length > 0 && (
+                      <div className="flex flex-wrap gap-1 mt-1">
+                        {(scaffold as unknown as { pagePaths: string[] }).pagePaths.map(
+                          (path: string) => (
+                            <span
+                              key={path}
+                              className="inline-block text-xs font-mono px-1.5 py-0.5 rounded bg-blue-50 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300"
+                            >
+                              {path}
+                            </span>
+                          )
+                        )}
+                      </div>
+                    )}
                 </div>
                 {scaffold.htmlHash && (
                   <div className="text-xs font-mono text-gray-400 dark:text-gray-500">

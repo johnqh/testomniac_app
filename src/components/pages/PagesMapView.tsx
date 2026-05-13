@@ -15,20 +15,19 @@ import {
   Position,
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
-import dagre from 'dagre';
 import { useLocalizedNavigate } from '../../hooks/useLocalizedNavigate';
-import { ArrowTopRightOnSquareIcon, CursorArrowRaysIcon } from '@heroicons/react/20/solid';
 
 // --- Constants ---
 
 const PAGE_NODE_WIDTH = 200;
 const PAGE_NODE_HEIGHT = 60;
-const ACTION_NODE_SIZE = 40;
+const ROW_GAP = 120;
+const COL_GAP = 250;
 const MAP_TEST_TYPES = new Set(['navigation', 'interaction']);
 
 // --- Custom Nodes ---
 
-function PageNode({ data }: { data: { label: string; isExternal: boolean } }) {
+function PageNode({ data }: { data: { label: string; isExternal: boolean; count: number } }) {
   const borderColor = data.isExternal ? '#f97316' : '#374151';
 
   return (
@@ -39,40 +38,18 @@ function PageNode({ data }: { data: { label: string; isExternal: boolean } }) {
         width: PAGE_NODE_WIDTH,
         minHeight: PAGE_NODE_HEIGHT,
         display: 'flex',
+        flexDirection: 'column',
         alignItems: 'center',
         justifyContent: 'center',
       }}
     >
       <Handle type="target" position={Position.Top} className="!bg-gray-400" />
-      <span className="truncate block max-w-[170px] text-center text-gray-900 dark:text-gray-100">
+      <span className="block max-w-[170px] truncate text-center text-gray-900 dark:text-gray-100">
         {data.label}
       </span>
-      <Handle type="source" position={Position.Bottom} className="!bg-gray-400" />
-    </div>
-  );
-}
-
-function ActionCircleNode({ data }: { data: { actionType: string; count: number } }) {
-  const isNavigation = data.actionType === 'navigation';
-
-  return (
-    <div
-      className="flex items-center justify-center rounded-full bg-gray-200 dark:bg-gray-700"
-      style={{ width: ACTION_NODE_SIZE, height: ACTION_NODE_SIZE }}
-    >
-      <Handle type="target" position={Position.Top} className="!bg-gray-400" />
-      <div className="relative flex items-center justify-center">
-        {isNavigation ? (
-          <ArrowTopRightOnSquareIcon className="h-4 w-4 text-gray-600 dark:text-gray-300" />
-        ) : (
-          <CursorArrowRaysIcon className="h-4 w-4 text-gray-600 dark:text-gray-300" />
-        )}
-        {data.count > 1 && (
-          <span className="absolute -right-3 -top-3 rounded-full bg-blue-600 px-1.5 py-0.5 text-[10px] font-semibold text-white">
-            {data.count}
-          </span>
-        )}
-      </div>
+      {data.count > 1 && (
+        <span className="text-[10px] text-gray-400 dark:text-gray-500">{data.count} URLs</span>
+      )}
       <Handle type="source" position={Position.Bottom} className="!bg-gray-400" />
     </div>
   );
@@ -80,54 +57,9 @@ function ActionCircleNode({ data }: { data: { actionType: string; count: number 
 
 const nodeTypes: NodeTypes = {
   pageNode: PageNode,
-  actionCircle: ActionCircleNode,
 };
 
-// --- Layout ---
-
-function layoutGraph(nodes: Node[], edges: Edge[]): Node[] {
-  const g = new dagre.graphlib.Graph();
-  g.setDefaultEdgeLabel(() => ({}));
-  g.setGraph({ rankdir: 'TB', nodesep: 80, ranksep: 100 });
-
-  nodes.forEach(node => {
-    const isAction = node.type === 'actionCircle';
-    g.setNode(node.id, {
-      width: isAction ? ACTION_NODE_SIZE : PAGE_NODE_WIDTH,
-      height: isAction ? ACTION_NODE_SIZE : PAGE_NODE_HEIGHT,
-    });
-  });
-
-  edges.forEach(edge => {
-    g.setEdge(edge.source, edge.target);
-  });
-
-  dagre.layout(g);
-
-  return nodes.map(node => {
-    const pos = g.node(node.id);
-    const isAction = node.type === 'actionCircle';
-    const w = isAction ? ACTION_NODE_SIZE : PAGE_NODE_WIDTH;
-    const h = isAction ? ACTION_NODE_SIZE : PAGE_NODE_HEIGHT;
-    return {
-      ...node,
-      position: {
-        x: pos.x - w / 2,
-        y: pos.y - h / 2,
-      },
-    };
-  });
-}
-
-// --- Component ---
-
-interface PagesMapViewProps {
-  pages: PageResponse[];
-  testInteractions: TestInteractionResponse[];
-  envId: string;
-  entitySlug: string;
-  runId?: string;
-}
+// --- Helpers ---
 
 function normalizePath(path: string | null | undefined): string | null {
   if (!path) return null;
@@ -150,6 +82,59 @@ function normalizePath(path: string | null | undefined): string | null {
   }
 }
 
+/** Replace numeric IDs, UUIDs, and long hex strings with `:param`. */
+function patternizePath(pathname: string): string {
+  const segments = pathname.split('/');
+  const result = segments.map(seg => {
+    if (!seg) return seg;
+    // Purely numeric (e.g. /products/42)
+    if (/^\d+$/.test(seg)) return ':param';
+    // UUID (e.g. 550e8400-e29b-41d4-a716-446655440000)
+    if (/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(seg))
+      return ':param';
+    // Long hex string (≥ 12 chars, e.g. hash-based IDs)
+    if (/^[0-9a-f]{12,}$/i.test(seg)) return ':param';
+    return seg;
+  });
+  return result.join('/') || '/';
+}
+
+function getConsolidationKey(page: PageResponse): string {
+  // Always normalize: strip query params / hash, trailing slashes,
+  // then collapse dynamic segments so parameterised URLs merge.
+  const raw = page.routeKey || page.relativePath;
+  const isExternal = page.relativePath.startsWith('http');
+
+  if (isExternal) {
+    try {
+      const url = new URL(page.relativePath);
+      const pathname = url.pathname === '/' ? '' : url.pathname.replace(/\/+$/, '');
+      return `${url.host}${patternizePath(pathname)}`;
+    } catch {
+      return page.relativePath;
+    }
+  }
+
+  const normalized = normalizePath(raw);
+  if (normalized) return patternizePath(normalized);
+  return raw;
+}
+
+function getPathDepth(path: string): number {
+  if (path === '/') return 0;
+  return path.split('/').filter(Boolean).length;
+}
+
+// --- Component ---
+
+interface PagesMapViewProps {
+  pages: PageResponse[];
+  testInteractions: TestInteractionResponse[];
+  envId: string;
+  entitySlug: string;
+  runId?: string;
+}
+
 export function PagesMapView({
   pages,
   testInteractions,
@@ -161,182 +146,158 @@ export function PagesMapView({
   const pageBasePath = runId
     ? `/dashboard/${entitySlug}/environments/${envId}/runs/${runId}/pages`
     : `/dashboard/${entitySlug}/environments/${envId}/pages`;
-  const { mapNodes, mapEdges, hiddenInteractionCount } = useMemo(() => {
-    const pageIdByPath = new Map<string, number>();
+
+  const { initialNodes, initialEdges, hiddenInteractionCount } = useMemo(() => {
+    if (pages.length === 0)
+      return { initialNodes: [], initialEdges: [], hiddenInteractionCount: 0 };
+
+    // --- 1. Consolidate pages by routeKey / normalized path ---
+    const consolidated = new Map<string, { pageIds: number[]; isExternal: boolean }>();
 
     for (const page of pages) {
-      const relativePath = normalizePath(page.relativePath);
-      const routeKey = normalizePath(page.routeKey);
-      if (relativePath) pageIdByPath.set(relativePath, page.id);
-      if (routeKey) pageIdByPath.set(routeKey, page.id);
-    }
-
-    const rawEdges = testInteractions
-      .filter(element => MAP_TEST_TYPES.has(element.testType))
-      .map(element => {
-        const normalizedStartingPath = normalizePath(element.startingPath);
-        const inferredPathPageId = normalizedStartingPath
-          ? (pageIdByPath.get(normalizedStartingPath) ?? null)
-          : null;
-        const sourcePageId =
-          element.testType === 'navigation' ? null : (element.pageId ?? inferredPathPageId);
-        const targetPageId =
-          element.targetPageId ??
-          (element.testType === 'navigation' ? (element.pageId ?? inferredPathPageId) : null);
-
-        return {
-          id: String(element.id),
-          sourcePageId,
-          targetPageId,
-          testInteractionId: element.id,
-          testType: element.testType,
-          title: element.title,
-        };
-      })
-      .filter(edge => {
-        if (edge.testType === 'navigation') {
-          return edge.targetPageId != null;
-        }
-
-        if (edge.sourcePageId == null || edge.targetPageId == null) {
-          return false;
-        }
-
-        if (edge.sourcePageId === edge.targetPageId) {
-          return false;
-        }
-
-        return true;
-      });
-
-    const hiddenInteractionCount = testInteractions.filter(
-      element =>
-        element.testType === 'interaction' &&
-        !rawEdges.some(edge => edge.testInteractionId === element.id)
-    ).length;
-
-    const edgeMap = new Map<
-      string,
-      {
-        id: string;
-        sourcePageId: number | null;
-        targetPageId: number | null;
-        testType: string;
-        title: string;
-        count: number;
-      }
-    >();
-
-    for (const edge of rawEdges) {
-      const key = `${edge.testType}:${edge.sourcePageId ?? 'root'}:${edge.targetPageId ?? 'none'}`;
-      const existing = edgeMap.get(key);
+      const key = getConsolidationKey(page);
+      const existing = consolidated.get(key);
       if (existing) {
-        existing.count += 1;
-        continue;
-      }
-      edgeMap.set(key, {
-        id: key,
-        sourcePageId: edge.sourcePageId,
-        targetPageId: edge.targetPageId,
-        testType: edge.testType,
-        title: edge.title,
-        count: 1,
-      });
-    }
-
-    const edges = Array.from(edgeMap.values());
-
-    const countMap = new Map<number, number>();
-    for (const edge of edges) {
-      if (edge.sourcePageId != null) {
-        countMap.set(edge.sourcePageId, (countMap.get(edge.sourcePageId) ?? 0) + 1);
-      }
-      if (edge.targetPageId != null) {
-        countMap.set(edge.targetPageId, (countMap.get(edge.targetPageId) ?? 0) + 1);
+        existing.pageIds.push(page.id);
+      } else {
+        consolidated.set(key, {
+          pageIds: [page.id],
+          isExternal: page.relativePath.startsWith('http'),
+        });
       }
     }
 
-    const nodes = pages.map(page => ({
-      id: String(page.id),
-      relativePath: page.relativePath,
-      routeKey: page.routeKey,
-      isExternal: page.relativePath.startsWith('http'),
-      testInteractionCount: countMap.get(page.id) ?? 0,
+    const nodeEntries = Array.from(consolidated.entries()).map(([path, data]) => ({
+      path,
+      ...data,
+      depth: getPathDepth(path),
     }));
 
-    return { mapNodes: nodes, mapEdges: edges, hiddenInteractionCount };
-  }, [pages, testInteractions]);
-
-  const { initialNodes, initialEdges } = useMemo(() => {
-    if (mapNodes.length === 0) return { initialNodes: [], initialEdges: [] };
-
-    const rfNodes: Node[] = [];
-    const rfEdges: Edge[] = [];
-
-    // Create page nodes
-    for (const pn of mapNodes) {
-      rfNodes.push({
-        id: `page-${pn.id}`,
-        type: 'pageNode',
-        data: {
-          label: pn.routeKey || pn.relativePath,
-          isExternal: pn.isExternal,
-          pageId: pn.id,
-        },
-        position: { x: 0, y: 0 },
-      });
+    // --- 2. Map original page IDs → consolidated path ---
+    const pageIdToPath = new Map<number, string>();
+    for (const entry of nodeEntries) {
+      for (const pid of entry.pageIds) {
+        pageIdToPath.set(pid, entry.path);
+      }
     }
 
-    // Create action circle nodes and edges from map edges
-    for (const edge of mapEdges) {
-      const actionNodeId = `action-${edge.id}`;
+    // --- 3. Position nodes by depth (rows) ---
+    const depthGroups = new Map<number, typeof nodeEntries>();
+    for (const entry of nodeEntries) {
+      const arr = depthGroups.get(entry.depth) || [];
+      arr.push(entry);
+      depthGroups.set(entry.depth, arr);
+    }
 
-      rfNodes.push({
-        id: actionNodeId,
-        type: 'actionCircle',
-        data: { actionType: edge.testType, count: edge.count },
-        position: { x: 0, y: 0 },
-      });
+    const sortedDepths = Array.from(depthGroups.keys()).sort((a, b) => a - b);
+    const rfNodes: Node[] = [];
 
-      if (edge.sourcePageId == null) {
-        // Navigation (direct URL entry): circle -> target page
-        if (edge.targetPageId != null) {
-          rfEdges.push({
-            id: `e-${edge.id}-to-target`,
-            source: actionNodeId,
-            target: `page-${edge.targetPageId}`,
-            type: 'smoothstep',
-            markerEnd: { type: MarkerType.ArrowClosed },
-            style: { stroke: '#94a3b8' },
-          });
-        }
-      } else {
-        // Interaction: source page -> circle -> target page
-        rfEdges.push({
-          id: `e-${edge.id}-from-source`,
-          source: `page-${edge.sourcePageId}`,
-          target: actionNodeId,
-          type: 'smoothstep',
-          markerEnd: { type: MarkerType.ArrowClosed },
-          style: { stroke: '#94a3b8' },
+    for (let rowIdx = 0; rowIdx < sortedDepths.length; rowIdx++) {
+      const group = depthGroups.get(sortedDepths[rowIdx])!;
+      group.sort((a, b) => a.path.localeCompare(b.path));
+      const totalWidth = group.length * COL_GAP;
+      const startX = -totalWidth / 2 + COL_GAP / 2;
+
+      for (let i = 0; i < group.length; i++) {
+        const entry = group[i];
+        rfNodes.push({
+          id: entry.path,
+          type: 'pageNode',
+          data: {
+            label: entry.path,
+            isExternal: entry.isExternal,
+            count: entry.pageIds.length,
+            pageIds: entry.pageIds,
+          },
+          position: {
+            x: startX + i * COL_GAP,
+            y: rowIdx * ROW_GAP,
+          },
         });
+      }
+    }
 
-        if (edge.targetPageId != null) {
+    // --- 4. URL hierarchy edges (parent → child) ---
+    const pathSet = new Set(nodeEntries.map(n => n.path));
+    const rfEdges: Edge[] = [];
+    const edgeKeySet = new Set<string>();
+
+    for (const entry of nodeEntries) {
+      if (entry.path === '/' || entry.isExternal) continue;
+      const segments = entry.path.split('/').filter(Boolean);
+      for (let i = segments.length - 1; i >= 0; i--) {
+        const parentPath = i === 0 ? '/' : '/' + segments.slice(0, i).join('/');
+        if (pathSet.has(parentPath)) {
+          const key = `${parentPath}\0${entry.path}`;
+          edgeKeySet.add(key);
           rfEdges.push({
-            id: `e-${edge.id}-to-target`,
-            source: actionNodeId,
-            target: `page-${edge.targetPageId}`,
+            id: `h-${rfEdges.length}`,
+            source: parentPath,
+            target: entry.path,
             type: 'smoothstep',
-            markerEnd: { type: MarkerType.ArrowClosed },
             style: { stroke: '#94a3b8' },
+            markerEnd: {
+              type: MarkerType.ArrowClosed,
+              color: '#94a3b8',
+            },
           });
+          break;
         }
       }
     }
 
-    const layoutNodes = layoutGraph(rfNodes, rfEdges);
-    return { initialNodes: layoutNodes, initialEdges: rfEdges };
-  }, [mapNodes, mapEdges]);
+    // --- 5. Test interaction edges (cross-page) ---
+    let hiddenInteractionCount = 0;
+    const interactionCounts = new Map<string, { source: string; target: string; count: number }>();
+
+    for (const ti of testInteractions) {
+      if (!MAP_TEST_TYPES.has(ti.testType)) continue;
+
+      const sourcePath = ti.pageId != null ? (pageIdToPath.get(ti.pageId) ?? null) : null;
+      const targetPath =
+        ti.targetPageId != null ? (pageIdToPath.get(ti.targetPageId) ?? null) : null;
+
+      const src = ti.testType === 'navigation' ? null : sourcePath;
+      const tgt = targetPath ?? (ti.testType === 'navigation' ? sourcePath : null);
+
+      if (src && tgt && src !== tgt) {
+        const key = `${src}\0${tgt}`;
+        const existing = interactionCounts.get(key);
+        if (existing) {
+          existing.count++;
+        } else {
+          interactionCounts.set(key, { source: src, target: tgt, count: 1 });
+        }
+      } else {
+        hiddenInteractionCount++;
+      }
+    }
+
+    for (const [key, edge] of interactionCounts) {
+      if (!edgeKeySet.has(key)) {
+        edgeKeySet.add(key);
+        rfEdges.push({
+          id: `ti-${rfEdges.length}`,
+          source: edge.source,
+          target: edge.target,
+          type: 'smoothstep',
+          animated: true,
+          style: { stroke: '#60a5fa' },
+          label: edge.count > 1 ? String(edge.count) : undefined,
+          markerEnd: {
+            type: MarkerType.ArrowClosed,
+            color: '#60a5fa',
+          },
+        });
+      }
+    }
+
+    return {
+      initialNodes: rfNodes,
+      initialEdges: rfEdges,
+      hiddenInteractionCount,
+    };
+  }, [pages, testInteractions]);
 
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
@@ -348,14 +309,15 @@ export function PagesMapView({
 
   const handleNodeDoubleClick = useCallback(
     (_: React.MouseEvent, node: Node) => {
-      if (node.type === 'pageNode' && node.data.pageId) {
-        navigate(`${pageBasePath}/${node.data.pageId}`);
+      const pageIds = node.data.pageIds as number[] | undefined;
+      if (pageIds && pageIds.length > 0) {
+        navigate(`${pageBasePath}/${pageIds[0]}`);
       }
     },
     [navigate, pageBasePath]
   );
 
-  if (mapNodes.length === 0) {
+  if (pages.length === 0) {
     return (
       <div className="flex h-[500px] items-center justify-center rounded-lg border border-gray-200 bg-gray-50 dark:border-gray-700 dark:bg-gray-800">
         <p className="text-gray-500 dark:text-gray-400">
@@ -369,9 +331,8 @@ export function PagesMapView({
     <div className="space-y-2">
       {hiddenInteractionCount > 0 && (
         <p className="text-xs text-gray-500 dark:text-gray-400">
-          {hiddenInteractionCount} interaction case
-          {hiddenInteractionCount === 1 ? '' : 's'} omitted because no destination page was
-          recorded.
+          {hiddenInteractionCount} interaction
+          {hiddenInteractionCount === 1 ? '' : 's'} omitted (no cross-page connection).
         </p>
       )}
       <div className="h-[600px] w-full overflow-hidden rounded-lg border border-gray-200 dark:border-gray-700">
