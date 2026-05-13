@@ -1,160 +1,18 @@
 import { useState } from 'react';
+import { useParams } from 'react-router-dom';
 import {
   useRunnerTestSurfaceBundles,
-  useBundleSurfaces,
-  useBundleInteractions,
-  useBundleScenarios,
+  useCreateTestSurfaceBundle,
 } from '@sudobility/testomniac_client';
-import type {
-  TestSurfaceBundleResponse,
-  TestSurfaceResponse,
-  TestInteractionResponse,
-  TestScenarioResponse,
-} from '@sudobility/testomniac_types';
+import type { TestSurfaceBundleResponse } from '@sudobility/testomniac_types';
 import SEOHead from '@/components/SEOHead';
 import { CONSTANTS } from '../config/constants';
 import { useDashboardEnvironmentContext } from '../hooks/useDashboardEnvironmentContext';
-
-type ContentTab = 'surfaces' | 'interactions' | 'scenarios';
-
-function BundleContents({
-  runnerId,
-  bundle,
-}: {
-  runnerId: number;
-  bundle: TestSurfaceBundleResponse;
-}) {
-  const [tab, setTab] = useState<ContentTab>('surfaces');
-  const { networkClient, token } = useDashboardEnvironmentContext();
-
-  const { surfaces, isLoading: surfacesLoading } = useBundleSurfaces({
-    networkClient,
-    baseUrl: CONSTANTS.API_URL,
-    runnerId,
-    bundleId: bundle.id,
-    token,
-    enabled: tab === 'surfaces',
-  });
-
-  const { interactions, isLoading: interactionsLoading } = useBundleInteractions({
-    networkClient,
-    baseUrl: CONSTANTS.API_URL,
-    runnerId,
-    bundleId: bundle.id,
-    token,
-    enabled: tab === 'interactions',
-  });
-
-  const { scenarios, isLoading: scenariosLoading } = useBundleScenarios({
-    networkClient,
-    baseUrl: CONSTANTS.API_URL,
-    runnerId,
-    bundleId: bundle.id,
-    token,
-    enabled: tab === 'scenarios',
-  });
-
-  const tabs: { key: ContentTab; label: string; count: number }[] = [
-    { key: 'surfaces', label: 'Surfaces', count: surfaces.length },
-    { key: 'interactions', label: 'Interactions', count: interactions.length },
-    { key: 'scenarios', label: 'Scenarios', count: scenarios.length },
-  ];
-
-  return (
-    <div className="mt-3">
-      <div className="flex border-b border-gray-200 dark:border-gray-700">
-        {tabs.map(t => (
-          <button
-            key={t.key}
-            onClick={() => setTab(t.key)}
-            className={`px-3 py-1.5 text-xs font-medium border-b-2 transition-colors ${
-              tab === t.key
-                ? 'border-blue-500 text-blue-600 dark:text-blue-400'
-                : 'border-transparent text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300'
-            }`}
-          >
-            {t.label}
-            {t.count > 0 && (
-              <span className="ml-1 text-[10px] text-gray-400 dark:text-gray-500">({t.count})</span>
-            )}
-          </button>
-        ))}
-      </div>
-
-      <div className="mt-2 space-y-1">
-        {tab === 'surfaces' && (
-          <>
-            {surfacesLoading && <LoadingRow />}
-            {!surfacesLoading && surfaces.length === 0 && <EmptyRow label="surfaces" />}
-            {surfaces.map((s: TestSurfaceResponse) => (
-              <div
-                key={s.id}
-                className="px-3 py-2 rounded border border-gray-100 dark:border-gray-700 text-sm text-gray-800 dark:text-gray-200"
-              >
-                <div className="font-medium">{s.title}</div>
-                <div className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
-                  {s.startingPath || '/'} · priority {s.priority}
-                </div>
-              </div>
-            ))}
-          </>
-        )}
-
-        {tab === 'interactions' && (
-          <>
-            {interactionsLoading && <LoadingRow />}
-            {!interactionsLoading && interactions.length === 0 && <EmptyRow label="interactions" />}
-            {interactions.map((i: TestInteractionResponse) => (
-              <div
-                key={i.id}
-                className="px-3 py-2 rounded border border-gray-100 dark:border-gray-700 text-sm text-gray-800 dark:text-gray-200"
-              >
-                <div className="font-medium">{i.title}</div>
-                <div className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
-                  {i.testType} · {i.startingPath || '/'}
-                </div>
-              </div>
-            ))}
-          </>
-        )}
-
-        {tab === 'scenarios' && (
-          <>
-            {scenariosLoading && <LoadingRow />}
-            {!scenariosLoading && scenarios.length === 0 && <EmptyRow label="scenarios" />}
-            {scenarios.map((s: TestScenarioResponse) => (
-              <div
-                key={s.id}
-                className="px-3 py-2 rounded border border-gray-100 dark:border-gray-700 text-sm text-gray-800 dark:text-gray-200"
-              >
-                <div className="font-medium">{s.title}</div>
-                <div className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
-                  {s.startingPath} · {s.sizeClass}
-                </div>
-              </div>
-            ))}
-          </>
-        )}
-      </div>
-    </div>
-  );
-}
-
-function LoadingRow() {
-  return (
-    <div className="text-xs text-gray-400 dark:text-gray-500 py-2 text-center">Loading...</div>
-  );
-}
-
-function EmptyRow({ label }: { label: string }) {
-  return (
-    <div className="text-xs text-gray-400 dark:text-gray-500 py-2 text-center">
-      No {label} in this bundle
-    </div>
-  );
-}
+import { useLocalizedNavigate } from '../hooks/useLocalizedNavigate';
 
 export default function BundlesPage() {
+  const { entitySlug, envId } = useParams<{ entitySlug: string; envId: string }>();
+  const { navigate } = useLocalizedNavigate();
   const {
     networkClient,
     token,
@@ -163,15 +21,46 @@ export default function BundlesPage() {
     error: contextError,
   } = useDashboardEnvironmentContext();
 
-  const [expandedId, setExpandedId] = useState<number | null>(null);
+  const [showForm, setShowForm] = useState(false);
+  const [title, setTitle] = useState('');
+  const [description, setDescription] = useState('');
+  const [formError, setFormError] = useState<string | null>(null);
 
-  const { bundles, isLoading, error } = useRunnerTestSurfaceBundles({
+  const runnerId = primaryRunner?.id ?? 0;
+  const basePath = `/dashboard/${entitySlug}/environments/${envId}`;
+
+  const { bundles, isLoading, error, refetch } = useRunnerTestSurfaceBundles({
     networkClient,
     baseUrl: CONSTANTS.API_URL,
-    runnerId: primaryRunner?.id ?? 0,
+    runnerId,
     token,
     enabled: !!token && !!primaryRunner,
   });
+
+  const { createBundle, isCreating } = useCreateTestSurfaceBundle({
+    networkClient,
+    baseUrl: CONSTANTS.API_URL,
+    runnerId,
+    token,
+  });
+
+  const handleCreate = async () => {
+    if (!title.trim()) return;
+    setFormError(null);
+    try {
+      await createBundle({
+        runnerId,
+        title: title.trim(),
+        description: description.trim() || undefined,
+      });
+      setTitle('');
+      setDescription('');
+      setShowForm(false);
+      refetch();
+    } catch (err) {
+      setFormError(err instanceof Error ? err.message : 'Failed to create bundle');
+    }
+  };
 
   if (contextLoading || isLoading) {
     return (
@@ -194,9 +83,66 @@ export default function BundlesPage() {
   return (
     <div className="p-6">
       <SEOHead title="Bundles" description="" noIndex />
-      <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-6">Test Bundles</h1>
+      <div className="flex items-center justify-between mb-6">
+        <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">Test Bundles</h1>
+        {primaryRunner && (
+          <button
+            onClick={() => setShowForm(!showForm)}
+            className="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition-colors"
+          >
+            {showForm ? 'Cancel' : 'New Bundle'}
+          </button>
+        )}
+      </div>
 
-      {bundles.length === 0 ? (
+      {showForm && (
+        <div className="mb-6 p-4 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 space-y-3">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+              Title
+            </label>
+            <input
+              type="text"
+              value={title}
+              onChange={e => setTitle(e.target.value)}
+              placeholder="e.g., Checkout Flow Tests"
+              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 text-sm"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+              Description
+            </label>
+            <input
+              type="text"
+              value={description}
+              onChange={e => setDescription(e.target.value)}
+              placeholder="Optional description"
+              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 text-sm"
+            />
+          </div>
+          {formError && <p className="text-sm text-red-600 dark:text-red-400">{formError}</p>}
+          <div className="flex gap-2">
+            <button
+              type="button"
+              onClick={handleCreate}
+              disabled={isCreating || !title.trim()}
+              className="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 disabled:opacity-50 transition-colors"
+            >
+              {isCreating ? 'Creating...' : 'Create Bundle'}
+            </button>
+            <button
+              type="button"
+              onClick={() => setShowForm(false)}
+              className="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 rounded-lg border border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+            >
+              Cancel
+            </button>
+          </div>
+        </div>
+      )}
+
+      {bundles.length === 0 && !showForm ? (
         <div className="rounded-xl border border-dashed border-gray-200 dark:border-gray-700 p-8 text-center">
           <div className="text-lg font-semibold text-gray-900 dark:text-gray-100">
             No bundles yet
@@ -206,37 +152,30 @@ export default function BundlesPage() {
           </p>
         </div>
       ) : (
-        <div className="space-y-3">
+        <div className="space-y-2">
           {bundles.map((bundle: TestSurfaceBundleResponse) => (
-            <div
+            <button
               key={bundle.id}
-              className="rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800"
+              onClick={() => navigate(`${basePath}/bundles/${bundle.id}`)}
+              className="w-full text-left px-4 py-3 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors flex items-center justify-between"
             >
-              <button
-                onClick={() => setExpandedId(expandedId === bundle.id ? null : bundle.id)}
-                className="w-full px-4 py-3 text-left flex items-center justify-between"
-              >
-                <div>
-                  <div className="text-sm font-medium text-gray-900 dark:text-gray-100">
-                    {bundle.title}
-                  </div>
-                  {bundle.description && (
-                    <div className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
-                      {bundle.description}
-                    </div>
+              <div>
+                <div className="text-sm font-medium text-gray-900 dark:text-gray-100">
+                  {bundle.title}
+                  {bundle.title === 'Discovery' && (
+                    <span className="ml-2 text-[11px] px-1.5 py-0.5 rounded bg-gray-100 dark:bg-gray-700 text-gray-500 dark:text-gray-400">
+                      auto
+                    </span>
                   )}
                 </div>
-                <span className="text-xs text-gray-400 dark:text-gray-500">
-                  {expandedId === bundle.id ? '▲' : '▼'}
-                </span>
-              </button>
-
-              {expandedId === bundle.id && primaryRunner && (
-                <div className="px-4 pb-4">
-                  <BundleContents runnerId={primaryRunner.id} bundle={bundle} />
-                </div>
-              )}
-            </div>
+                {bundle.description && (
+                  <div className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
+                    {bundle.description}
+                  </div>
+                )}
+              </div>
+              <span className="text-gray-400 dark:text-gray-500 text-xs">&rarr;</span>
+            </button>
           ))}
         </div>
       )}

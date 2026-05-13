@@ -33,6 +33,7 @@ const RunnerGraphPage = lazy(() => import('./pages/RunnerGraphPage'));
 const PageGraphPage = lazy(() => import('./pages/PageGraphPage'));
 const RunRedirect = lazy(() => import('./pages/RunRedirect'));
 const BundlesPage = lazy(() => import('./pages/BundlesPage'));
+const BundleDetailPage = lazy(() => import('./pages/BundleDetailPage'));
 const SchedulesPage = lazy(() => import('./pages/SchedulesPage'));
 const TestSurfacesListPage = lazy(() => import('./pages/TestSurfacesListPage'));
 const TestSurfaceDetailPage = lazy(() => import('./pages/TestSurfaceDetailPage'));
@@ -137,6 +138,10 @@ function AppRoutes() {
 
                   {/* Environment dashboard routes */}
                   <Route path="environments/:envId/bundles" element={<BundlesPage />} />
+                  <Route
+                    path="environments/:envId/bundles/:bundleId"
+                    element={<BundleDetailPage />}
+                  />
                   <Route
                     path="environments/:envId/test-surfaces"
                     element={<TestSurfacesListPage />}
