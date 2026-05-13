@@ -14,6 +14,8 @@ import type { TestInteractionResponse } from '@sudobility/testomniac_types';
 import SEOHead from '@/components/SEOHead';
 import { CONSTANTS } from '../config/constants';
 import { useLocalizedNavigate } from '../hooks/useLocalizedNavigate';
+import { AddScenarioForm } from '../components/scenarios/AddScenarioForm';
+import { useDashboardEnvironmentContext } from '../hooks/useDashboardEnvironmentContext';
 
 export default function PageDetailPage() {
   const { pageId, envId, entitySlug, runId } = useParams<{
@@ -24,6 +26,8 @@ export default function PageDetailPage() {
   }>();
   const { networkClient, token } = useApi();
   const { navigate } = useLocalizedNavigate();
+  const { primaryRunner } = useDashboardEnvironmentContext();
+  const [showScenarioForm, setShowScenarioForm] = useState(false);
 
   const numericPageId = Number(pageId);
 
@@ -62,6 +66,7 @@ export default function PageDetailPage() {
   });
 
   const envPages = runScoped ? runPagesQuery.pages : envPagesQuery.pages;
+  const currentPage = envPages.find(p => p.id === numericPageId);
   const testInteractions = runScoped
     ? runElementsQuery.testInteractions
     : envElementsQuery.testInteractions;
@@ -136,15 +141,38 @@ export default function PageDetailPage() {
             {runId ? ` • Run #${runId}` : ` • Page #${pageId}`}
           </p>
         </div>
-        <button
-          onClick={() =>
-            navigate(`/dashboard/${entitySlug}/environments/${envId}/pages/${pageId}/graph`)
-          }
-          className="px-4 py-2 text-sm rounded-lg border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
-        >
-          View Page Graph
-        </button>
+        <div className="flex gap-2">
+          {primaryRunner && (
+            <button
+              onClick={() => setShowScenarioForm(prev => !prev)}
+              className="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition-colors"
+            >
+              {showScenarioForm ? 'Cancel' : 'Add Scenario'}
+            </button>
+          )}
+          <button
+            onClick={() =>
+              navigate(`/dashboard/${entitySlug}/environments/${envId}/pages/${pageId}/graph`)
+            }
+            className="px-4 py-2 text-sm rounded-lg border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+          >
+            View Page Graph
+          </button>
+        </div>
       </div>
+
+      {showScenarioForm && primaryRunner && (
+        <div className="mb-6">
+          <AddScenarioForm
+            networkClient={networkClient}
+            token={token ?? ''}
+            runnerId={primaryRunner.id}
+            defaultStartingPath={summary?.relativePath ?? currentPage?.relativePath ?? '/'}
+            onCreated={() => setShowScenarioForm(false)}
+            onCancel={() => setShowScenarioForm(false)}
+          />
+        </div>
+      )}
 
       {summary && (
         <>

@@ -1,15 +1,12 @@
 import { useState } from 'react';
 import { useParams } from 'react-router-dom';
-import {
-  useRunnerTestScenarios,
-  useCreateTestScenario,
-  useDeleteTestScenario,
-} from '@sudobility/testomniac_client';
+import { useRunnerTestScenarios, useDeleteTestScenario } from '@sudobility/testomniac_client';
 import type { TestScenarioResponse } from '@sudobility/testomniac_types';
 import SEOHead from '@/components/SEOHead';
 import { useLocalizedNavigate } from '../hooks/useLocalizedNavigate';
 import { CONSTANTS } from '../config/constants';
 import { StatusBadge } from '../components/scanner/StatusBadge';
+import { AddScenarioForm } from '../components/scenarios/AddScenarioForm';
 import { useDashboardEnvironmentContext } from '../hooks/useDashboardEnvironmentContext';
 
 export default function TestScenariosPage() {
@@ -23,9 +20,6 @@ export default function TestScenariosPage() {
     error: contextError,
   } = useDashboardEnvironmentContext();
   const [showForm, setShowForm] = useState(false);
-  const [title, setTitle] = useState('');
-  const [startingPath, setStartingPath] = useState('/');
-  const [prompt, setPrompt] = useState('');
 
   const { testScenarios, isLoading, error, refetch } = useRunnerTestScenarios({
     networkClient,
@@ -33,13 +27,6 @@ export default function TestScenariosPage() {
     runnerId: primaryRunner?.id ?? 0,
     token,
     enabled: !!envId && !!token && !!primaryRunner,
-  });
-
-  const { createTestScenario, isCreating } = useCreateTestScenario({
-    networkClient,
-    baseUrl: CONSTANTS.API_URL,
-    runnerId: primaryRunner?.id ?? 0,
-    token,
   });
 
   const { deleteTestScenario } = useDeleteTestScenario({
@@ -50,21 +37,6 @@ export default function TestScenariosPage() {
   });
 
   const basePath = `/dashboard/${entitySlug}/environments/${envId}`;
-
-  const handleCreate = async () => {
-    if (!title.trim() || !prompt.trim() || !primaryRunner) return;
-    await createTestScenario({
-      runnerId: primaryRunner.id,
-      title: title.trim(),
-      startingPath: startingPath.trim(),
-      prompt: prompt.trim(),
-    });
-    setTitle('');
-    setStartingPath('/');
-    setPrompt('');
-    setShowForm(false);
-    refetch();
-  };
 
   const handleDelete = async (scenarioId: number) => {
     await deleteTestScenario(scenarioId);
@@ -94,51 +66,18 @@ export default function TestScenariosPage() {
         </button>
       </div>
 
-      {showForm && (
-        <div className="mb-6 p-4 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 space-y-3">
-          <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-              Title
-            </label>
-            <input
-              type="text"
-              value={title}
-              onChange={e => setTitle(e.target.value)}
-              placeholder="e.g., Add dish to cart and checkout"
-              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 text-sm"
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-              Starting Path
-            </label>
-            <input
-              type="text"
-              value={startingPath}
-              onChange={e => setStartingPath(e.target.value)}
-              placeholder="e.g., /store"
-              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 text-sm"
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-              Prompt
-            </label>
-            <textarea
-              value={prompt}
-              onChange={e => setPrompt(e.target.value)}
-              placeholder="Describe the test flow in plain English. e.g., Browse the menu, add a pasta dish to the shopping cart, go to checkout, fill in shipping details, and complete the purchase."
-              rows={4}
-              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 text-sm"
-            />
-          </div>
-          <button
-            onClick={handleCreate}
-            disabled={isCreating || !title.trim() || !prompt.trim()}
-            className="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 disabled:opacity-50 transition-colors"
-          >
-            {isCreating ? 'Creating...' : 'Create Scenario'}
-          </button>
+      {showForm && primaryRunner && (
+        <div className="mb-6">
+          <AddScenarioForm
+            networkClient={networkClient}
+            token={token}
+            runnerId={primaryRunner.id}
+            onCreated={() => {
+              setShowForm(false);
+              refetch();
+            }}
+            onCancel={() => setShowForm(false)}
+          />
         </div>
       )}
 
