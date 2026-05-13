@@ -1,5 +1,6 @@
-import { useState } from 'react';
+import { useState, useMemo, useCallback } from 'react';
 import { useParams } from 'react-router-dom';
+import { useMutation } from '@tanstack/react-query';
 import {
   useRunnerTestSurfaceBundles,
   useBundleSurfaces,
@@ -7,6 +8,7 @@ import {
   useBundleScenarios,
   useUpdateTestSurfaceBundle,
   useDeleteTestSurfaceBundle,
+  TestomniacClient,
 } from '@sudobility/testomniac_client';
 import type {
   TestSurfaceResponse,
@@ -74,7 +76,11 @@ export default function BundleDetailPage() {
     token,
   });
 
-  const { surfaces, isLoading: surfacesLoading } = useBundleSurfaces({
+  const {
+    surfaces,
+    isLoading: surfacesLoading,
+    refetch: refetchSurfaces,
+  } = useBundleSurfaces({
     networkClient,
     baseUrl: CONSTANTS.API_URL,
     runnerId,
@@ -83,7 +89,11 @@ export default function BundleDetailPage() {
     enabled: !!token && !!primaryRunner && tab === 'surfaces',
   });
 
-  const { interactions, isLoading: interactionsLoading } = useBundleInteractions({
+  const {
+    interactions,
+    isLoading: interactionsLoading,
+    refetch: refetchInteractions,
+  } = useBundleInteractions({
     networkClient,
     baseUrl: CONSTANTS.API_URL,
     runnerId,
@@ -92,7 +102,11 @@ export default function BundleDetailPage() {
     enabled: !!token && !!primaryRunner && tab === 'interactions',
   });
 
-  const { scenarios, isLoading: scenariosLoading } = useBundleScenarios({
+  const {
+    scenarios,
+    isLoading: scenariosLoading,
+    refetch: refetchScenarios,
+  } = useBundleScenarios({
     networkClient,
     baseUrl: CONSTANTS.API_URL,
     runnerId,
@@ -100,6 +114,43 @@ export default function BundleDetailPage() {
     token,
     enabled: !!token && !!primaryRunner && tab === 'scenarios',
   });
+
+  const client = useMemo(
+    () => new TestomniacClient({ baseUrl: CONSTANTS.API_URL, networkClient }),
+    [networkClient]
+  );
+
+  const removeSurface = useMutation({
+    mutationFn: (surfaceId: number) =>
+      client.removeSurfaceFromBundle(runnerId, numericBundleId, surfaceId, token),
+    onSuccess: () => refetchSurfaces(),
+  });
+
+  const removeInteraction = useMutation({
+    mutationFn: (interactionId: number) =>
+      client.removeInteractionFromBundle(runnerId, numericBundleId, interactionId, token),
+    onSuccess: () => refetchInteractions(),
+  });
+
+  const removeScenario = useMutation({
+    mutationFn: (scenarioId: number) =>
+      client.removeScenarioFromBundle(runnerId, numericBundleId, scenarioId, token),
+    onSuccess: () => refetchScenarios(),
+  });
+
+  const handleRemove = useCallback(
+    async (type: ContentTab, itemId: number) => {
+      setError(null);
+      try {
+        if (type === 'surfaces') await removeSurface.mutateAsync(itemId);
+        else if (type === 'interactions') await removeInteraction.mutateAsync(itemId);
+        else await removeScenario.mutateAsync(itemId);
+      } catch (err) {
+        setError(err instanceof Error ? err.message : 'Failed to remove item');
+      }
+    },
+    [removeSurface, removeInteraction, removeScenario]
+  );
 
   const startEdit = () => {
     if (!bundle) return;
@@ -270,14 +321,25 @@ export default function BundleDetailPage() {
             {surfaces.map((s: TestSurfaceResponse) => (
               <div
                 key={s.id}
-                className="px-4 py-3 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800"
+                className="flex items-center justify-between px-4 py-3 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800"
               >
-                <div className="text-sm font-medium text-gray-900 dark:text-gray-100">
-                  {s.title}
+                <div>
+                  <div className="text-sm font-medium text-gray-900 dark:text-gray-100">
+                    {s.title}
+                  </div>
+                  <div className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
+                    {s.startingPath || '/'} · priority {s.priority}
+                  </div>
                 </div>
-                <div className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
-                  {s.startingPath || '/'} · priority {s.priority}
-                </div>
+                {!isDiscovery && (
+                  <button
+                    type="button"
+                    onClick={() => handleRemove('surfaces', s.id)}
+                    className="text-xs text-red-500 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300 shrink-0 ml-3"
+                  >
+                    Remove
+                  </button>
+                )}
               </div>
             ))}
           </>
@@ -292,14 +354,25 @@ export default function BundleDetailPage() {
             {interactions.map((i: TestInteractionResponse) => (
               <div
                 key={i.id}
-                className="px-4 py-3 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800"
+                className="flex items-center justify-between px-4 py-3 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800"
               >
-                <div className="text-sm font-medium text-gray-900 dark:text-gray-100">
-                  {i.title}
+                <div>
+                  <div className="text-sm font-medium text-gray-900 dark:text-gray-100">
+                    {i.title}
+                  </div>
+                  <div className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
+                    {i.testType} · {i.startingPath || '/'}
+                  </div>
                 </div>
-                <div className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
-                  {i.testType} · {i.startingPath || '/'}
-                </div>
+                {!isDiscovery && (
+                  <button
+                    type="button"
+                    onClick={() => handleRemove('interactions', i.id)}
+                    className="text-xs text-red-500 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300 shrink-0 ml-3"
+                  >
+                    Remove
+                  </button>
+                )}
               </div>
             ))}
           </>
@@ -312,14 +385,25 @@ export default function BundleDetailPage() {
             {scenarios.map((s: TestScenarioResponse) => (
               <div
                 key={s.id}
-                className="px-4 py-3 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800"
+                className="flex items-center justify-between px-4 py-3 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800"
               >
-                <div className="text-sm font-medium text-gray-900 dark:text-gray-100">
-                  {s.title}
+                <div>
+                  <div className="text-sm font-medium text-gray-900 dark:text-gray-100">
+                    {s.title}
+                  </div>
+                  <div className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
+                    {s.startingPath} · {s.sizeClass}
+                  </div>
                 </div>
-                <div className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
-                  {s.startingPath} · {s.sizeClass}
-                </div>
+                {!isDiscovery && (
+                  <button
+                    type="button"
+                    onClick={() => handleRemove('scenarios', s.id)}
+                    className="text-xs text-red-500 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300 shrink-0 ml-3"
+                  >
+                    Remove
+                  </button>
+                )}
               </div>
             ))}
           </>
