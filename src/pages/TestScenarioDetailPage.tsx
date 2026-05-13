@@ -5,6 +5,7 @@ import SEOHead from '@/components/SEOHead';
 import { useLocalizedNavigate } from '../hooks/useLocalizedNavigate';
 import { CONSTANTS } from '../config/constants';
 import { useDashboardEnvironmentContext } from '../hooks/useDashboardEnvironmentContext';
+import { AddToBundleButton } from '../components/bundles/AddToBundleButton';
 
 export default function TestScenarioDetailPage() {
   const { entitySlug, envId, scenarioId } = useParams<{
@@ -73,9 +74,12 @@ export default function TestScenarioDetailPage() {
         </span>
       </nav>
 
-      <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-2">
-        {scenario?.title ?? `Test Scenario #${scenarioId}`}
-      </h1>
+      <div className="flex items-center justify-between mb-2">
+        <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">
+          {scenario?.title ?? `Test Scenario #${scenarioId}`}
+        </h1>
+        <AddToBundleButton itemType="scenario" itemId={Number(scenarioId)} />
+      </div>
 
       {scenario && (
         <div className="mb-6 space-y-3">

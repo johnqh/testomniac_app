@@ -9,6 +9,7 @@ import type { TestActionResponse, TestInteractionResponse } from '@sudobility/te
 import { useLocalizedNavigate } from '../hooks/useLocalizedNavigate';
 import { CONSTANTS } from '../config/constants';
 import { StatusBadge } from '../components/scanner/StatusBadge';
+import { AddToBundleButton } from '../components/bundles/AddToBundleButton';
 
 type StoredStep = {
   action?: {
@@ -175,9 +176,12 @@ export default function TestInteractionDetailPage() {
         </span>
       </nav>
 
-      <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-2">
-        Test Interaction #{elementId}
-      </h1>
+      <div className="flex items-center justify-between mb-2">
+        <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">
+          Test Interaction #{elementId}
+        </h1>
+        <AddToBundleButton itemType="interaction" itemId={Number(elementId)} />
+      </div>
 
       {/* Metadata badges */}
       <div className="flex flex-wrap items-center gap-2 mb-6">

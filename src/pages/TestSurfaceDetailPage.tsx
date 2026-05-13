@@ -5,6 +5,7 @@ import type { TestInteractionResponse } from '@sudobility/testomniac_types';
 import { useLocalizedNavigate } from '../hooks/useLocalizedNavigate';
 import { CONSTANTS } from '../config/constants';
 import { StatusBadge } from '../components/scanner/StatusBadge';
+import { AddToBundleButton } from '../components/bundles/AddToBundleButton';
 
 function FileIcon() {
   return (
@@ -72,9 +73,12 @@ export default function TestSurfaceDetailPage() {
         <span className="text-gray-900 dark:text-gray-100 font-medium">Surface #{surfaceId}</span>
       </nav>
 
-      <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-6">
-        Test Surface #{surfaceId}
-      </h1>
+      <div className="flex items-center justify-between mb-6">
+        <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">
+          Test Surface #{surfaceId}
+        </h1>
+        <AddToBundleButton itemType="surface" itemId={Number(surfaceId)} />
+      </div>
 
       {isLoading && (
         <div className="text-sm text-gray-500 dark:text-gray-400 py-8 text-center">Loading...</div>
