@@ -34,6 +34,9 @@ export default function StartScanPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [sizeClass, setSizeClass] = useState<'desktop' | 'mobile'>('desktop');
 
+  // Scan scope
+  const [scanScopePath, setScanScopePath] = useState('');
+
   // Login credential state
   const [continueWithLogin, setContinueWithLogin] = useState(false);
   const [entityCredentialId, setEntityCredentialId] = useState('');
@@ -80,10 +83,11 @@ export default function StartScanPage() {
           url,
           sizeClass,
           ...(email ? { reportEmail: email } : {}),
+          ...(scanScopePath.trim() ? { scanScopePath: scanScopePath.trim() } : {}),
           ...(continueWithLogin
             ? {
                 continueWithLogin: true,
-                ...(entityCredentialId ? { entityCredentialId } : {}),
+                ...(entityCredentialId ? { entityCredentialId: Number(entityCredentialId) } : {}),
                 ...(loginUrl.trim() ? { loginUrl: loginUrl.trim() } : {}),
               }
             : {}),
@@ -150,6 +154,24 @@ export default function StartScanPage() {
                   Mobile
                 </button>
               </div>
+            </div>
+
+            {/* Scan Scope Path */}
+            <div>
+              <label className="block text-sm text-gray-600 dark:text-gray-400 mb-1">
+                Scope Path (optional)
+              </label>
+              <input
+                type="text"
+                value={scanScopePath}
+                onChange={e => setScanScopePath(e.target.value)}
+                placeholder="/store/"
+                className="w-full px-3 py-1.5 text-sm rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100"
+                disabled={isSubmitting}
+              />
+              <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
+                Restrict scanning to URLs under this path prefix
+              </p>
             </div>
 
             {/* Login Credential Option */}
