@@ -1,0 +1,155 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2] [cursor=pointer]: Manage consent
+  - generic [ref=e3]:
+    - link "Skip to content" [ref=e4] [cursor=pointer]:
+      - /url: "#sq-content"
+    - banner [ref=e5]:
+      - generic [ref=e6]:
+        - heading "AcademyBugs.com" [level=3] [ref=e8]:
+          - link "AcademyBugs.com" [ref=e9] [cursor=pointer]:
+            - /url: https://academybugs.com/
+        - navigation [ref=e10]:
+          - list [ref=e12]:
+            - listitem [ref=e13]:
+              - link "Examples of Bugs" [ref=e14] [cursor=pointer]:
+                - /url: https://academybugs.com/
+            - listitem [ref=e15]:
+              - link "Types of Bugs" [ref=e16] [cursor=pointer]:
+                - /url: https://academybugs.com/types/
+            - listitem [ref=e17]:
+              - link "Find Bugs" [ref=e18] [cursor=pointer]:
+                - /url: https://academybugs.com/find-bugs/
+            - listitem [ref=e19]:
+              - link "Report Bugs" [ref=e20] [cursor=pointer]:
+                - /url: https://academybugs.com/report-bugs/
+            - listitem [ref=e21]:
+              - link "" [ref=e22] [cursor=pointer]:
+                - /url: "#"
+                - generic [ref=e23]: 
+    - generic [ref=e25]:
+      - main [ref=e27]:
+        - article [ref=e28]:
+          - generic [ref=e30]:
+            - generic [ref=e31]:
+              - generic [ref=e32]:
+                - generic [ref=e33]: View
+                - link "10" [ref=e34] [cursor=pointer]:
+                  - /url: "#"
+                - link "25" [ref=e35] [cursor=pointer]:
+                  - /url: "#"
+                - link "50" [ref=e36] [cursor=pointer]:
+                  - /url: "#"
+              - generic [ref=e37]: Showing all 1 results
+              - combobox [ref=e38]:
+                - option "Default Sorting" [selected]
+                - option "Price Low-High"
+                - option "Price High-Low"
+                - option "Title A-Z"
+                - option "Title Z-A"
+                - option "Newest"
+                - option "Oldest"
+                - option "Best Rating"
+                - option "Most Viewed"
+            - text: 
+            - list:
+              - listitem [ref=e39]:
+                - generic [ref=e40]:
+                  - generic [ref=e41]:
+                    - link [ref=e42] [cursor=pointer]:
+                      - /url: https://academybugs.com/store/flamingo-tshirt/
+                    - img "Flamingo Tshirt" [ref=e46] [cursor=pointer]
+                  - heading "Flamingo Tshirt" [level=3] [ref=e47]:
+                    - link "Flamingo Tshirt" [ref=e48] [cursor=pointer]:
+                      - /url: https://academybugs.com/store/flamingo-tshirt/
+                  - generic [ref=e49]: $15.14
+                  - link "ADD TO CART" [ref=e52] [cursor=pointer]:
+                    - /url: https://academybugs.com/my-cart/?ec_action=addtocart&model_number=4881370
+                  - text:  
+      - generic [ref=e53]:
+        - heading "Select a Currency" [level=4] [ref=e54]
+        - combobox [ref=e56] [cursor=pointer]:
+          - option "USD" [selected]
+          - option "EUR"
+          - option "GBP"
+          - option "JPY"
+        - heading "Product Search" [level=4] [ref=e57]
+        - generic [ref=e59]:
+          - combobox [ref=e60]
+          - button "Search" [ref=e61] [cursor=pointer]
+        - heading "Hot Item" [level=4] [ref=e62]
+        - generic [ref=e63]:
+          - link [ref=e65] [cursor=pointer]:
+            - /url: https://academybugs.com/anchor-bracelet
+            - img [ref=e66]
+          - link "Silver Heart Bracelet" [ref=e68] [cursor=pointer]:
+            - /url: https://academybugs.com/store/heart-bracelet/
+          - generic [ref=e69]: $275.00
+        - heading "Store Menu" [level=4] [ref=e70]
+        - list [ref=e72]:
+          - listitem [ref=e73]:
+            - link "All Items" [ref=e74] [cursor=pointer]:
+              - /url: https://academybugs.com/store/all-items/
+          - listitem [ref=e75]:
+            - link "Accessories [+]" [ref=e76] [cursor=pointer]:
+              - /url: "#"
+              - text: Accessories
+              - generic [ref=e77]: "[+]"
+          - listitem [ref=e78]:
+            - link "Fashion Type [+]" [ref=e79] [cursor=pointer]:
+              - /url: "#"
+              - text: Fashion Type
+              - generic [ref=e80]: "[+]"
+          - listitem [ref=e81]:
+            - link "Women's Pants" [ref=e82] [cursor=pointer]:
+              - /url: https://academybugs.com/store/womens-pants/
+        - heading "Filter by Price" [level=4] [ref=e83]
+        - generic [ref=e84]:
+          - generic [ref=e85]:
+            - link "$15.00 - $19.99 (1)" [ref=e86] [cursor=pointer]:
+              - /url: https://academybugs.com/store/all-items/?&perpage=25&pricepoint=7
+            - link "X" [ref=e87] [cursor=pointer]:
+              - /url: https://academybugs.com/store/all-items/?&perpage=25
+          - link "$25.00 - $49.99 (2)" [ref=e89] [cursor=pointer]:
+            - /url: https://academybugs.com/store/all-items/?&perpage=25&pricepoint=2
+          - link "$50.00 - $99.99 (3)" [ref=e91] [cursor=pointer]:
+            - /url: https://academybugs.com/store/all-items/?&perpage=25&pricepoint=3
+          - link "$100.00 - $299.99 (11)" [ref=e93] [cursor=pointer]:
+            - /url: https://academybugs.com/store/all-items/?&perpage=25&pricepoint=4
+          - link "Greater Than $299.99 (1)" [ref=e95] [cursor=pointer]:
+            - /url: https://academybugs.com/store/all-items/?&perpage=25&pricepoint=5
+        - heading "Shopping Cart" [level=4] [ref=e96]
+        - link "Shopping Cart (1)" [ref=e98] [cursor=pointer]:
+          - /url: "#"
+          - generic [ref=e99]: Shopping Cart (1)
+        - heading "Your Account" [level=4] [ref=e100]
+        - generic:
+          - generic [ref=e101]:
+            - generic [ref=e102]: Email Address*
+            - textbox [ref=e103]
+          - generic [ref=e104]:
+            - generic [ref=e105]: Password*
+            - textbox [ref=e106]
+          - link "Sign Up" [ref=e108] [cursor=pointer]:
+            - /url: https://academybugs.com/account/?ec_page=register
+          - button "SIGN IN" [ref=e110] [cursor=pointer]
+    - contentinfo [ref=e111]:
+      - generic [ref=e112]:
+        - generic [ref=e115]:
+          - generic:
+            - list:
+              - listitem [ref=e116]:
+                - link "uTest" [ref=e117] [cursor=pointer]:
+                  - /url: https://www.utest.com/academy
+                  - img "uTest" [ref=e118]
+              - listitem [ref=e119]:
+                - link "Terms & Conditions" [ref=e120] [cursor=pointer]:
+                  - /url: https://www.utest.com/terms-and-conditions
+              - listitem [ref=e121]:
+                - link "Privacy Policy" [ref=e122] [cursor=pointer]:
+                  - /url: https://www.utest.com/privacy-policy
+        - text:      
+  - generic [ref=e124]:
+    - generic [ref=e126]: "1"
+    - link "" [ref=e127] [cursor=pointer]:
+      - /url: "#"
+      - generic [ref=e128]: 

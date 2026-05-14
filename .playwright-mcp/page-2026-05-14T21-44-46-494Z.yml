@@ -1,0 +1,96 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2] [cursor=pointer]: Manage consent
+  - generic [ref=e3]:
+    - link "Skip to content" [ref=e4] [cursor=pointer]:
+      - /url: "#sq-content"
+    - banner [ref=e5]:
+      - generic [ref=e6]:
+        - heading "AcademyBugs.com" [level=3] [ref=e8]:
+          - link "AcademyBugs.com" [ref=e9] [cursor=pointer]:
+            - /url: https://academybugs.com/
+        - navigation [ref=e10]:
+          - list [ref=e12]:
+            - listitem [ref=e13]:
+              - link "Examples of Bugs" [ref=e14] [cursor=pointer]:
+                - /url: https://academybugs.com/
+            - listitem [ref=e15]:
+              - link "Types of Bugs" [ref=e16] [cursor=pointer]:
+                - /url: https://academybugs.com/types/
+            - listitem [ref=e17]:
+              - link "Find Bugs" [ref=e18] [cursor=pointer]:
+                - /url: https://academybugs.com/find-bugs/
+            - listitem [ref=e19]:
+              - link "Report Bugs" [ref=e20] [cursor=pointer]:
+                - /url: https://academybugs.com/report-bugs/
+            - listitem [ref=e21]:
+              - link "" [ref=e22] [cursor=pointer]:
+                - /url: "#"
+                - generic [ref=e23]: 
+    - generic [ref=e26]:
+      - heading "Examples of Bugs" [level=3] [ref=e27]
+      - heading "Discover some examples of real bugs and recreate them yourself." [level=6] [ref=e28]
+      - generic [ref=e29]:
+        - link " Social share buttons don't work Many websites have buttons for sharing information, but in this example those buttons don’t work." [ref=e30] [cursor=pointer]:
+          - /url: "#"
+          - generic [ref=e32]:
+            - paragraph [ref=e33]:
+              - generic [ref=e34]: 
+            - heading "Social share buttons don't work" [level=5] [ref=e35]
+            - paragraph [ref=e36]: Many websites have buttons for sharing information, but in this example those buttons don’t work.
+        - link " Send button returns an error page Users should be able to send a message when clicking send, but in this example the button returns an error page." [ref=e37] [cursor=pointer]:
+          - /url: "#"
+          - generic [ref=e39]:
+            - paragraph [ref=e40]:
+              - generic [ref=e41]: 
+            - heading "Send button returns an error page" [level=5] [ref=e42]
+            - paragraph [ref=e43]: Users should be able to send a message when clicking send, but in this example the button returns an error page.
+        - link " Video player doesn’t work Video players should quickly buffer and play video files, but in this example some videos can’t be played." [ref=e44] [cursor=pointer]:
+          - /url: "#"
+          - generic [ref=e46]:
+            - paragraph [ref=e47]:
+              - generic [ref=e48]: 
+            - heading "Video player doesn’t work" [level=5] [ref=e49]
+            - paragraph [ref=e50]: Video players should quickly buffer and play video files, but in this example some videos can’t be played.
+        - link " Articles show an error page The articles should show appropriate content, but in this example clicking an article shows an error page." [ref=e51] [cursor=pointer]:
+          - /url: "#"
+          - generic [ref=e53]:
+            - paragraph [ref=e54]:
+              - generic [ref=e55]: 
+            - heading "Articles show an error page" [level=5] [ref=e56]
+            - paragraph [ref=e57]: The articles should show appropriate content, but in this example clicking an article shows an error page.
+        - link " Search button leads to an error A search button should find appropriate results, but in this example clicking on it leads to an error page." [ref=e58] [cursor=pointer]:
+          - /url: "#"
+          - generic [ref=e60]:
+            - paragraph [ref=e61]:
+              - generic [ref=e62]: 
+            - heading "Search button leads to an error" [level=5] [ref=e63]
+            - paragraph [ref=e64]: A search button should find appropriate results, but in this example clicking on it leads to an error page.
+        - link " Booking a table doesn't work The user should be able to book a table, but in this example the user cannot submit the booking form." [ref=e65] [cursor=pointer]:
+          - /url: "#"
+          - generic [ref=e67]:
+            - paragraph [ref=e68]:
+              - generic [ref=e69]: 
+            - heading "Booking a table doesn't work" [level=5] [ref=e70]
+            - paragraph [ref=e71]: The user should be able to book a table, but in this example the user cannot submit the booking form.
+    - contentinfo [ref=e72]:
+      - generic [ref=e73]:
+        - generic [ref=e76]:
+          - generic:
+            - list:
+              - listitem [ref=e77]:
+                - link "uTest" [ref=e78] [cursor=pointer]:
+                  - /url: https://www.utest.com/academy
+                  - img "uTest" [ref=e79]
+              - listitem [ref=e80]:
+                - link "Terms & Conditions" [ref=e81] [cursor=pointer]:
+                  - /url: https://www.utest.com/terms-and-conditions
+              - listitem [ref=e82]:
+                - link "Privacy Policy" [ref=e83] [cursor=pointer]:
+                  - /url: https://www.utest.com/privacy-policy
+        - text:      
+  - generic [ref=e86]:
+    - button "×" [ref=e87] [cursor=pointer]
+    - generic [ref=e88]:
+      - paragraph [ref=e89]: Tutorial
+      - paragraph [ref=e90]: Click start to begin the guided site tutorial
+      - button "Start" [ref=e93] [cursor=pointer]

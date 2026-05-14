@@ -1,0 +1,219 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2] [cursor=pointer]: Manage consent
+  - generic [ref=e3]:
+    - link "Skip to content" [ref=e4] [cursor=pointer]:
+      - /url: "#sq-content"
+    - banner [ref=e5]:
+      - generic [ref=e6]:
+        - heading "AcademyBugs.com" [level=3] [ref=e8]:
+          - link "AcademyBugs.com" [ref=e9] [cursor=pointer]:
+            - /url: https://academybugs.com/
+        - navigation [ref=e10]:
+          - list [ref=e12]:
+            - listitem [ref=e13]:
+              - link "Examples of Bugs" [ref=e14] [cursor=pointer]:
+                - /url: https://academybugs.com/
+            - listitem [ref=e15]:
+              - link "Types of Bugs" [ref=e16] [cursor=pointer]:
+                - /url: https://academybugs.com/types/
+            - listitem [ref=e17]:
+              - link "Find Bugs" [ref=e18] [cursor=pointer]:
+                - /url: https://academybugs.com/find-bugs/
+            - listitem [ref=e19]:
+              - link "Report Bugs" [ref=e20] [cursor=pointer]:
+                - /url: https://academybugs.com/report-bugs/
+            - listitem [ref=e21]:
+              - link "" [ref=e22] [cursor=pointer]:
+                - /url: "#"
+                - generic [ref=e23]: 
+    - generic [ref=e25]:
+      - main [ref=e27]:
+        - article [ref=e28]:
+          - generic [ref=e30]:
+            - heading "Home / Shop / Fashion Type / Weekend Wear" [level=4] [ref=e31]:
+              - link "Home" [ref=e32] [cursor=pointer]:
+                - /url: https://academybugs.com
+              - text: /
+              - link "Shop" [ref=e33] [cursor=pointer]:
+                - /url: https://academybugs.com/store/
+              - text: /
+              - link "Fashion Type" [ref=e34] [cursor=pointer]:
+                - /url: https://academybugs.com/store/fashion-type/
+              - text: /
+              - link "Weekend Wear" [ref=e35] [cursor=pointer]:
+                - /url: https://academybugs.com/store/weekend-wear/
+            - generic [ref=e36]:
+              - generic [ref=e37]:
+                - img "Fall Coat" [ref=e39] [cursor=pointer]
+                - generic [ref=e40]:
+                  - img "Fall Coat" [ref=e42] [cursor=pointer]
+                  - img "Fall Coat" [ref=e44] [cursor=pointer]
+              - generic:
+                - generic [ref=e45]:
+                  - heading "Home / Shop / Fashion Type / Weekend Wear" [level=4] [ref=e46]:
+                    - link "Home" [ref=e47] [cursor=pointer]:
+                      - /url: https://academybugs.com
+                    - text: /
+                    - link "Shop" [ref=e48] [cursor=pointer]:
+                      - /url: https://academybugs.com/store/
+                    - text: /
+                    - link "Fashion Type" [ref=e49] [cursor=pointer]:
+                      - /url: https://academybugs.com/store/fashion-type/
+                    - text: /
+                    - link "Weekend Wear" [ref=e50] [cursor=pointer]:
+                      - /url: https://academybugs.com/store/weekend-wear/
+                  - heading "Fall Coat" [level=1] [ref=e51]
+                  - generic [ref=e53]:
+                    - generic [ref=e54]: $189.95
+                    - text: $169.95
+                  - generic [ref=e55]: "Model Number: 4781370"
+                  - generic [ref=e56] [cursor=pointer]: Nam nec tellus a odio tincidunt auctor a ornare odio. Sed non mauris vitae erat consequat auctor eu in elit. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Mauris in erat justo. Nullam ac urna eu felis dapibus condimentum sit amet a augue. Sed non neque elit sed.
+                  - generic [ref=e59]:
+                    - generic [ref=e60]: Select Shirt Size
+                    - list:
+                      - listitem [ref=e61] [cursor=pointer]:
+                        - img "X-Small" [ref=e62]
+                      - listitem [ref=e63] [cursor=pointer]:
+                        - img "Small" [ref=e64]
+                      - listitem [ref=e65] [cursor=pointer]:
+                        - img "Medium" [ref=e66]
+                      - listitem [ref=e67] [cursor=pointer]:
+                        - img "Large" [ref=e68]
+                      - listitem [ref=e69] [cursor=pointer]:
+                        - img "X-Large" [ref=e70]
+                  - generic [ref=e72]:
+                    - generic [ref=e73]:
+                      - button "-" [ref=e74] [cursor=pointer]
+                      - spinbutton [ref=e75]: "1"
+                      - button "+" [ref=e76] [cursor=pointer]
+                    - button "ADD TO CART" [ref=e78] [cursor=pointer]
+                    - generic [ref=e79]: "Your Price: $169.95"
+                - generic [ref=e80]: 76 Left in Stock
+                - generic [ref=e81]: Maximum purchase amount of 10 is allowed
+                - generic [ref=e82]:
+                  - text: "Manufacturer:"
+                  - link "L4 Development" [ref=e83] [cursor=pointer]:
+                    - /url: https://academybugs.com/stored/extra/l4-development/
+                - generic [ref=e84]:
+                  - link "Facebook" [ref=e86] [cursor=pointer]:
+                    - /url: https://www.facebook.com/sharer/sharer.php?p[url]=https://academybugs.com/store/fall-coat/&p[images][o]=https://academybugs.com/wp-content/uploads/2020/11/womens-8c.jpg&p[title]=Fall+Coat
+                    - img "Facebook" [ref=e87]
+                  - link "X" [ref=e89] [cursor=pointer]:
+                    - /url: https://twitter.com/intent/tweet?original_referer=https://academybugs.com/store/fall-coat/&source=tweetbutton&text=Fall+Coat&url=https://academybugs.com/store/fall-coat/
+                    - img "X" [ref=e90]
+                  - link "Email" [ref=e92] [cursor=pointer]:
+                    - /url: "mailto:?subject=Fall Coat&body=Link for Product: https://academybugs.com/store/fall-coat/"
+                    - img "Email" [ref=e93]
+                  - link "Pinterest" [ref=e95] [cursor=pointer]:
+                    - /url: https://pinterest.com/pin/create/button/?media=https%3A%2F%2Facademybugs.com%2Fwp-content%2Fuploads%2F2020%2F11%2Fwomens-8c.jpg&description=Fall+Coat&url=https%3A%2F%2Facademybugs.com%2Fstore%2Ffall-coat%2F
+                    - img "Pinterest" [ref=e96]
+                  - link "LinkedIn" [ref=e98] [cursor=pointer]:
+                    - /url: https://www.linkedin.com/shareArticle?mini=true&url=https://academybugs.com/store/fall-coat/
+                    - img "LinkedIn" [ref=e99]
+                  - link "MySpace" [ref=e101] [cursor=pointer]:
+                    - /url: https://academybugs.com/myspace/
+                    - img "MySpace" [ref=e102]
+            - generic [ref=e103]:
+              - list [ref=e104]:
+                - listitem [ref=e105] [cursor=pointer]: Description
+              - paragraph [ref=e108] [cursor=pointer]: Nam nec tellus a odio tincidunt auctor a ornare odio. Sed non mauris vitae erat consequat auctor eu in elit. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Mauris in erat justo. Nullam ac urna eu felis dapibus condimentum sit amet a augue. Sed non neque elit sed.
+        - generic [ref=e110]:
+          - heading "Leave a Reply" [level=3] [ref=e111]: Leave a Reply
+          - generic [ref=e112]:
+            - paragraph [ref=e113]:
+              - text: Your email address will not be published.
+              - generic [ref=e114]: Required fields are marked *
+            - paragraph [ref=e115]:
+              - textbox "Comment" [ref=e116]
+            - generic:
+              - paragraph [ref=e117]:
+                - textbox "Name*" [ref=e118]
+              - paragraph [ref=e119]:
+                - textbox "Email*" [ref=e120]
+              - paragraph [ref=e121]:
+                - textbox "Website" [ref=e122]
+            - paragraph [ref=e123]:
+              - button "Post Comment" [ref=e124] [cursor=pointer]
+      - generic [ref=e125]:
+        - heading "Select a Currency" [level=4] [ref=e126]
+        - combobox [ref=e128] [cursor=pointer]:
+          - option "USD" [selected]
+          - option "EUR"
+          - option "GBP"
+          - option "JPY"
+        - heading "Product Search" [level=4] [ref=e129]
+        - generic [ref=e131]:
+          - combobox [ref=e132]
+          - button "Search" [ref=e133] [cursor=pointer]
+        - heading "Hot Item" [level=4] [ref=e134]
+        - generic [ref=e135]:
+          - link [ref=e137] [cursor=pointer]:
+            - /url: https://academybugs.com/anchor-bracelet
+            - img [ref=e138]
+          - link "Silver Heart Bracelet" [ref=e140] [cursor=pointer]:
+            - /url: https://academybugs.com/store/heart-bracelet/
+          - generic [ref=e141]: $275.00
+        - heading "Store Menu" [level=4] [ref=e142]
+        - list [ref=e144]:
+          - listitem [ref=e145]:
+            - link "All Items" [ref=e146] [cursor=pointer]:
+              - /url: https://academybugs.com/store/all-items/
+          - listitem [ref=e147]:
+            - link "Accessories [+]" [ref=e148] [cursor=pointer]:
+              - /url: "#"
+              - text: Accessories
+              - generic [ref=e149]: "[+]"
+          - listitem [ref=e150]:
+            - link "Fashion Type [+]" [ref=e151] [cursor=pointer]:
+              - /url: "#"
+              - text: Fashion Type
+              - generic [ref=e152]: "[+]"
+          - listitem [ref=e153]:
+            - link "Women's Pants" [ref=e154] [cursor=pointer]:
+              - /url: https://academybugs.com/store/womens-pants/
+        - heading "Filter by Price" [level=4] [ref=e155]
+        - generic [ref=e156]:
+          - link "$15.00 - $19.99 (1)" [ref=e158] [cursor=pointer]:
+            - /url: https://academybugs.com/store/fall-coat/?&perpage=25&pricepoint=7
+          - link "$25.00 - $49.99 (2)" [ref=e160] [cursor=pointer]:
+            - /url: https://academybugs.com/store/fall-coat/?&perpage=25&pricepoint=2
+          - link "$50.00 - $99.99 (3)" [ref=e162] [cursor=pointer]:
+            - /url: https://academybugs.com/store/fall-coat/?&perpage=25&pricepoint=3
+          - link "$100.00 - $299.99 (11)" [ref=e164] [cursor=pointer]:
+            - /url: https://academybugs.com/store/fall-coat/?&perpage=25&pricepoint=4
+          - link "Greater Than $299.99 (1)" [ref=e166] [cursor=pointer]:
+            - /url: https://academybugs.com/store/fall-coat/?&perpage=25&pricepoint=5
+        - heading "Shopping Cart" [level=4] [ref=e167]
+        - link "Shopping Cart (1)" [ref=e169] [cursor=pointer]:
+          - /url: "#"
+          - generic [ref=e170]: Shopping Cart (1)
+        - heading "Your Account" [level=4] [ref=e171]
+        - generic:
+          - generic [ref=e172]:
+            - generic [ref=e173]: Email Address*
+            - textbox [ref=e174]
+          - generic [ref=e175]:
+            - generic [ref=e176]: Password*
+            - textbox [ref=e177]
+          - link "Sign Up" [ref=e179] [cursor=pointer]:
+            - /url: https://academybugs.com/account/?ec_page=register
+          - button "SIGN IN" [ref=e181] [cursor=pointer]
+    - contentinfo [ref=e182]:
+      - generic [ref=e183]:
+        - generic [ref=e186]:
+          - generic:
+            - list:
+              - listitem [ref=e187]:
+                - link "uTest" [ref=e188] [cursor=pointer]:
+                  - /url: https://www.utest.com/academy
+                  - img "uTest" [ref=e189]
+              - listitem [ref=e190]:
+                - link "Terms & Conditions" [ref=e191] [cursor=pointer]:
+                  - /url: https://www.utest.com/terms-and-conditions
+              - listitem [ref=e192]:
+                - link "Privacy Policy" [ref=e193] [cursor=pointer]:
+                  - /url: https://www.utest.com/privacy-policy
+        - text:      
+  - link "" [ref=e196] [cursor=pointer]:
+    - /url: "#"
+    - generic [ref=e197]: 

@@ -1,0 +1,191 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2] [cursor=pointer]: Manage consent
+  - generic [ref=e3]:
+    - link "Skip to content" [ref=e4] [cursor=pointer]:
+      - /url: "#sq-content"
+    - banner [ref=e5]:
+      - generic [ref=e6]:
+        - heading "AcademyBugs.com" [level=3] [ref=e8]:
+          - link "AcademyBugs.com" [ref=e9] [cursor=pointer]:
+            - /url: https://academybugs.com/
+        - navigation [ref=e10]:
+          - list [ref=e12]:
+            - listitem [ref=e13]:
+              - link "Examples of Bugs" [ref=e14] [cursor=pointer]:
+                - /url: https://academybugs.com/
+            - listitem [ref=e15]:
+              - link "Types of Bugs" [ref=e16] [cursor=pointer]:
+                - /url: https://academybugs.com/types/
+            - listitem [ref=e17]:
+              - link "Find Bugs" [ref=e18] [cursor=pointer]:
+                - /url: https://academybugs.com/find-bugs/
+            - listitem [ref=e19]:
+              - link "Report Bugs" [ref=e20] [cursor=pointer]:
+                - /url: https://academybugs.com/report-bugs/
+            - listitem [ref=e21]:
+              - link "" [ref=e22] [cursor=pointer]:
+                - /url: "#"
+                - generic [ref=e23]: 
+    - generic [ref=e25]:
+      - main [ref=e27]:
+        - article [ref=e28]:
+          - generic [ref=e30]:
+            - heading "Home / Shop / All Items" [level=4] [ref=e31]:
+              - link "Home" [ref=e32] [cursor=pointer]:
+                - /url: https://academybugs.com
+              - text: /
+              - link "Shop" [ref=e33] [cursor=pointer]:
+                - /url: https://academybugs.com/store/
+              - text: /
+              - link "All Items" [ref=e34] [cursor=pointer]:
+                - /url: https://academybugs.com/store/all-items/
+            - generic [ref=e35]:
+              - img "Flamingo Tshirt" [ref=e38] [cursor=pointer]
+              - generic:
+                - generic [ref=e39]:
+                  - heading "Home / Shop / All Items" [level=4] [ref=e40]:
+                    - link "Home" [ref=e41] [cursor=pointer]:
+                      - /url: https://academybugs.com
+                    - text: /
+                    - link "Shop" [ref=e42] [cursor=pointer]:
+                      - /url: https://academybugs.com/store/
+                    - text: /
+                    - link "All Items" [ref=e43] [cursor=pointer]:
+                      - /url: https://academybugs.com/store/all-items/
+                  - heading "Flamingo Tshirt" [level=1] [ref=e44]
+                  - generic [ref=e46]: $15.14
+                  - generic [ref=e47]: "Model Number: 4881370"
+                  - generic [ref=e48] [cursor=pointer]: Nam nec tellus a odio tincidunt auctor a ornare odio. Sed non mauris vitae erat consequat auctor eu in elit. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Mauris in erat justo. Nullam ac urna eu felis dapibus condimentum sit amet a augue. Sed non neque elit sed.
+                  - generic [ref=e50]:
+                    - generic [ref=e51]:
+                      - button "-" [ref=e52] [cursor=pointer]
+                      - spinbutton [ref=e53]: "1"
+                      - button "+" [ref=e54] [cursor=pointer]
+                    - button "ADD TO CART" [ref=e56] [cursor=pointer]
+                - generic [ref=e57]:
+                  - text: "Manufacturer:"
+                  - link "HDX" [ref=e58] [cursor=pointer]:
+                    - /url: https://academybugs.com/stored/extra/hdx/
+                - generic [ref=e59]:
+                  - link "Facebook" [ref=e61] [cursor=pointer]:
+                    - /url: https://www.facebook.com/sharer/sharer.php?p[url]=https://academybugs.com/store/flamingo-tshirt/&p[images][o]=https://academybugs.com/wp-content/uploads/2020/10/flamingo-tshirt-compressed.jpg&p[title]=Flamingo+Tshirt
+                    - img "Facebook" [ref=e62]
+                  - link "X" [ref=e64] [cursor=pointer]:
+                    - /url: https://twitter.com/intent/tweet?original_referer=https://academybugs.com/store/flamingo-tshirt/&source=tweetbutton&text=Flamingo+Tshirt&url=https://academybugs.com/store/flamingo-tshirt/
+                    - img "X" [ref=e65]
+                  - link "Email" [ref=e67] [cursor=pointer]:
+                    - /url: "mailto:?subject=Flamingo Tshirt&body=Link for Product: https://academybugs.com/store/flamingo-tshirt/"
+                    - img "Email" [ref=e68]
+                  - link "Pinterest" [ref=e70] [cursor=pointer]:
+                    - /url: https://pinterest.com/pin/create/button/?media=https%3A%2F%2Facademybugs.com%2Fwp-content%2Fuploads%2F2020%2F10%2Fflamingo-tshirt-compressed.jpg&description=Flamingo+Tshirt&url=https%3A%2F%2Facademybugs.com%2Fstore%2Fflamingo-tshirt%2F
+                    - img "Pinterest" [ref=e71]
+                  - link "LinkedIn" [ref=e73] [cursor=pointer]:
+                    - /url: https://www.linkedin.com/shareArticle?mini=true&url=https://academybugs.com/store/flamingo-tshirt/
+                    - img "LinkedIn" [ref=e74]
+                  - link "MySpace" [ref=e76] [cursor=pointer]:
+                    - /url: https://academybugs.com/myspace/
+                    - img "MySpace" [ref=e77]
+            - generic [ref=e78]:
+              - list [ref=e79]:
+                - listitem [ref=e80] [cursor=pointer]: Description
+              - paragraph [ref=e83] [cursor=pointer]: Nam nec tellus a odio tincidunt auctor a ornare odio. Sed non mauris vitae erat consequat auctor eu in elit. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Mauris in erat justo. Nullam ac urna eu felis dapibus condimentum sit amet a augue. Sed non neque elit sed.
+        - generic [ref=e85]:
+          - heading "Leave a Reply" [level=3] [ref=e86]: Leave a Reply
+          - generic [ref=e87]:
+            - paragraph [ref=e88]:
+              - text: Your email address will not be published.
+              - generic [ref=e89]: Required fields are marked *
+            - paragraph [ref=e90]:
+              - textbox "Comment" [ref=e91]
+            - generic:
+              - paragraph [ref=e92]:
+                - textbox "Name*" [ref=e93]
+              - paragraph [ref=e94]:
+                - textbox "Email*" [ref=e95]
+              - paragraph [ref=e96]:
+                - textbox "Website" [ref=e97]
+            - paragraph [ref=e98]:
+              - button "Post Comment" [ref=e99] [cursor=pointer]
+      - generic [ref=e100]:
+        - heading "Select a Currency" [level=4] [ref=e101]
+        - combobox [ref=e103] [cursor=pointer]:
+          - option "USD" [selected]
+          - option "EUR"
+          - option "GBP"
+          - option "JPY"
+        - heading "Product Search" [level=4] [ref=e104]
+        - generic [ref=e106]:
+          - combobox [ref=e107]
+          - button "Search" [ref=e108] [cursor=pointer]
+        - heading "Hot Item" [level=4] [ref=e109]
+        - generic [ref=e110]:
+          - link [ref=e112] [cursor=pointer]:
+            - /url: https://academybugs.com/anchor-bracelet
+            - img [ref=e113]
+          - link "Silver Heart Bracelet" [ref=e115] [cursor=pointer]:
+            - /url: https://academybugs.com/store/heart-bracelet/
+          - generic [ref=e116]: $275.00
+        - heading "Store Menu" [level=4] [ref=e117]
+        - list [ref=e119]:
+          - listitem [ref=e120]:
+            - link "All Items" [ref=e121] [cursor=pointer]:
+              - /url: https://academybugs.com/store/all-items/
+          - listitem [ref=e122]:
+            - link "Accessories [+]" [ref=e123] [cursor=pointer]:
+              - /url: "#"
+              - text: Accessories
+              - generic [ref=e124]: "[+]"
+          - listitem [ref=e125]:
+            - link "Fashion Type [+]" [ref=e126] [cursor=pointer]:
+              - /url: "#"
+              - text: Fashion Type
+              - generic [ref=e127]: "[+]"
+          - listitem [ref=e128]:
+            - link "Women's Pants" [ref=e129] [cursor=pointer]:
+              - /url: https://academybugs.com/store/womens-pants/
+        - heading "Filter by Price" [level=4] [ref=e130]
+        - generic [ref=e131]:
+          - link "$15.00 - $19.99 (1)" [ref=e133] [cursor=pointer]:
+            - /url: https://academybugs.com/store/flamingo-tshirt/?&perpage=25&pricepoint=7
+          - link "$25.00 - $49.99 (2)" [ref=e135] [cursor=pointer]:
+            - /url: https://academybugs.com/store/flamingo-tshirt/?&perpage=25&pricepoint=2
+          - link "$50.00 - $99.99 (3)" [ref=e137] [cursor=pointer]:
+            - /url: https://academybugs.com/store/flamingo-tshirt/?&perpage=25&pricepoint=3
+          - link "$100.00 - $299.99 (11)" [ref=e139] [cursor=pointer]:
+            - /url: https://academybugs.com/store/flamingo-tshirt/?&perpage=25&pricepoint=4
+          - link "Greater Than $299.99 (1)" [ref=e141] [cursor=pointer]:
+            - /url: https://academybugs.com/store/flamingo-tshirt/?&perpage=25&pricepoint=5
+        - heading "Shopping Cart" [level=4] [ref=e142]
+        - link "Shopping Cart (1)" [ref=e144] [cursor=pointer]:
+          - /url: "#"
+          - generic [ref=e145]: Shopping Cart (1)
+        - heading "Your Account" [level=4] [ref=e146]
+        - generic:
+          - generic [ref=e147]:
+            - generic [ref=e148]: Email Address*
+            - textbox [ref=e149]
+          - generic [ref=e150]:
+            - generic [ref=e151]: Password*
+            - textbox [ref=e152]
+          - link "Sign Up" [ref=e154] [cursor=pointer]:
+            - /url: https://academybugs.com/account/?ec_page=register
+          - button "SIGN IN" [ref=e156] [cursor=pointer]
+    - contentinfo [ref=e157]:
+      - generic [ref=e158]:
+        - generic [ref=e161]:
+          - generic:
+            - list:
+              - listitem [ref=e162]:
+                - link "uTest" [ref=e163] [cursor=pointer]:
+                  - /url: https://www.utest.com/academy
+                  - img "uTest" [ref=e164]
+              - listitem [ref=e165]:
+                - link "Terms & Conditions" [ref=e166] [cursor=pointer]:
+                  - /url: https://www.utest.com/terms-and-conditions
+              - listitem [ref=e167]:
+                - link "Privacy Policy" [ref=e168] [cursor=pointer]:
+                  - /url: https://www.utest.com/privacy-policy
+        - text:      
+  - link "" [ref=e171] [cursor=pointer]:
+    - /url: "#"
+    - generic [ref=e172]: 

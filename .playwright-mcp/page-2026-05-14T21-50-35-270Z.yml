@@ -1,0 +1,187 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2] [cursor=pointer]: Manage consent
+  - generic [ref=e3]:
+    - link "Skip to content" [ref=e4] [cursor=pointer]:
+      - /url: "#sq-content"
+    - banner [ref=e5]:
+      - generic [ref=e6]:
+        - heading "AcademyBugs.com" [level=3] [ref=e8]:
+          - link "AcademyBugs.com" [ref=e9] [cursor=pointer]:
+            - /url: https://academybugs.com/
+        - navigation [ref=e10]:
+          - list [ref=e12]:
+            - listitem [ref=e13]:
+              - link "Examples of Bugs" [ref=e14] [cursor=pointer]:
+                - /url: https://academybugs.com/
+            - listitem [ref=e15]:
+              - link "Types of Bugs" [ref=e16] [cursor=pointer]:
+                - /url: https://academybugs.com/types/
+            - listitem [ref=e17]:
+              - link "Find Bugs" [ref=e18] [cursor=pointer]:
+                - /url: https://academybugs.com/find-bugs/
+            - listitem [ref=e19]:
+              - link "Report Bugs" [ref=e20] [cursor=pointer]:
+                - /url: https://academybugs.com/report-bugs/
+            - listitem [ref=e21]:
+              - link "" [ref=e22] [cursor=pointer]:
+                - /url: "#"
+                - generic [ref=e23]: 
+    - generic [ref=e25]:
+      - main [ref=e27]:
+        - article [ref=e28]:
+          - generic [ref=e30]:
+            - heading "Home / Shop / All Items" [level=4] [ref=e31]:
+              - link "Home" [ref=e32] [cursor=pointer]:
+                - /url: https://academybugs.com
+              - text: /
+              - link "Shop" [ref=e33] [cursor=pointer]:
+                - /url: https://academybugs.com/store/
+              - text: /
+              - link "All Items" [ref=e34] [cursor=pointer]:
+                - /url: https://academybugs.com/store/all-items/
+            - generic [ref=e35]:
+              - img "Dark Blue Denim Jeans" [ref=e38] [cursor=pointer]
+              - generic:
+                - generic [ref=e39]:
+                  - heading "Home / Shop / All Items" [level=4] [ref=e40]:
+                    - link "Home" [ref=e41] [cursor=pointer]:
+                      - /url: https://academybugs.com
+                    - text: /
+                    - link "Shop" [ref=e42] [cursor=pointer]:
+                      - /url: https://academybugs.com/store/
+                    - text: /
+                    - link "All Items" [ref=e43] [cursor=pointer]:
+                      - /url: https://academybugs.com/store/all-items/
+                  - heading "Dark Blue Denim Jeans" [level=1] [ref=e44]
+                  - generic [ref=e46]: "Model Number: 4181370"
+                  - generic [ref=e47] [cursor=pointer]: Nam nec tellus a odio tincidunt auctor a ornare odio. Sed non mauris vitae erat consequat auctor eu in elit. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Mauris in erat justo. Nullam ac urna eu felis dapibus condimentum sit amet a augue. Sed non neque elit sed.
+                  - link "Login for Pricing" [ref=e51] [cursor=pointer]:
+                    - /url: https://academybugs.com/account/
+                - generic [ref=e52]: 24 Left in Stock
+                - generic [ref=e53]:
+                  - text: "Manufacturer:"
+                  - link "Denim" [ref=e54] [cursor=pointer]:
+                    - /url: https://academybugs.com/stored/extra/denim/
+                - generic [ref=e55]:
+                  - link "Facebook" [ref=e57] [cursor=pointer]:
+                    - /url: https://www.facebook.com/sharer/sharer.php?p[url]=https://academybugs.com/store/dark-blue-denim-jeans/&p[images][o]=https://academybugs.com/wp-content/uploads/2020/06/product-m-jeans2.jpg&p[title]=Dark+Blue+Denim+Jeans
+                    - img "Facebook" [ref=e58]
+                  - link "X" [ref=e60] [cursor=pointer]:
+                    - /url: https://twitter.com/intent/tweet?original_referer=https://academybugs.com/store/dark-blue-denim-jeans/&source=tweetbutton&text=Dark+Blue+Denim+Jeans&url=https://academybugs.com/store/dark-blue-denim-jeans/
+                    - img "X" [ref=e61]
+                  - link "Email" [ref=e63] [cursor=pointer]:
+                    - /url: "mailto:?subject=Dark Blue Denim Jeans&body=Link for Product: https://academybugs.com/store/dark-blue-denim-jeans/"
+                    - img "Email" [ref=e64]
+                  - link "Pinterest" [ref=e66] [cursor=pointer]:
+                    - /url: https://pinterest.com/pin/create/button/?media=https%3A%2F%2Facademybugs.com%2Fwp-content%2Fuploads%2F2020%2F06%2Fproduct-m-jeans2.jpg&description=Dark+Blue+Denim+Jeans&url=https%3A%2F%2Facademybugs.com%2Fstore%2Fdark-blue-denim-jeans%2F
+                    - img "Pinterest" [ref=e67]
+                  - link "LinkedIn" [ref=e69] [cursor=pointer]:
+                    - /url: https://www.linkedin.com/shareArticle?mini=true&url=https://academybugs.com/store/dark-blue-denim-jeans/
+                    - img "LinkedIn" [ref=e70]
+                  - link "MySpace" [ref=e72] [cursor=pointer]:
+                    - /url: https://academybugs.com/myspace/
+                    - img "MySpace" [ref=e73]
+            - generic [ref=e74]:
+              - list [ref=e75]:
+                - listitem [ref=e76] [cursor=pointer]: Description
+              - paragraph [ref=e79] [cursor=pointer]: Nam nec tellus a odio tincidunt auctor a ornare odio. Sed non mauris vitae erat consequat auctor eu in elit. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Mauris in erat justo. Nullam ac urna eu felis dapibus condimentum sit amet a augue. Sed non neque elit sed.
+        - generic [ref=e81]:
+          - heading "Leave a Reply" [level=3] [ref=e82]: Leave a Reply
+          - generic [ref=e83]:
+            - paragraph [ref=e84]:
+              - text: Your email address will not be published.
+              - generic [ref=e85]: Required fields are marked *
+            - paragraph [ref=e86]:
+              - textbox "Comment" [ref=e87]
+            - generic:
+              - paragraph [ref=e88]:
+                - textbox "Name*" [ref=e89]
+              - paragraph [ref=e90]:
+                - textbox "Email*" [ref=e91]
+              - paragraph [ref=e92]:
+                - textbox "Website" [ref=e93]
+            - paragraph [ref=e94]:
+              - button "Post Comment" [ref=e95] [cursor=pointer]
+      - generic [ref=e96]:
+        - heading "Select a Currency" [level=4] [ref=e97]
+        - combobox [ref=e99] [cursor=pointer]:
+          - option "USD" [selected]
+          - option "EUR"
+          - option "GBP"
+          - option "JPY"
+        - heading "Product Search" [level=4] [ref=e100]
+        - generic [ref=e102]:
+          - combobox [ref=e103]
+          - button "Search" [ref=e104] [cursor=pointer]
+        - heading "Hot Item" [level=4] [ref=e105]
+        - generic [ref=e106]:
+          - link [ref=e108] [cursor=pointer]:
+            - /url: https://academybugs.com/anchor-bracelet
+            - img [ref=e109]
+          - link "Silver Heart Bracelet" [ref=e111] [cursor=pointer]:
+            - /url: https://academybugs.com/store/heart-bracelet/
+          - generic [ref=e112]: $275.00
+        - heading "Store Menu" [level=4] [ref=e113]
+        - list [ref=e115]:
+          - listitem [ref=e116]:
+            - link "All Items" [ref=e117] [cursor=pointer]:
+              - /url: https://academybugs.com/store/all-items/
+          - listitem [ref=e118]:
+            - link "Accessories [+]" [ref=e119] [cursor=pointer]:
+              - /url: "#"
+              - text: Accessories
+              - generic [ref=e120]: "[+]"
+          - listitem [ref=e121]:
+            - link "Fashion Type [+]" [ref=e122] [cursor=pointer]:
+              - /url: "#"
+              - text: Fashion Type
+              - generic [ref=e123]: "[+]"
+          - listitem [ref=e124]:
+            - link "Women's Pants" [ref=e125] [cursor=pointer]:
+              - /url: https://academybugs.com/store/womens-pants/
+        - heading "Filter by Price" [level=4] [ref=e126]
+        - generic [ref=e127]:
+          - link "$15.00 - $19.99 (1)" [ref=e129] [cursor=pointer]:
+            - /url: https://academybugs.com/store/dark-blue-denim-jeans/?&perpage=25&pricepoint=7
+          - link "$25.00 - $49.99 (2)" [ref=e131] [cursor=pointer]:
+            - /url: https://academybugs.com/store/dark-blue-denim-jeans/?&perpage=25&pricepoint=2
+          - link "$50.00 - $99.99 (3)" [ref=e133] [cursor=pointer]:
+            - /url: https://academybugs.com/store/dark-blue-denim-jeans/?&perpage=25&pricepoint=3
+          - link "$100.00 - $299.99 (11)" [ref=e135] [cursor=pointer]:
+            - /url: https://academybugs.com/store/dark-blue-denim-jeans/?&perpage=25&pricepoint=4
+          - link "Greater Than $299.99 (1)" [ref=e137] [cursor=pointer]:
+            - /url: https://academybugs.com/store/dark-blue-denim-jeans/?&perpage=25&pricepoint=5
+        - heading "Shopping Cart" [level=4] [ref=e138]
+        - link "Shopping Cart (1)" [ref=e140] [cursor=pointer]:
+          - /url: "#"
+          - generic [ref=e141]: Shopping Cart (1)
+        - heading "Your Account" [level=4] [ref=e142]
+        - generic:
+          - generic [ref=e143]:
+            - generic [ref=e144]: Email Address*
+            - textbox [ref=e145]
+          - generic [ref=e146]:
+            - generic [ref=e147]: Password*
+            - textbox [ref=e148]
+          - link "Sign Up" [ref=e150] [cursor=pointer]:
+            - /url: https://academybugs.com/account/?ec_page=register
+          - button "SIGN IN" [ref=e152] [cursor=pointer]
+    - contentinfo [ref=e153]:
+      - generic [ref=e154]:
+        - generic [ref=e157]:
+          - generic:
+            - list:
+              - listitem [ref=e158]:
+                - link "uTest" [ref=e159] [cursor=pointer]:
+                  - /url: https://www.utest.com/academy
+                  - img "uTest" [ref=e160]
+              - listitem [ref=e161]:
+                - link "Terms & Conditions" [ref=e162] [cursor=pointer]:
+                  - /url: https://www.utest.com/terms-and-conditions
+              - listitem [ref=e163]:
+                - link "Privacy Policy" [ref=e164] [cursor=pointer]:
+                  - /url: https://www.utest.com/privacy-policy
+        - text:      
+  - link "" [ref=e167] [cursor=pointer]:
+    - /url: "#"
+    - generic [ref=e168]: 

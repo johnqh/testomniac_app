@@ -1,0 +1,221 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2] [cursor=pointer]: Manage consent
+  - generic [ref=e3]:
+    - link "Skip to content" [ref=e4] [cursor=pointer]:
+      - /url: "#sq-content"
+    - banner [ref=e5]:
+      - generic [ref=e6]:
+        - heading "AcademyBugs.com" [level=3] [ref=e8]:
+          - link "AcademyBugs.com" [ref=e9] [cursor=pointer]:
+            - /url: https://academybugs.com/
+        - navigation [ref=e10]:
+          - list [ref=e12]:
+            - listitem [ref=e13]:
+              - link "Examples of Bugs" [ref=e14] [cursor=pointer]:
+                - /url: https://academybugs.com/
+            - listitem [ref=e15]:
+              - link "Types of Bugs" [ref=e16] [cursor=pointer]:
+                - /url: https://academybugs.com/types/
+            - listitem [ref=e17]:
+              - link "Find Bugs" [ref=e18] [cursor=pointer]:
+                - /url: https://academybugs.com/find-bugs/
+            - listitem [ref=e19]:
+              - link "Report Bugs" [ref=e20] [cursor=pointer]:
+                - /url: https://academybugs.com/report-bugs/
+            - listitem [ref=e21]:
+              - link "" [ref=e22] [cursor=pointer]:
+                - /url: "#"
+                - generic [ref=e23]: 
+    - generic [ref=e25]:
+      - main [ref=e27]:
+        - article [ref=e28]:
+          - generic [ref=e30]:
+            - heading "Home / Shop / Fashion Type" [level=4] [ref=e31]:
+              - link "Home" [ref=e32] [cursor=pointer]:
+                - /url: https://academybugs.com
+              - text: /
+              - link "Shop" [ref=e33] [cursor=pointer]:
+                - /url: https://academybugs.com/store/
+              - text: /
+              - link "Fashion Type" [ref=e34] [cursor=pointer]:
+                - /url: https://academybugs.com/store/fashion-type/
+            - generic [ref=e35]:
+              - generic [ref=e36]:
+                - img "Professional Suit" [ref=e38] [cursor=pointer]
+                - generic [ref=e39]:
+                  - img "Professional Suit" [ref=e41] [cursor=pointer]
+                  - img "Professional Suit" [ref=e43] [cursor=pointer]
+                  - img "Professional Suit" [ref=e45] [cursor=pointer]
+                  - img "Professional Suit" [ref=e47] [cursor=pointer]
+                  - img "Professional Suit" [ref=e49] [cursor=pointer]
+              - generic:
+                - generic [ref=e50]:
+                  - heading "Home / Shop / Fashion Type" [level=4] [ref=e51]:
+                    - link "Home" [ref=e52] [cursor=pointer]:
+                      - /url: https://academybugs.com
+                    - text: /
+                    - link "Shop" [ref=e53] [cursor=pointer]:
+                      - /url: https://academybugs.com/store/
+                    - text: /
+                    - link "Fashion Type" [ref=e54] [cursor=pointer]:
+                      - /url: https://academybugs.com/store/fashion-type/
+                  - heading "Professional Suit" [level=1] [ref=e55]
+                  - generic [ref=e57]:
+                    - generic [ref=e58]: $279.95
+                    - text: $239.95
+                  - generic [ref=e59]: "Model Number: 3981370"
+                  - generic [ref=e60] [cursor=pointer]: Nam nec tellus a odio tincidunt auctor a ornare odio. Sed non mauris vitae erat consequat auctor eu in elit. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Mauris in erat justo. Nullam ac urna eu felis dapibus condimentum sit amet a augue. Sed non neque elit sed.
+                  - generic [ref=e63]:
+                    - generic [ref=e64]: Select Color
+                    - list:
+                      - listitem [ref=e65] [cursor=pointer]:
+                        - img "Blue" [ref=e66]
+                      - listitem [ref=e67] [cursor=pointer]:
+                        - img "Orang" [ref=e68]
+                      - listitem [ref=e69] [cursor=pointer]:
+                        - img "Pink" [ref=e70]
+                      - listitem [ref=e71] [cursor=pointer]:
+                        - img "Green" [ref=e72]
+                      - listitem [ref=e73] [cursor=pointer]:
+                        - img "Yelow" [ref=e74]
+                  - generic [ref=e76]:
+                    - generic [ref=e77]:
+                      - button "-" [ref=e78] [cursor=pointer]
+                      - spinbutton [ref=e79]: "1"
+                      - button "+" [ref=e80] [cursor=pointer]
+                    - button "ADD TO CART" [ref=e82] [cursor=pointer]
+                    - generic [ref=e83]: "Your Price: $239.95"
+                - generic [ref=e84]: 12 Left in Stock
+                - generic [ref=e85]:
+                  - text: "Categories:"
+                  - link "Specials" [ref=e86] [cursor=pointer]:
+                    - /url: https://academybugs.com/store/specials/
+                - generic [ref=e87]:
+                  - text: "Manufacturer:"
+                  - link "L4 Development" [ref=e88] [cursor=pointer]:
+                    - /url: https://academybugs.com/stored/extra/l4-development/
+                - generic [ref=e89]:
+                  - link "Facebook" [ref=e91] [cursor=pointer]:
+                    - /url: https://www.facebook.com/sharer/sharer.php?p[url]=https://academybugs.com/store/professional-suit/&p[images][o]=https://academybugs.com/wp-content/uploads/2020/11/womens-11c-green.png&p[title]=Professional+Suit
+                    - img "Facebook" [ref=e92]
+                  - link "X" [ref=e94] [cursor=pointer]:
+                    - /url: https://twitter.com/intent/tweet?original_referer=https://academybugs.com/store/professional-suit/&source=tweetbutton&text=Professional+Suit&url=https://academybugs.com/store/professional-suit/
+                    - img "X" [ref=e95]
+                  - link "Email" [ref=e97] [cursor=pointer]:
+                    - /url: "mailto:?subject=Professional Suit&body=Link for Product: https://academybugs.com/store/professional-suit/"
+                    - img "Email" [ref=e98]
+                  - link "Pinterest" [ref=e100] [cursor=pointer]:
+                    - /url: https://pinterest.com/pin/create/button/?media=https%3A%2F%2Facademybugs.com%2Fwp-content%2Fuploads%2F2020%2F11%2Fwomens-11c-green.png&description=Professional+Suit&url=https%3A%2F%2Facademybugs.com%2Fstore%2Fprofessional-suit%2F
+                    - img "Pinterest" [ref=e101]
+                  - link "LinkedIn" [ref=e103] [cursor=pointer]:
+                    - /url: https://www.linkedin.com/shareArticle?mini=true&url=https://academybugs.com/store/professional-suit/
+                    - img "LinkedIn" [ref=e104]
+                  - link "MySpace" [ref=e106] [cursor=pointer]:
+                    - /url: https://academybugs.com/myspace/
+                    - img "MySpace" [ref=e107]
+            - generic [ref=e108]:
+              - list [ref=e109]:
+                - listitem [ref=e110] [cursor=pointer]: Description
+              - generic [ref=e113] [cursor=pointer]: Nam nec tellus a odio tincidunt auctor a ornare odio. Sed non mauris vitae erat consequat auctor eu in elit. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Mauris in erat justo. Nullam ac urna eu felis dapibus condimentum sit amet a augue. Sed non neque elit sed.
+        - generic [ref=e115]:
+          - heading "Leave a Reply" [level=3] [ref=e116]: Leave a Reply
+          - generic [ref=e117]:
+            - paragraph [ref=e118]:
+              - text: Your email address will not be published.
+              - generic [ref=e119]: Required fields are marked *
+            - paragraph [ref=e120]:
+              - textbox "Comment" [ref=e121]
+            - generic:
+              - paragraph [ref=e122]:
+                - textbox "Name*" [ref=e123]
+              - paragraph [ref=e124]:
+                - textbox "Email*" [ref=e125]
+              - paragraph [ref=e126]:
+                - textbox "Website" [ref=e127]
+            - paragraph [ref=e128]:
+              - button "Post Comment" [ref=e129] [cursor=pointer]
+      - generic [ref=e130]:
+        - heading "Select a Currency" [level=4] [ref=e131]
+        - combobox [ref=e133] [cursor=pointer]:
+          - option "USD" [selected]
+          - option "EUR"
+          - option "GBP"
+          - option "JPY"
+        - heading "Product Search" [level=4] [ref=e134]
+        - generic [ref=e136]:
+          - combobox [ref=e137]
+          - button "Search" [ref=e138] [cursor=pointer]
+        - heading "Hot Item" [level=4] [ref=e139]
+        - generic [ref=e140]:
+          - link [ref=e142] [cursor=pointer]:
+            - /url: https://academybugs.com/anchor-bracelet
+            - img [ref=e143]
+          - link "Silver Heart Bracelet" [ref=e145] [cursor=pointer]:
+            - /url: https://academybugs.com/store/heart-bracelet/
+          - generic [ref=e146]: $275.00
+        - heading "Store Menu" [level=4] [ref=e147]
+        - list [ref=e149]:
+          - listitem [ref=e150]:
+            - link "All Items" [ref=e151] [cursor=pointer]:
+              - /url: https://academybugs.com/store/all-items/
+          - listitem [ref=e152]:
+            - link "Accessories [+]" [ref=e153] [cursor=pointer]:
+              - /url: "#"
+              - text: Accessories
+              - generic [ref=e154]: "[+]"
+          - listitem [ref=e155]:
+            - link "Fashion Type [+]" [ref=e156] [cursor=pointer]:
+              - /url: "#"
+              - text: Fashion Type
+              - generic [ref=e157]: "[+]"
+          - listitem [ref=e158]:
+            - link "Women's Pants" [ref=e159] [cursor=pointer]:
+              - /url: https://academybugs.com/store/womens-pants/
+        - heading "Filter by Price" [level=4] [ref=e160]
+        - generic [ref=e161]:
+          - link "$15.00 - $19.99 (1)" [ref=e163] [cursor=pointer]:
+            - /url: https://academybugs.com/store/professional-suit/?&perpage=25&pricepoint=7
+          - link "$25.00 - $49.99 (2)" [ref=e165] [cursor=pointer]:
+            - /url: https://academybugs.com/store/professional-suit/?&perpage=25&pricepoint=2
+          - link "$50.00 - $99.99 (3)" [ref=e167] [cursor=pointer]:
+            - /url: https://academybugs.com/store/professional-suit/?&perpage=25&pricepoint=3
+          - link "$100.00 - $299.99 (11)" [ref=e169] [cursor=pointer]:
+            - /url: https://academybugs.com/store/professional-suit/?&perpage=25&pricepoint=4
+          - link "Greater Than $299.99 (1)" [ref=e171] [cursor=pointer]:
+            - /url: https://academybugs.com/store/professional-suit/?&perpage=25&pricepoint=5
+        - heading "Shopping Cart" [level=4] [ref=e172]
+        - link "Shopping Cart (1)" [ref=e174] [cursor=pointer]:
+          - /url: "#"
+          - generic [ref=e175]: Shopping Cart (1)
+        - heading "Your Account" [level=4] [ref=e176]
+        - generic:
+          - generic [ref=e177]:
+            - generic [ref=e178]: Email Address*
+            - textbox [ref=e179]
+          - generic [ref=e180]:
+            - generic [ref=e181]: Password*
+            - textbox [ref=e182]
+          - link "Sign Up" [ref=e184] [cursor=pointer]:
+            - /url: https://academybugs.com/account/?ec_page=register
+          - button "SIGN IN" [ref=e186] [cursor=pointer]
+    - contentinfo [ref=e187]:
+      - generic [ref=e188]:
+        - generic [ref=e191]:
+          - generic:
+            - list:
+              - listitem [ref=e192]:
+                - link "uTest" [ref=e193] [cursor=pointer]:
+                  - /url: https://www.utest.com/academy
+                  - img "uTest" [ref=e194]
+              - listitem [ref=e195]:
+                - link "Terms & Conditions" [ref=e196] [cursor=pointer]:
+                  - /url: https://www.utest.com/terms-and-conditions
+              - listitem [ref=e197]:
+                - link "Privacy Policy" [ref=e198] [cursor=pointer]:
+                  - /url: https://www.utest.com/privacy-policy
+        - text:      
+  - generic [ref=e200]:
+    - generic [ref=e202]: "1"
+    - link "" [ref=e203] [cursor=pointer]:
+      - /url: "#"
+      - generic [ref=e204]: 

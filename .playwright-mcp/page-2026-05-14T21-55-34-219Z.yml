@@ -1,0 +1,224 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2] [cursor=pointer]: Manage consent
+  - generic [ref=e3]:
+    - link "Skip to content" [ref=e4] [cursor=pointer]:
+      - /url: "#sq-content"
+    - banner [ref=e5]:
+      - generic [ref=e6]:
+        - heading "AcademyBugs.com" [level=3] [ref=e8]:
+          - link "AcademyBugs.com" [ref=e9] [cursor=pointer]:
+            - /url: https://academybugs.com/
+        - navigation [ref=e10]:
+          - list [ref=e12]:
+            - listitem [ref=e13]:
+              - link "Examples of Bugs" [ref=e14] [cursor=pointer]:
+                - /url: https://academybugs.com/
+            - listitem [ref=e15]:
+              - link "Types of Bugs" [ref=e16] [cursor=pointer]:
+                - /url: https://academybugs.com/types/
+            - listitem [ref=e17]:
+              - link "Find Bugs" [ref=e18] [cursor=pointer]:
+                - /url: https://academybugs.com/find-bugs/
+            - listitem [ref=e19]:
+              - link "Report Bugs" [ref=e20] [cursor=pointer]:
+                - /url: https://academybugs.com/report-bugs/
+            - listitem [ref=e21]:
+              - link "" [ref=e22] [cursor=pointer]:
+                - /url: "#"
+                - generic [ref=e23]: 
+    - generic [ref=e25]:
+      - main [ref=e27]:
+        - article [ref=e28]:
+          - generic [ref=e30]:
+            - heading "Home / Shop / Fashion Type" [level=4] [ref=e31]:
+              - link "Home" [ref=e32] [cursor=pointer]:
+                - /url: https://academybugs.com
+              - text: /
+              - link "Shop" [ref=e33] [cursor=pointer]:
+                - /url: https://academybugs.com/store/
+              - text: /
+              - link "Fashion Type" [ref=e34] [cursor=pointer]:
+                - /url: https://academybugs.com/store/fashion-type/
+            - generic [ref=e35]:
+              - generic [ref=e36]:
+                - img "Denim Coat" [ref=e38] [cursor=pointer]
+                - generic [ref=e39]:
+                  - img "Denim Coat" [ref=e41] [cursor=pointer]
+                  - img "Denim Coat" [ref=e43] [cursor=pointer]
+                  - img "Denim Coat" [ref=e45] [cursor=pointer]
+                  - img "Denim Coat" [ref=e47] [cursor=pointer]
+                  - img "Denim Coat" [ref=e49] [cursor=pointer]
+              - generic:
+                - generic [ref=e50]:
+                  - heading "Home / Shop / Fashion Type" [level=4] [ref=e51]:
+                    - link "Home" [ref=e52] [cursor=pointer]:
+                      - /url: https://academybugs.com
+                    - text: /
+                    - link "Shop" [ref=e53] [cursor=pointer]:
+                      - /url: https://academybugs.com/store/
+                    - text: /
+                    - link "Fashion Type" [ref=e54] [cursor=pointer]:
+                      - /url: https://academybugs.com/store/fashion-type/
+                  - heading "Denim Coat" [level=1] [ref=e55]
+                  - generic [ref=e57]:
+                    - generic [ref=e58]: $149.95
+                    - text: $109.95
+                  - generic [ref=e59]: "Model Number: 4381370"
+                  - generic [ref=e60] [cursor=pointer]: Nam nec tellus a odio tincidunt auctor a ornare odio. Sed non mauris vitae erat consequat auctor eu in elit. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Mauris in erat justo. Nullam ac urna eu felis dapibus condimentum sit amet a augue. Sed non neque elit sed.
+                  - generic [ref=e63]:
+                    - generic [ref=e64]: Select Color
+                    - list:
+                      - listitem [ref=e65] [cursor=pointer]:
+                        - img "Blue" [ref=e66]
+                      - listitem [ref=e67] [cursor=pointer]:
+                        - img "Orang" [ref=e68]
+                      - listitem [ref=e69] [cursor=pointer]:
+                        - img "Pink" [ref=e70]
+                      - listitem [ref=e71] [cursor=pointer]:
+                        - img "Green" [ref=e72]
+                      - listitem [ref=e73] [cursor=pointer]:
+                        - img "Yelow" [ref=e74]
+                  - generic [ref=e76]:
+                    - generic [ref=e77]:
+                      - button "-" [ref=e78] [cursor=pointer]
+                      - spinbutton [ref=e79]: "1"
+                      - button "+" [ref=e80] [cursor=pointer]
+                    - button "ADD TO CART" [ref=e82] [cursor=pointer]
+                    - generic [ref=e83]: "Your Price: $109.95"
+                - generic [ref=e84]: 13 Left in Stock
+                - generic [ref=e85]:
+                  - text: "Categories:"
+                  - link "Sales" [ref=e86] [cursor=pointer]:
+                    - /url: https://academybugs.com/store/sales/
+                  - text: ","
+                  - link "New" [ref=e87] [cursor=pointer]:
+                    - /url: https://academybugs.com/store/new/
+                - generic [ref=e88]:
+                  - text: "Manufacturer:"
+                  - link "Denim" [ref=e89] [cursor=pointer]:
+                    - /url: https://academybugs.com/stored/extra/denim/
+                - generic [ref=e90]:
+                  - link "Facebook" [ref=e92] [cursor=pointer]:
+                    - /url: https://www.facebook.com/sharer/sharer.php?p[url]=https://academybugs.com/store/denim-coat/&p[images][o]=https://support.wpeasycart.com/sampledata/v4/products/pics1/womens-12b.jpg&p[title]=Denim+Coat
+                    - img "Facebook" [ref=e93]
+                  - link "X" [ref=e95] [cursor=pointer]:
+                    - /url: https://twitter.com/intent/tweet?original_referer=https://academybugs.com/store/denim-coat/&source=tweetbutton&text=Denim+Coat&url=https://academybugs.com/store/denim-coat/
+                    - img "X" [ref=e96]
+                  - link "Email" [ref=e98] [cursor=pointer]:
+                    - /url: "mailto:?subject=Denim Coat&body=Link for Product: https://academybugs.com/store/denim-coat/"
+                    - img "Email" [ref=e99]
+                  - link "Pinterest" [ref=e101] [cursor=pointer]:
+                    - /url: https://pinterest.com/pin/create/button/?media=https%3A%2F%2Fsupport.wpeasycart.com%2Fsampledata%2Fv4%2Fproducts%2Fpics1%2Fwomens-12b.jpg&description=Denim+Coat&url=https%3A%2F%2Facademybugs.com%2Fstore%2Fdenim-coat%2F
+                    - img "Pinterest" [ref=e102]
+                  - link "LinkedIn" [ref=e104] [cursor=pointer]:
+                    - /url: https://www.linkedin.com/shareArticle?mini=true&url=https://academybugs.com/store/denim-coat/
+                    - img "LinkedIn" [ref=e105]
+                  - link "MySpace" [ref=e107] [cursor=pointer]:
+                    - /url: https://academybugs.com/myspace/
+                    - img "MySpace" [ref=e108]
+            - generic [ref=e109]:
+              - list [ref=e110]:
+                - listitem [ref=e111] [cursor=pointer]: Description
+              - generic [ref=e114] [cursor=pointer]: Nam nec tellus a odio tincidunt auctor a ornare odio. Sed non mauris vitae erat consequat auctor eu in elit. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Mauris in erat justo. Nullam ac urna eu felis dapibus condimentum sit amet a augue. Sed non neque elit sed.
+        - generic [ref=e116]:
+          - heading "Leave a Reply" [level=3] [ref=e117]: Leave a Reply
+          - generic [ref=e118]:
+            - paragraph [ref=e119]:
+              - text: Your email address will not be published.
+              - generic [ref=e120]: Required fields are marked *
+            - paragraph [ref=e121]:
+              - textbox "Comment" [ref=e122]
+            - generic:
+              - paragraph [ref=e123]:
+                - textbox "Name*" [ref=e124]
+              - paragraph [ref=e125]:
+                - textbox "Email*" [ref=e126]
+              - paragraph [ref=e127]:
+                - textbox "Website" [ref=e128]
+            - paragraph [ref=e129]:
+              - button "Post Comment" [ref=e130] [cursor=pointer]
+      - generic [ref=e131]:
+        - heading "Select a Currency" [level=4] [ref=e132]
+        - combobox [ref=e134] [cursor=pointer]:
+          - option "USD" [selected]
+          - option "EUR"
+          - option "GBP"
+          - option "JPY"
+        - heading "Product Search" [level=4] [ref=e135]
+        - generic [ref=e137]:
+          - combobox [ref=e138]
+          - button "Search" [ref=e139] [cursor=pointer]
+        - heading "Hot Item" [level=4] [ref=e140]
+        - generic [ref=e141]:
+          - link [ref=e143] [cursor=pointer]:
+            - /url: https://academybugs.com/anchor-bracelet
+            - img [ref=e144]
+          - link "Silver Heart Bracelet" [ref=e146] [cursor=pointer]:
+            - /url: https://academybugs.com/store/heart-bracelet/
+          - generic [ref=e147]: $275.00
+        - heading "Store Menu" [level=4] [ref=e148]
+        - list [ref=e150]:
+          - listitem [ref=e151]:
+            - link "All Items" [ref=e152] [cursor=pointer]:
+              - /url: https://academybugs.com/store/all-items/
+          - listitem [ref=e153]:
+            - link "Accessories [+]" [ref=e154] [cursor=pointer]:
+              - /url: "#"
+              - text: Accessories
+              - generic [ref=e155]: "[+]"
+          - listitem [ref=e156]:
+            - link "Fashion Type [+]" [ref=e157] [cursor=pointer]:
+              - /url: "#"
+              - text: Fashion Type
+              - generic [ref=e158]: "[+]"
+          - listitem [ref=e159]:
+            - link "Women's Pants" [ref=e160] [cursor=pointer]:
+              - /url: https://academybugs.com/store/womens-pants/
+        - heading "Filter by Price" [level=4] [ref=e161]
+        - generic [ref=e162]:
+          - link "$15.00 - $19.99 (1)" [ref=e164] [cursor=pointer]:
+            - /url: https://academybugs.com/store/denim-coat/?&perpage=25&pricepoint=7
+          - link "$25.00 - $49.99 (2)" [ref=e166] [cursor=pointer]:
+            - /url: https://academybugs.com/store/denim-coat/?&perpage=25&pricepoint=2
+          - link "$50.00 - $99.99 (3)" [ref=e168] [cursor=pointer]:
+            - /url: https://academybugs.com/store/denim-coat/?&perpage=25&pricepoint=3
+          - link "$100.00 - $299.99 (11)" [ref=e170] [cursor=pointer]:
+            - /url: https://academybugs.com/store/denim-coat/?&perpage=25&pricepoint=4
+          - link "Greater Than $299.99 (1)" [ref=e172] [cursor=pointer]:
+            - /url: https://academybugs.com/store/denim-coat/?&perpage=25&pricepoint=5
+        - heading "Shopping Cart" [level=4] [ref=e173]
+        - link "Shopping Cart (1)" [ref=e175] [cursor=pointer]:
+          - /url: "#"
+          - generic [ref=e176]: Shopping Cart (1)
+        - heading "Your Account" [level=4] [ref=e177]
+        - generic:
+          - generic [ref=e178]:
+            - generic [ref=e179]: Email Address*
+            - textbox [ref=e180]
+          - generic [ref=e181]:
+            - generic [ref=e182]: Password*
+            - textbox [ref=e183]
+          - link "Sign Up" [ref=e185] [cursor=pointer]:
+            - /url: https://academybugs.com/account/?ec_page=register
+          - button "SIGN IN" [ref=e187] [cursor=pointer]
+    - contentinfo [ref=e188]:
+      - generic [ref=e189]:
+        - generic [ref=e192]:
+          - generic:
+            - list:
+              - listitem [ref=e193]:
+                - link "uTest" [ref=e194] [cursor=pointer]:
+                  - /url: https://www.utest.com/academy
+                  - img "uTest" [ref=e195]
+              - listitem [ref=e196]:
+                - link "Terms & Conditions" [ref=e197] [cursor=pointer]:
+                  - /url: https://www.utest.com/terms-and-conditions
+              - listitem [ref=e198]:
+                - link "Privacy Policy" [ref=e199] [cursor=pointer]:
+                  - /url: https://www.utest.com/privacy-policy
+        - text:      
+  - generic [ref=e201]:
+    - generic [ref=e203]: "1"
+    - link "" [ref=e204] [cursor=pointer]:
+      - /url: "#"
+      - generic [ref=e205]: 

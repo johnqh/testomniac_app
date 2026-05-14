@@ -1,0 +1,195 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2] [cursor=pointer]: Manage consent
+  - generic [ref=e3]:
+    - link "Skip to content" [ref=e4] [cursor=pointer]:
+      - /url: "#sq-content"
+    - banner [ref=e5]:
+      - generic [ref=e6]:
+        - heading "AcademyBugs.com" [level=3] [ref=e8]:
+          - link "AcademyBugs.com" [ref=e9] [cursor=pointer]:
+            - /url: https://academybugs.com/
+        - navigation [ref=e10]:
+          - list [ref=e12]:
+            - listitem [ref=e13]:
+              - link "Examples of Bugs" [ref=e14] [cursor=pointer]:
+                - /url: https://academybugs.com/
+            - listitem [ref=e15]:
+              - link "Types of Bugs" [ref=e16] [cursor=pointer]:
+                - /url: https://academybugs.com/types/
+            - listitem [ref=e17]:
+              - link "Find Bugs" [ref=e18] [cursor=pointer]:
+                - /url: https://academybugs.com/find-bugs/
+            - listitem [ref=e19]:
+              - link "Report Bugs" [ref=e20] [cursor=pointer]:
+                - /url: https://academybugs.com/report-bugs/
+            - listitem [ref=e21]:
+              - link "" [ref=e22] [cursor=pointer]:
+                - /url: "#"
+                - generic [ref=e23]: 
+    - generic [ref=e25]:
+      - main [ref=e27]:
+        - article [ref=e28]:
+          - generic [ref=e30]:
+            - heading "Home / Shop / All Items" [level=4] [ref=e31]:
+              - link "Home" [ref=e32] [cursor=pointer]:
+                - /url: https://academybugs.com
+              - text: /
+              - link "Shop" [ref=e33] [cursor=pointer]:
+                - /url: https://academybugs.com/store/
+              - text: /
+              - link "All Items" [ref=e34] [cursor=pointer]:
+                - /url: https://academybugs.com/store/all-items/
+            - generic [ref=e35]:
+              - img "Bright Red Bag" [ref=e38] [cursor=pointer]
+              - generic:
+                - generic [ref=e39]:
+                  - heading "Home / Shop / All Items" [level=4] [ref=e40]:
+                    - link "Home" [ref=e41] [cursor=pointer]:
+                      - /url: https://academybugs.com
+                    - text: /
+                    - link "Shop" [ref=e42] [cursor=pointer]:
+                      - /url: https://academybugs.com/store/
+                    - text: /
+                    - link "All Items" [ref=e43] [cursor=pointer]:
+                      - /url: https://academybugs.com/store/all-items/
+                  - heading "Bright Red Bag" [level=1] [ref=e44]
+                  - generic [ref=e46]: $92.94
+                  - generic [ref=e47]: "Model Number: 3881370"
+                  - generic [ref=e48] [cursor=pointer]: Nam nec tellus a odio tincidunt auctor a ornare odio. Sed non mauris vitae erat consequat auctor eu in elit. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Mauris in erat justo. Nullam ac urna eu felis dapibus condimentum sit amet a augue. Sed non neque elit sed ut.
+                  - generic [ref=e50]:
+                    - generic [ref=e51]:
+                      - button "-" [ref=e52] [cursor=pointer]
+                      - spinbutton [ref=e53]: "1"
+                      - button "+" [ref=e54] [cursor=pointer]
+                    - button "ADD TO CART" [ref=e56] [cursor=pointer]
+                    - generic [ref=e57]: "Your Price: $92.94"
+                - generic [ref=e58]: 4 Left in Stock
+                - generic [ref=e59]:
+                  - text: "Manufacturer:"
+                  - link "Handmade" [ref=e60] [cursor=pointer]:
+                    - /url: https://academybugs.com/stored/extra/handmade/
+                - generic [ref=e61]:
+                  - link "Facebook" [ref=e63] [cursor=pointer]:
+                    - /url: https://www.facebook.com/sharer/sharer.php?p[url]=https://academybugs.com/store/bright-red-bag/&p[images][o]=https://academybugs.com/wp-content/uploads/2020/09/bright-red-bag.jpg&p[title]=Bright+Red+Bag
+                    - img "Facebook" [ref=e64]
+                  - link "X" [ref=e66] [cursor=pointer]:
+                    - /url: https://twitter.com/intent/tweet?original_referer=https://academybugs.com/store/bright-red-bag/&source=tweetbutton&text=Bright+Red+Bag&url=https://academybugs.com/store/bright-red-bag/
+                    - img "X" [ref=e67]
+                  - link "Email" [ref=e69] [cursor=pointer]:
+                    - /url: "mailto:?subject=Bright Red Bag&body=Link for Product: https://academybugs.com/store/bright-red-bag/"
+                    - img "Email" [ref=e70]
+                  - link "Pinterest" [ref=e72] [cursor=pointer]:
+                    - /url: https://pinterest.com/pin/create/button/?media=https%3A%2F%2Facademybugs.com%2Fwp-content%2Fuploads%2F2020%2F09%2Fbright-red-bag.jpg&description=Bright+Red+Bag&url=https%3A%2F%2Facademybugs.com%2Fstore%2Fbright-red-bag%2F
+                    - img "Pinterest" [ref=e73]
+                  - link "LinkedIn" [ref=e75] [cursor=pointer]:
+                    - /url: https://www.linkedin.com/shareArticle?mini=true&url=https://academybugs.com/store/bright-red-bag/
+                    - img "LinkedIn" [ref=e76]
+                  - link "MySpace" [ref=e78] [cursor=pointer]:
+                    - /url: https://academybugs.com/myspace/
+                    - img "MySpace" [ref=e79]
+            - generic [ref=e80]:
+              - list [ref=e81]:
+                - listitem [ref=e82] [cursor=pointer]: Description
+              - paragraph [ref=e85] [cursor=pointer]: Nam nec tellus a odio tincidunt auctor a ornare odio. Sed non mauris vitae erat consequat auctor eu in elit. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Mauris in erat justo. Nullam ac urna eu felis dapibus condimentum sit amet a augue. Sed non neque elit sed ut.
+        - generic [ref=e87]:
+          - heading "Leave a Reply" [level=3] [ref=e88]: Leave a Reply
+          - generic [ref=e89]:
+            - paragraph [ref=e90]:
+              - text: Your email address will not be published.
+              - generic [ref=e91]: Required fields are marked *
+            - paragraph [ref=e92]:
+              - textbox "Comment" [ref=e93]
+            - generic:
+              - paragraph [ref=e94]:
+                - textbox "Name*" [ref=e95]
+              - paragraph [ref=e96]:
+                - textbox "Email*" [ref=e97]
+              - paragraph [ref=e98]:
+                - textbox "Website" [ref=e99]
+            - paragraph [ref=e100]:
+              - button "Post Comment" [ref=e101] [cursor=pointer]
+      - generic [ref=e102]:
+        - heading "Select a Currency" [level=4] [ref=e103]
+        - combobox [ref=e105] [cursor=pointer]:
+          - option "USD" [selected]
+          - option "EUR"
+          - option "GBP"
+          - option "JPY"
+        - heading "Product Search" [level=4] [ref=e106]
+        - generic [ref=e108]:
+          - combobox [ref=e109]
+          - button "Search" [ref=e110] [cursor=pointer]
+        - heading "Hot Item" [level=4] [ref=e111]
+        - generic [ref=e112]:
+          - link [ref=e114] [cursor=pointer]:
+            - /url: https://academybugs.com/anchor-bracelet
+            - img [ref=e115]
+          - link "Silver Heart Bracelet" [ref=e117] [cursor=pointer]:
+            - /url: https://academybugs.com/store/heart-bracelet/
+          - generic [ref=e118]: $275.00
+        - heading "Store Menu" [level=4] [ref=e119]
+        - list [ref=e121]:
+          - listitem [ref=e122]:
+            - link "All Items" [ref=e123] [cursor=pointer]:
+              - /url: https://academybugs.com/store/all-items/
+          - listitem [ref=e124]:
+            - link "Accessories [+]" [ref=e125] [cursor=pointer]:
+              - /url: "#"
+              - text: Accessories
+              - generic [ref=e126]: "[+]"
+          - listitem [ref=e127]:
+            - link "Fashion Type [+]" [ref=e128] [cursor=pointer]:
+              - /url: "#"
+              - text: Fashion Type
+              - generic [ref=e129]: "[+]"
+          - listitem [ref=e130]:
+            - link "Women's Pants" [ref=e131] [cursor=pointer]:
+              - /url: https://academybugs.com/store/womens-pants/
+        - heading "Filter by Price" [level=4] [ref=e132]
+        - generic [ref=e133]:
+          - link "$15.00 - $19.99 (1)" [ref=e135] [cursor=pointer]:
+            - /url: https://academybugs.com/store/bright-red-bag/?&perpage=25&pricepoint=7
+          - link "$25.00 - $49.99 (2)" [ref=e137] [cursor=pointer]:
+            - /url: https://academybugs.com/store/bright-red-bag/?&perpage=25&pricepoint=2
+          - link "$50.00 - $99.99 (3)" [ref=e139] [cursor=pointer]:
+            - /url: https://academybugs.com/store/bright-red-bag/?&perpage=25&pricepoint=3
+          - link "$100.00 - $299.99 (11)" [ref=e141] [cursor=pointer]:
+            - /url: https://academybugs.com/store/bright-red-bag/?&perpage=25&pricepoint=4
+          - link "Greater Than $299.99 (1)" [ref=e143] [cursor=pointer]:
+            - /url: https://academybugs.com/store/bright-red-bag/?&perpage=25&pricepoint=5
+        - heading "Shopping Cart" [level=4] [ref=e144]
+        - link "Shopping Cart (1)" [ref=e146] [cursor=pointer]:
+          - /url: "#"
+          - generic [ref=e147]: Shopping Cart (1)
+        - heading "Your Account" [level=4] [ref=e148]
+        - generic:
+          - generic [ref=e149]:
+            - generic [ref=e150]: Email Address*
+            - textbox [ref=e151]
+          - generic [ref=e152]:
+            - generic [ref=e153]: Password*
+            - textbox [ref=e154]
+          - link "Sign Up" [ref=e156] [cursor=pointer]:
+            - /url: https://academybugs.com/account/?ec_page=register
+          - button "SIGN IN" [ref=e158] [cursor=pointer]
+    - contentinfo [ref=e159]:
+      - generic [ref=e160]:
+        - generic [ref=e163]:
+          - generic:
+            - list:
+              - listitem [ref=e164]:
+                - link "uTest" [ref=e165] [cursor=pointer]:
+                  - /url: https://www.utest.com/academy
+                  - img "uTest" [ref=e166]
+              - listitem [ref=e167]:
+                - link "Terms & Conditions" [ref=e168] [cursor=pointer]:
+                  - /url: https://www.utest.com/terms-and-conditions
+              - listitem [ref=e169]:
+                - link "Privacy Policy" [ref=e170] [cursor=pointer]:
+                  - /url: https://www.utest.com/privacy-policy
+        - text:      
+  - generic [ref=e172]:
+    - generic [ref=e174]: "1"
+    - link "" [ref=e175] [cursor=pointer]:
+      - /url: "#"
+      - generic [ref=e176]: 
