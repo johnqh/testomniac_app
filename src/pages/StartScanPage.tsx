@@ -1,10 +1,30 @@
-import { useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useApi } from '@sudobility/building_blocks/firebase';
 import SEOHead from '@/components/SEOHead';
 import { useLocalizedNavigate } from '../hooks/useLocalizedNavigate';
 import { ScanForm } from '../components/scanner/ScanForm';
 import { CONSTANTS } from '../config/constants';
+
+interface StoredCredential {
+  id: string;
+  label: string;
+  authProvider: string;
+  email?: string;
+}
+
+const AUTH_PROVIDER_LABELS: Record<string, string> = {
+  email_password: 'Email / Password',
+  google: 'Google',
+  apple: 'Apple',
+  microsoft: 'Microsoft',
+  twitter: 'Twitter / X',
+  facebook: 'Facebook',
+  github: 'GitHub',
+  linkedin: 'LinkedIn',
+  okta: 'Okta',
+  saml: 'SAML',
+};
 
 export default function StartScanPage() {
   const { entitySlug } = useParams<{ entitySlug: string }>();
@@ -13,6 +33,38 @@ export default function StartScanPage() {
   const [error, setError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [sizeClass, setSizeClass] = useState<'desktop' | 'mobile'>('desktop');
+
+  // Login credential state
+  const [continueWithLogin, setContinueWithLogin] = useState(false);
+  const [entityCredentialId, setEntityCredentialId] = useState('');
+  const [loginUrl, setLoginUrl] = useState('');
+  const [storedCredentials, setStoredCredentials] = useState<StoredCredential[]>([]);
+  const [loadingCredentials, setLoadingCredentials] = useState(false);
+
+  const fetchCredentials = useCallback(async () => {
+    if (!entitySlug || !token) return;
+    setLoadingCredentials(true);
+    try {
+      const res = await fetch(`${CONSTANTS.API_URL}/api/v1/entities/${entitySlug}/credentials`, {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      const json = await res.json();
+      if (json.success) {
+        setStoredCredentials(json.data);
+      }
+    } catch {
+      // silently ignore - credentials are optional
+    } finally {
+      setLoadingCredentials(false);
+    }
+  }, [entitySlug, token]);
+
+  useEffect(() => {
+    fetchCredentials();
+  }, [fetchCredentials]);
 
   async function handleSubmit(url: string, email?: string) {
     setError(null);
@@ -28,6 +80,13 @@ export default function StartScanPage() {
           url,
           sizeClass,
           ...(email ? { reportEmail: email } : {}),
+          ...(continueWithLogin
+            ? {
+                continueWithLogin: true,
+                ...(entityCredentialId ? { entityCredentialId } : {}),
+                ...(loginUrl.trim() ? { loginUrl: loginUrl.trim() } : {}),
+              }
+            : {}),
         }),
       });
       const data = await response.json();
@@ -91,6 +150,72 @@ export default function StartScanPage() {
                   Mobile
                 </button>
               </div>
+            </div>
+
+            {/* Login Credential Option */}
+            <div>
+              <label className="flex items-center gap-2 cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={continueWithLogin}
+                  onChange={e => {
+                    setContinueWithLogin(e.target.checked);
+                    if (!e.target.checked) {
+                      setEntityCredentialId('');
+                      setLoginUrl('');
+                    }
+                  }}
+                  className="rounded border-gray-300 dark:border-gray-600 text-blue-600 focus:ring-blue-500"
+                />
+                <span className="text-sm text-gray-600 dark:text-gray-400">
+                  Continue with login
+                </span>
+              </label>
+
+              {continueWithLogin && (
+                <div className="mt-3 ml-6 space-y-3">
+                  <div>
+                    <label className="block text-sm text-gray-600 dark:text-gray-400 mb-1">
+                      Stored Credential
+                    </label>
+                    <select
+                      value={entityCredentialId}
+                      onChange={e => setEntityCredentialId(e.target.value)}
+                      disabled={loadingCredentials}
+                      className="w-full px-3 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    >
+                      <option value="">
+                        {loadingCredentials ? 'Loading...' : 'Select a credential'}
+                      </option>
+                      {storedCredentials.map(cred => (
+                        <option key={cred.id} value={cred.id}>
+                          {cred.label} (
+                          {AUTH_PROVIDER_LABELS[cred.authProvider] || cred.authProvider}
+                          {cred.email ? ` - ${cred.email}` : ''})
+                        </option>
+                      ))}
+                    </select>
+                    {!loadingCredentials && storedCredentials.length === 0 && (
+                      <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
+                        No stored credentials. Add them in Settings.
+                      </p>
+                    )}
+                  </div>
+
+                  <div>
+                    <label className="block text-sm text-gray-600 dark:text-gray-400 mb-1">
+                      Login URL (optional)
+                    </label>
+                    <input
+                      type="text"
+                      value={loginUrl}
+                      onChange={e => setLoginUrl(e.target.value)}
+                      placeholder="https://example.com/login"
+                      className="w-full px-3 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    />
+                  </div>
+                </div>
+              )}
             </div>
 
             <p className="text-xs text-gray-500 dark:text-gray-400">
