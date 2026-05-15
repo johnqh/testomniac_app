@@ -16,10 +16,17 @@ interface DataTableProps<T> {
   columns: ColumnDef<T, unknown>[];
   pageSize?: number;
   isLoading?: boolean;
+  initialSorting?: SortingState;
 }
 
-export function DataTable<T>({ data, columns, pageSize = 20, isLoading }: DataTableProps<T>) {
-  const [sorting, setSorting] = useState<SortingState>([]);
+export function DataTable<T>({
+  data,
+  columns,
+  pageSize = 20,
+  isLoading,
+  initialSorting,
+}: DataTableProps<T>) {
+  const [sorting, setSorting] = useState<SortingState>(initialSorting ?? []);
 
   const table = useReactTable({
     data,

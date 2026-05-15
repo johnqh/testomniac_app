@@ -9,6 +9,7 @@ import { DataTable } from '../components/data/DataTable';
 interface FindingRow {
   id: number;
   type: string;
+  priority: number;
   title: string;
   description: string;
   expertiseRuleId: number | null;
@@ -20,7 +21,45 @@ const TYPE_COLORS: Record<string, string> = {
   warning: 'text-yellow-600 dark:text-yellow-400',
 };
 
+const PRIORITY_CONFIG: Record<number, { label: string; className: string }> = {
+  0: {
+    label: 'P0 - Crash',
+    className: 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200',
+  },
+  1: {
+    label: 'P1 - Critical',
+    className: 'bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-200',
+  },
+  2: {
+    label: 'P2 - Major',
+    className: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200',
+  },
+  3: {
+    label: 'P3 - Minor',
+    className: 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200',
+  },
+  4: {
+    label: 'P4 - Suggestion',
+    className: 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-200',
+  },
+};
+
 const columns = [
+  columnHelper.accessor('priority', {
+    header: 'Priority',
+    sortingFn: 'basic',
+    cell: info => {
+      const value = info.getValue();
+      const config = PRIORITY_CONFIG[value] ?? PRIORITY_CONFIG[3];
+      return (
+        <span
+          className={`inline-block rounded px-2 py-0.5 text-xs font-semibold ${config.className}`}
+        >
+          {config.label}
+        </span>
+      );
+    },
+  }),
   columnHelper.accessor('type', {
     header: 'Type',
     cell: info => (
@@ -80,7 +119,12 @@ export default function IssuesPage() {
       <SEOHead title="Findings" description="" noIndex />
       <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-6">Findings</h1>
 
-      <DataTable data={findings} columns={columns as never} isLoading={isLoading} />
+      <DataTable
+        data={findings}
+        columns={columns as never}
+        isLoading={isLoading}
+        initialSorting={[{ id: 'priority', desc: false }]}
+      />
     </div>
   );
 }
