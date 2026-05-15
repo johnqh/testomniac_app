@@ -1,5 +1,7 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useApi } from '@sudobility/building_blocks/firebase';
+import { useSubmitScan } from '@sudobility/testomniac_client';
 import SEOHead from '@/components/SEOHead';
 import { buildHowToSchema } from '@/components/buildHowToSchema';
 import { ScanForm } from '../components/scanner/ScanForm';
@@ -9,9 +11,14 @@ import { useLocalizedNavigate } from '../hooks/useLocalizedNavigate';
 export default function HomePage() {
   const { t } = useTranslation('common');
   const { t: tHowTo } = useTranslation('howto');
+  const { networkClient } = useApi();
   const { navigate } = useLocalizedNavigate();
   const [error, setError] = useState<string | null>(null);
-  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const { submitScan, isSubmitting } = useSubmitScan({
+    networkClient,
+    baseUrl: CONSTANTS.API_URL,
+  });
 
   const seoTitle = t('seo.home.title');
   const seoDescription = t('seo.home.description');
@@ -25,20 +32,14 @@ export default function HomePage() {
 
   async function handleSubmit(url: string, email?: string) {
     setError(null);
-    setIsSubmitting(true);
     try {
-      const response = await fetch(`${CONSTANTS.API_URL}/api/v1/scan`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          url,
-          ...(email ? { reportEmail: email } : {}),
-        }),
+      const response = await submitScan({
+        url,
+        ...(email ? { reportEmail: email } : {}),
       });
-      const data = await response.json();
 
-      if (data.success && data.data) {
-        const result = data.data;
+      if (response.success && response.data) {
+        const result = response.data;
         if (result.status === 'pending' && result.testRunId) {
           navigate(`/scan/${result.testRunId}/progress`);
         } else if (result.status === 'duplicate_owned') {
@@ -54,12 +55,10 @@ export default function HomePage() {
           setError(result.message || 'Validation failed. Please check your input.');
         }
       } else {
-        setError(data.error || 'Failed to start discovery run');
+        setError(response.error || 'Failed to start discovery run');
       }
-    } catch {
-      setError('Failed to connect to server');
-    } finally {
-      setIsSubmitting(false);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to connect to server');
     }
   }
 

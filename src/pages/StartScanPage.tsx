@@ -1,17 +1,11 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useApi } from '@sudobility/building_blocks/firebase';
+import { useEntityCredentials, useSubmitScan } from '@sudobility/testomniac_client';
 import SEOHead from '@/components/SEOHead';
 import { useLocalizedNavigate } from '../hooks/useLocalizedNavigate';
 import { ScanForm } from '../components/scanner/ScanForm';
 import { CONSTANTS } from '../config/constants';
-
-interface StoredCredential {
-  id: string;
-  label: string;
-  authProvider: string;
-  email?: string;
-}
 
 const AUTH_PROVIDER_LABELS: Record<string, string> = {
   email_password: 'Email / Password',
@@ -28,10 +22,9 @@ const AUTH_PROVIDER_LABELS: Record<string, string> = {
 
 export default function StartScanPage() {
   const { entitySlug } = useParams<{ entitySlug: string }>();
-  const { token } = useApi();
+  const { networkClient, token } = useApi();
   const { navigate } = useLocalizedNavigate();
   const [error, setError] = useState<string | null>(null);
-  const [isSubmitting, setIsSubmitting] = useState(false);
   const [sizeClass, setSizeClass] = useState<'desktop' | 'mobile'>('desktop');
 
   // Scan scope
@@ -41,71 +34,48 @@ export default function StartScanPage() {
   const [continueWithLogin, setContinueWithLogin] = useState(false);
   const [entityCredentialId, setEntityCredentialId] = useState('');
   const [loginUrl, setLoginUrl] = useState('');
-  const [storedCredentials, setStoredCredentials] = useState<StoredCredential[]>([]);
-  const [loadingCredentials, setLoadingCredentials] = useState(false);
 
-  const fetchCredentials = useCallback(async () => {
-    if (!entitySlug || !token) return;
-    setLoadingCredentials(true);
-    try {
-      const res = await fetch(`${CONSTANTS.API_URL}/api/v1/entities/${entitySlug}/credentials`, {
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      const json = await res.json();
-      if (json.success) {
-        setStoredCredentials(json.data);
-      }
-    } catch {
-      // silently ignore - credentials are optional
-    } finally {
-      setLoadingCredentials(false);
-    }
-  }, [entitySlug, token]);
+  // Credentials hook
+  const { credentials: storedCredentials, isLoading: loadingCredentials } = useEntityCredentials({
+    networkClient,
+    baseUrl: CONSTANTS.API_URL,
+    entitySlug: entitySlug ?? '',
+    token: token ?? '',
+    enabled: !!entitySlug && !!token,
+  });
 
-  useEffect(() => {
-    fetchCredentials();
-  }, [fetchCredentials]);
+  // Scan submission hook
+  const { submitScan, isSubmitting } = useSubmitScan({
+    networkClient,
+    baseUrl: CONSTANTS.API_URL,
+  });
 
   async function handleSubmit(url: string, email?: string) {
     setError(null);
-    setIsSubmitting(true);
     try {
-      const response = await fetch(`${CONSTANTS.API_URL}/api/v1/scan`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          ...(token ? { Authorization: `Bearer ${token}` } : {}),
-        },
-        body: JSON.stringify({
-          url,
-          sizeClass,
-          ...(email ? { reportEmail: email } : {}),
-          ...(scanScopePath.trim() ? { scanScopePath: scanScopePath.trim() } : {}),
-          ...(continueWithLogin
-            ? {
-                continueWithLogin: true,
-                ...(entityCredentialId ? { entityCredentialId: Number(entityCredentialId) } : {}),
-                ...(loginUrl.trim() ? { loginUrl: loginUrl.trim() } : {}),
-              }
-            : {}),
-        }),
+      const response = await submitScan({
+        url,
+        sizeClass,
+        ...(email ? { reportEmail: email } : {}),
+        ...(scanScopePath.trim() ? { scanScopePath: scanScopePath.trim() } : {}),
+        ...(continueWithLogin
+          ? {
+              continueWithLogin: true,
+              ...(entityCredentialId ? { entityCredentialId: Number(entityCredentialId) } : {}),
+              ...(loginUrl.trim() ? { loginUrl: loginUrl.trim() } : {}),
+            }
+          : {}),
       });
-      const data = await response.json();
 
-      if (data.success && data.data?.testRunId && data.data?.testEnvironmentId) {
+      if (response.success && response.data?.testRunId && response.data?.testEnvironmentId) {
         navigate(
-          `/dashboard/${entitySlug}/environments/${data.data.testEnvironmentId}/runs/${data.data.testRunId}/progress`
+          `/dashboard/${entitySlug}/environments/${response.data.testEnvironmentId}/runs/${response.data.testRunId}/progress`
         );
       } else {
-        setError(data.error || data.data?.message || 'Failed to start scan');
+        setError(response.error || response.data?.message || 'Failed to start scan');
       }
-    } catch {
-      setError('Failed to connect to server');
-    } finally {
-      setIsSubmitting(false);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to connect to server');
     }
   }
 

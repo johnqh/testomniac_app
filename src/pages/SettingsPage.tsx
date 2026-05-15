@@ -1,9 +1,16 @@
-import { type ReactNode, useCallback, useEffect, useState } from 'react';
+import { type ReactNode, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { GlobalSettingsPage } from '@sudobility/building_blocks';
 import { useApi } from '@sudobility/building_blocks/firebase';
 import { useTheme } from '@sudobility/components';
+import {
+  useEntityCredentials,
+  useCreateEntityCredential,
+  useUpdateEntityCredential,
+  useDeleteEntityCredential,
+} from '@sudobility/testomniac_client';
+import type { EntityCredentialResponse } from '@sudobility/testomniac_types';
 import SEOHead from '@/components/SEOHead';
 import { useSetPageConfig } from '../hooks/usePageConfig';
 import { analyticsService } from '../config/analytics';
@@ -197,20 +204,6 @@ const AUTH_PROVIDER_ICONS: Record<AuthProvider, ReactNode> = {
   ),
 };
 
-interface EntityCredentialResponse {
-  id: string;
-  entityId: string;
-  label: string;
-  authProvider: AuthProvider;
-  loginUrl?: string;
-  email?: string;
-  username?: string;
-  hasPassword: boolean;
-  hasTwoFactorCode: boolean;
-  createdAt: string;
-  updatedAt: string;
-}
-
 interface CredentialFormData {
   label: string;
   authProvider: AuthProvider;
@@ -231,7 +224,7 @@ const EMPTY_FORM: CredentialFormData = {
 export default function SettingsPage() {
   const { t } = useTranslation('common');
   const { entitySlug } = useParams<{ entitySlug: string }>();
-  const { token } = useApi();
+  const { networkClient, token } = useApi();
   const { theme, fontSize, setTheme, setFontSize } = useTheme();
   const onTrack = useBuildingBlocksAnalytics();
 
@@ -241,52 +234,38 @@ export default function SettingsPage() {
     analyticsService.trackPageView('/settings', 'Settings');
   }, []);
 
-  // Credentials state
-  const [credentials, setCredentials] = useState<EntityCredentialResponse[]>([]);
-  const [loadingCredentials, setLoadingCredentials] = useState(false);
-  const [credentialsError, setCredentialsError] = useState<string | null>(null);
+  // Credential hooks
+  const hookConfig = {
+    networkClient,
+    baseUrl: CONSTANTS.API_URL,
+    entitySlug: entitySlug ?? '',
+    token: token ?? '',
+  };
+
+  const {
+    credentials,
+    isLoading: loadingCredentials,
+    error: credentialsFetchError,
+  } = useEntityCredentials({ ...hookConfig, enabled: !!entitySlug && !!token });
+
+  const { createCredential, isCreating } = useCreateEntityCredential(hookConfig);
+  const { updateCredential, isUpdating } = useUpdateEntityCredential(hookConfig);
+  const { deleteCredential } = useDeleteEntityCredential(hookConfig);
+
+  // Form state
   const [showForm, setShowForm] = useState(false);
-  const [editingId, setEditingId] = useState<string | null>(null);
+  const [editingId, setEditingId] = useState<number | null>(null);
   const [formData, setFormData] = useState<CredentialFormData>(EMPTY_FORM);
-  const [formSubmitting, setFormSubmitting] = useState(false);
-  const [deletingId, setDeletingId] = useState<string | null>(null);
+  const [mutationError, setMutationError] = useState<string | null>(null);
+  const [deletingId, setDeletingId] = useState<number | null>(null);
 
-  const headers = useCallback(
-    () => ({
-      'Content-Type': 'application/json',
-      ...(token ? { Authorization: `Bearer ${token}` } : {}),
-    }),
-    [token]
-  );
-
-  const fetchCredentials = useCallback(async () => {
-    if (!entitySlug || !token) return;
-    setLoadingCredentials(true);
-    setCredentialsError(null);
-    try {
-      const res = await fetch(`${CONSTANTS.API_URL}/api/v1/entities/${entitySlug}/credentials`, {
-        headers: headers(),
-      });
-      const json = await res.json();
-      if (json.success) {
-        setCredentials(json.data);
-      } else {
-        setCredentialsError(json.error || 'Failed to load credentials');
-      }
-    } catch {
-      setCredentialsError('Failed to connect to server');
-    } finally {
-      setLoadingCredentials(false);
-    }
-  }, [entitySlug, token, headers]);
-
-  useEffect(() => {
-    fetchCredentials();
-  }, [fetchCredentials]);
+  const credentialsError = mutationError || credentialsFetchError;
+  const formSubmitting = isCreating || isUpdating;
 
   function openAddForm() {
     setEditingId(null);
     setFormData(EMPTY_FORM);
+    setMutationError(null);
     setShowForm(true);
   }
 
@@ -299,6 +278,7 @@ export default function SettingsPage() {
       password: '',
       loginUrl: cred.loginUrl || '',
     });
+    setMutationError(null);
     setShowForm(true);
   }
 
@@ -306,11 +286,12 @@ export default function SettingsPage() {
     setShowForm(false);
     setEditingId(null);
     setFormData(EMPTY_FORM);
+    setMutationError(null);
   }
 
   async function handleFormSubmit() {
     if (!entitySlug || !formData.label.trim()) return;
-    setFormSubmitting(true);
+    setMutationError(null);
     try {
       const body: Record<string, string> = {
         label: formData.label.trim(),
@@ -320,46 +301,27 @@ export default function SettingsPage() {
       if (formData.password) body.password = formData.password;
       if (formData.loginUrl.trim()) body.loginUrl = formData.loginUrl.trim();
 
-      const url = editingId
-        ? `${CONSTANTS.API_URL}/api/v1/entities/${entitySlug}/credentials/${editingId}`
-        : `${CONSTANTS.API_URL}/api/v1/entities/${entitySlug}/credentials`;
-      const method = editingId ? 'PUT' : 'POST';
-
-      const res = await fetch(url, {
-        method,
-        headers: headers(),
-        body: JSON.stringify(body),
-      });
-      const json = await res.json();
-      if (json.success) {
-        cancelForm();
-        fetchCredentials();
+      if (editingId) {
+        await updateCredential({ credentialId: editingId, data: body });
       } else {
-        setCredentialsError(json.error || 'Failed to save credential');
+        await createCredential({ entityId: entitySlug, ...body } as Parameters<
+          typeof createCredential
+        >[0]);
       }
-    } catch {
-      setCredentialsError('Failed to connect to server');
-    } finally {
-      setFormSubmitting(false);
+      cancelForm();
+    } catch (err) {
+      setMutationError(err instanceof Error ? err.message : 'Failed to save credential');
     }
   }
 
-  async function handleDelete(id: string) {
+  async function handleDelete(id: number) {
     if (!entitySlug) return;
     setDeletingId(id);
+    setMutationError(null);
     try {
-      const res = await fetch(
-        `${CONSTANTS.API_URL}/api/v1/entities/${entitySlug}/credentials/${id}`,
-        { method: 'DELETE', headers: headers() }
-      );
-      const json = await res.json();
-      if (json.success) {
-        setCredentials(prev => prev.filter(c => c.id !== id));
-      } else {
-        setCredentialsError(json.error || 'Failed to delete credential');
-      }
-    } catch {
-      setCredentialsError('Failed to connect to server');
+      await deleteCredential(id);
+    } catch (err) {
+      setMutationError(err instanceof Error ? err.message : 'Failed to delete credential');
     } finally {
       setDeletingId(null);
     }
