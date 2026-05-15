@@ -16,6 +16,66 @@ interface FindingRow {
   expertiseRuleId: number | null;
 }
 
+/* Small 10x10 SVG icons for each priority level */
+const PRIORITY_ICONS: Record<number, React.ReactNode> = {
+  0: (
+    <svg className="w-2.5 h-2.5 flex-shrink-0" viewBox="0 0 16 16" fill="currentColor">
+      <path d="M8 1.5a6.5 6.5 0 100 13 6.5 6.5 0 000-13zM7 4.5h2v4H7zm0 5.5h2v2H7z" />
+    </svg>
+  ),
+  1: (
+    <svg className="w-2.5 h-2.5 flex-shrink-0" viewBox="0 0 16 16" fill="currentColor">
+      <path d="M8 1l7 13H1zm0 4v4m0 1.5v.5" />
+      <path
+        d="M7.13 2.26a1 1 0 011.74 0l6 11A1 1 0 0114 15H2a1 1 0 01-.87-1.5zm.87 4v3.5m0 2v.5"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.2"
+        strokeLinecap="round"
+      />
+    </svg>
+  ),
+  2: (
+    <svg
+      className="w-2.5 h-2.5 flex-shrink-0"
+      viewBox="0 0 16 16"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.5"
+      strokeLinecap="round"
+    >
+      <circle cx="8" cy="8" r="6.5" />
+      <path d="M8 5v3.5M8 10.5v.5" />
+    </svg>
+  ),
+  3: (
+    <svg
+      className="w-2.5 h-2.5 flex-shrink-0"
+      viewBox="0 0 16 16"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.5"
+      strokeLinecap="round"
+    >
+      <circle cx="8" cy="8" r="6.5" />
+      <path d="M6 8h4" />
+    </svg>
+  ),
+  4: (
+    <svg
+      className="w-2.5 h-2.5 flex-shrink-0"
+      viewBox="0 0 16 16"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.5"
+      strokeLinecap="round"
+    >
+      <circle cx="8" cy="8" r="6.5" />
+      <path d="M8 5v6M5 8h6" />
+    </svg>
+  ),
+};
+
 const PRIORITY_CONFIG: Record<
   number,
   { label: string; shortLabel: string; className: string; chipClassName: string }
@@ -78,8 +138,9 @@ const columns = [
       const config = PRIORITY_CONFIG[value] ?? PRIORITY_CONFIG[3];
       return (
         <span
-          className={`inline-flex items-center justify-center min-w-[90px] rounded-full px-2.5 py-0.5 text-xs font-semibold ${config.className}`}
+          className={`inline-flex items-center gap-1 justify-center min-w-[90px] rounded-full px-2.5 py-0.5 text-xs font-semibold ${config.className}`}
         >
+          {PRIORITY_ICONS[value]}
           {config.label}
         </span>
       );

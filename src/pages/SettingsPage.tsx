@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { type ReactNode, useCallback, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { GlobalSettingsPage } from '@sudobility/building_blocks';
@@ -36,6 +36,165 @@ const AUTH_PROVIDER_LABELS: Record<AuthProvider, string> = {
   linkedin: 'LinkedIn',
   okta: 'Okta',
   saml: 'SAML',
+};
+
+const AUTH_PROVIDER_ICONS: Record<AuthProvider, ReactNode> = {
+  email_password: (
+    <svg
+      width="12"
+      height="12"
+      viewBox="0 0 12 12"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <rect x="1" y="3" width="7" height="5" rx="0.5" />
+      <polyline points="1,3 4.5,6 8,3" />
+      <path d="M9.5 3.5v-1a1 1 0 0 1 1-1v0a1 1 0 0 1 1 1v3h-2" />
+    </svg>
+  ),
+  google: (
+    <svg
+      width="12"
+      height="12"
+      viewBox="0 0 12 12"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.3"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <path d="M10.5 6H6.5" />
+      <path d="M10 4.5a4.5 4.5 0 1 1-1.5-2.5" />
+    </svg>
+  ),
+  apple: (
+    <svg
+      width="12"
+      height="12"
+      viewBox="0 0 12 12"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <path d="M6 2.5C6 1.5 7 0.5 8 0.5" />
+      <path d="M3.5 3.5c-1.5.5-2.5 2-2.5 4 0 2.5 2 4 3.5 4 .7 0 1-.3 1.5-.3s.8.3 1.5.3c1.5 0 3.5-1.5 3.5-4 0-1.5-1-3-2-3.5-.7-.3-1.5-.2-2 .2-.5-.4-1.3-.5-2-.2-.5.2-.7.3-1 .5z" />
+    </svg>
+  ),
+  microsoft: (
+    <svg
+      width="12"
+      height="12"
+      viewBox="0 0 12 12"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <rect x="1.5" y="1.5" width="3.5" height="3.5" />
+      <rect x="7" y="1.5" width="3.5" height="3.5" />
+      <rect x="1.5" y="7" width="3.5" height="3.5" />
+      <rect x="7" y="7" width="3.5" height="3.5" />
+    </svg>
+  ),
+  twitter: (
+    <svg
+      width="12"
+      height="12"
+      viewBox="0 0 12 12"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.3"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <line x1="2" y1="2" x2="10" y2="10" />
+      <line x1="10" y1="2" x2="2" y2="10" />
+    </svg>
+  ),
+  facebook: (
+    <svg
+      width="12"
+      height="12"
+      viewBox="0 0 12 12"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.3"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <path d="M9 1.5H7.5a2.5 2.5 0 0 0-2.5 2.5v1.5H3.5V8H5v3.5h2.5V8H9l.5-2.5H7.5V4a.5.5 0 0 1 .5-.5H9V1.5z" />
+    </svg>
+  ),
+  github: (
+    <svg
+      width="12"
+      height="12"
+      viewBox="0 0 12 12"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <circle cx="6" cy="5.5" r="4.5" />
+      <path d="M4 10.5c0-1 .5-1.5 1-1.5-.5-.1-2-.5-2-2.5 0-.6.2-1 .5-1.4-.1-.3-.2-.8.1-1.6.5 0 1.2.5 1.4.7.4-.1.8-.2 1-.2s.6.1 1 .2c.2-.2.9-.7 1.4-.7.3.8.2 1.3.1 1.6.3.4.5.8.5 1.4 0 2-1.5 2.4-2 2.5.5 0 1 .5 1 1.5" />
+    </svg>
+  ),
+  linkedin: (
+    <svg
+      width="12"
+      height="12"
+      viewBox="0 0 12 12"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <rect x="1" y="1" width="10" height="10" rx="1" />
+      <line x1="3.5" y1="5" x2="3.5" y2="9" />
+      <circle cx="3.5" cy="3.5" r="0.5" fill="currentColor" />
+      <path d="M5.5 9V6.5c0-1 .5-1.5 1.2-1.5.8 0 1.3.5 1.3 1.5V9" />
+    </svg>
+  ),
+  okta: (
+    <svg
+      width="12"
+      height="12"
+      viewBox="0 0 12 12"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <path d="M2 1.5h8l.5.5v8l-.5.5H2l-.5-.5v-8L2 1.5z" />
+      <polyline points="4,6 5.5,8 8.5,4" />
+    </svg>
+  ),
+  saml: (
+    <svg
+      width="12"
+      height="12"
+      viewBox="0 0 12 12"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <rect x="3" y="5" width="6" height="5" rx="0.5" />
+      <path d="M4.5 5V3.5a1.5 1.5 0 0 1 3 0V5" />
+      <circle cx="6" cy="7.5" r="0.5" fill="currentColor" />
+      <line x1="6" y1="8" x2="6" y2="9" />
+    </svg>
+  ),
 };
 
 interface EntityCredentialResponse {
@@ -360,7 +519,8 @@ export default function SettingsPage() {
                       <span className="text-sm font-medium text-gray-900 dark:text-gray-100 truncate">
                         {cred.label}
                       </span>
-                      <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300">
+                      <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-xs font-medium bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300">
+                        {AUTH_PROVIDER_ICONS[cred.authProvider]}
                         {AUTH_PROVIDER_LABELS[cred.authProvider] || cred.authProvider}
                       </span>
                     </div>
