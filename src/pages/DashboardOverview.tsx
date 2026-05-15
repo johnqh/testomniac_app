@@ -13,22 +13,22 @@ import { CONSTANTS } from '../config/constants';
 /** Card linking to one of an app's data sections. */
 function SectionLink({
   label,
-  description,
+  count,
   onClick,
 }: {
   label: string;
-  description: string;
+  count?: string;
   onClick: () => void;
 }) {
   return (
     <button
       onClick={onClick}
-      className="text-left px-3 py-2 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors group"
+      className="text-left flex items-center justify-between px-3 py-2 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors group"
     >
-      <div className="text-sm font-medium text-gray-900 dark:text-gray-100 group-hover:text-blue-600 dark:group-hover:text-blue-400">
+      <span className="text-sm text-gray-700 dark:text-gray-300 group-hover:text-blue-600 dark:group-hover:text-blue-400">
         {label}
-      </div>
-      <div className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">{description}</div>
+      </span>
+      {count && <span className="text-xs text-gray-400 dark:text-gray-500 font-mono">{count}</span>}
     </button>
   );
 }
@@ -55,25 +55,36 @@ function EnvironmentCard({
     { label: 'Settings', description: 'Environment settings', path: `${envBasePath}/settings` },
   ];
 
+  const kindColor =
+    environment.kind === 'shared'
+      ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400'
+      : 'bg-sky-100 text-sky-700 dark:bg-sky-900/30 dark:text-sky-400';
+
   return (
-    <div className="rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 overflow-hidden">
+    <div className="rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 overflow-hidden hover:border-gray-300 dark:hover:border-gray-600 transition-colors">
       {/* Environment header */}
-      <div className="px-5 py-4 border-b border-gray-100 dark:border-gray-700">
-        <h3 className="text-base font-semibold text-gray-900 dark:text-gray-100 truncate">
-          {environment.title}
-        </h3>
-        <p className="text-sm text-gray-500 dark:text-gray-400 mt-0.5 truncate">
-          {environment.kind}
-        </p>
+      <div className="px-5 py-4 border-b border-gray-100 dark:border-gray-700/50">
+        <div className="flex items-center gap-2">
+          <h3 className="text-base font-semibold text-gray-900 dark:text-gray-100 truncate">
+            {environment.title}
+          </h3>
+          <span className={`text-[10px] font-medium px-1.5 py-0.5 rounded-full ${kindColor}`}>
+            {environment.kind}
+          </span>
+        </div>
+        {environment.baseUrl && (
+          <p className="text-xs text-gray-400 dark:text-gray-500 mt-1 truncate font-mono">
+            {environment.baseUrl}
+          </p>
+        )}
       </div>
 
-      {/* Section links grid */}
-      <div className="p-3 grid grid-cols-2 gap-1">
+      {/* Section links */}
+      <div className="p-2 grid grid-cols-2 gap-0.5">
         {sections.map(section => (
           <SectionLink
             key={section.label}
             label={section.label}
-            description={section.description}
             onClick={() => navigate(section.path)}
           />
         ))}
@@ -161,21 +172,44 @@ export default function DashboardOverview() {
       <div className="mb-8">
         <button
           onClick={() => navigate(`${basePath}/scan/new`)}
-          className="w-full sm:w-auto p-6 text-left rounded-xl border-2 border-dashed border-gray-300 dark:border-gray-600 hover:border-blue-400 dark:hover:border-blue-500 transition-colors group"
+          className="w-full sm:w-auto flex items-center gap-4 p-5 text-left rounded-xl border border-gray-200 dark:border-gray-700 bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/10 dark:to-indigo-900/10 hover:from-blue-100 hover:to-indigo-100 dark:hover:from-blue-900/20 dark:hover:to-indigo-900/20 transition-all group"
         >
-          <div className="text-lg font-semibold text-gray-900 dark:text-gray-100 group-hover:text-blue-600 dark:group-hover:text-blue-400">
-            Start Discovery Run
+          <div className="flex-shrink-0 w-10 h-10 rounded-lg bg-blue-600 dark:bg-blue-500 flex items-center justify-center">
+            <svg
+              className="w-5 h-5 text-white"
+              viewBox="0 0 20 20"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+            >
+              <circle cx="10" cy="10" r="7" />
+              <path d="M10 7v6M7 10h6" />
+            </svg>
           </div>
-          <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
-            Enter a URL to discover pages, run tests, and find issues
-          </p>
+          <div>
+            <div className="text-sm font-semibold text-gray-900 dark:text-gray-100">
+              New Discovery Run
+            </div>
+            <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
+              Scan a URL to discover pages, generate tests, and find issues
+            </p>
+          </div>
         </button>
       </div>
 
       {/* Loading state */}
       {isLoading && (
-        <div className="text-sm text-gray-500 dark:text-gray-400 py-8 text-center">
-          Loading products...
+        <div className="space-y-4">
+          {[1, 2].map(i => (
+            <div key={i} className="animate-pulse">
+              <div className="h-5 bg-gray-200 dark:bg-gray-700 rounded w-48 mb-3" />
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                <div className="h-40 bg-gray-100 dark:bg-gray-800 rounded-xl" />
+                <div className="h-40 bg-gray-100 dark:bg-gray-800 rounded-xl" />
+              </div>
+            </div>
+          ))}
         </div>
       )}
 
@@ -188,13 +222,28 @@ export default function DashboardOverview() {
 
       {/* Empty state */}
       {!isLoading && !error && products.length === 0 && (
-        <div className="rounded-xl border border-gray-200 dark:border-gray-700 p-8 text-center">
-          <div className="text-lg font-semibold text-gray-900 dark:text-gray-100">
+        <div className="rounded-xl border border-dashed border-gray-300 dark:border-gray-600 p-12 text-center">
+          <svg
+            className="w-12 h-12 text-gray-300 dark:text-gray-600 mx-auto mb-4"
+            viewBox="0 0 48 48"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
+            <rect x="6" y="10" width="36" height="28" rx="3" />
+            <path d="M6 18h36" />
+            <circle cx="12" cy="14" r="1.5" fill="currentColor" stroke="none" />
+            <circle cx="18" cy="14" r="1.5" fill="currentColor" stroke="none" />
+            <path d="M16 30h16M20 26h8" />
+          </svg>
+          <div className="text-base font-semibold text-gray-900 dark:text-gray-100">
             No products yet
           </div>
-          <p className="text-sm text-gray-500 dark:text-gray-400 mt-2">
-            Start a discovery run to automatically create your first product and discover your
-            application.
+          <p className="text-sm text-gray-500 dark:text-gray-400 mt-1.5 max-w-sm mx-auto">
+            Start a discovery run to scan your web application, generate tests, and track issues
+            automatically.
           </p>
         </div>
       )}
