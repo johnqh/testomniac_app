@@ -19,37 +19,74 @@ import { useLocalizedNavigate } from '../../hooks/useLocalizedNavigate';
 
 // --- Constants ---
 
-const PAGE_NODE_WIDTH = 200;
-const PAGE_NODE_HEIGHT = 60;
+const PAGE_NODE_WIDTH = 220;
+const PAGE_NODE_HEIGHT = 180;
 const ROW_GAP = 120;
 const COL_GAP = 250;
 const MAP_TEST_TYPES = new Set(['navigation', 'interaction']);
 
 // --- Custom Nodes ---
 
-function PageNode({ data }: { data: { label: string; isExternal: boolean; count: number } }) {
+function PageNode({
+  data,
+}: {
+  data: {
+    label: string;
+    isExternal: boolean;
+    count: number;
+    screenshotUrl?: string | null;
+  };
+}) {
   const borderColor = data.isExternal ? '#f97316' : '#374151';
 
   return (
     <div
-      className="rounded-lg bg-white px-4 py-3 text-xs dark:bg-gray-900"
+      className="rounded-lg bg-white text-xs dark:bg-gray-900 overflow-hidden shadow-sm"
       style={{
         border: `2px solid ${borderColor}`,
         width: PAGE_NODE_WIDTH,
         minHeight: PAGE_NODE_HEIGHT,
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        justifyContent: 'center',
       }}
     >
       <Handle type="target" position={Position.Top} className="!bg-gray-400" />
-      <span className="block max-w-[170px] truncate text-center text-gray-900 dark:text-gray-100">
-        {data.label}
-      </span>
-      {data.count > 1 && (
-        <span className="text-[10px] text-gray-400 dark:text-gray-500">{data.count} URLs</span>
-      )}
+
+      {/* Screenshot thumbnail */}
+      <div
+        className="bg-gray-100 dark:bg-gray-800 flex items-center justify-center"
+        style={{ height: 130 }}
+      >
+        {data.screenshotUrl ? (
+          <img
+            src={data.screenshotUrl}
+            alt={data.label}
+            className="w-full h-full object-cover object-top"
+            loading="lazy"
+          />
+        ) : (
+          <svg
+            className="w-8 h-8 text-gray-300 dark:text-gray-600"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1.5"
+          >
+            <rect x="3" y="3" width="18" height="18" rx="2" />
+            <path d="M3 15l5-5 4 4 3-3 6 6" />
+            <circle cx="8.5" cy="8.5" r="1.5" />
+          </svg>
+        )}
+      </div>
+
+      {/* Path label */}
+      <div className="px-2 py-1.5 text-center border-t border-gray-100 dark:border-gray-700/50">
+        <span className="block max-w-[190px] truncate text-gray-900 dark:text-gray-100 font-medium">
+          {data.label}
+        </span>
+        {data.count > 1 && (
+          <span className="text-[10px] text-gray-400 dark:text-gray-500">{data.count} URLs</span>
+        )}
+      </div>
+
       <Handle type="source" position={Position.Bottom} className="!bg-gray-400" />
     </div>
   );
@@ -133,6 +170,9 @@ interface PagesMapViewProps {
   envId: string;
   entitySlug: string;
   runId?: string;
+  /** Map of pageId → screenshot artifact path (from page states) */
+  screenshotsByPageId?: Map<number, string>;
+  apiUrl?: string;
 }
 
 export function PagesMapView({
@@ -141,6 +181,8 @@ export function PagesMapView({
   envId,
   entitySlug,
   runId,
+  screenshotsByPageId,
+  apiUrl,
 }: PagesMapViewProps) {
   const { navigate } = useLocalizedNavigate();
   const pageBasePath = runId
@@ -200,6 +242,18 @@ export function PagesMapView({
 
       for (let i = 0; i < group.length; i++) {
         const entry = group[i];
+        // Find screenshot for first page ID in this group
+        let screenshotUrl: string | null = null;
+        if (screenshotsByPageId && apiUrl) {
+          for (const pid of entry.pageIds) {
+            const path = screenshotsByPageId.get(pid);
+            if (path) {
+              screenshotUrl = `${apiUrl}/api/v1/artifacts/${path}?thumbnail=true`;
+              break;
+            }
+          }
+        }
+
         rfNodes.push({
           id: entry.path,
           type: 'pageNode',
@@ -208,6 +262,7 @@ export function PagesMapView({
             isExternal: entry.isExternal,
             count: entry.pageIds.length,
             pageIds: entry.pageIds,
+            screenshotUrl,
           },
           position: {
             x: startX + i * COL_GAP,
@@ -297,7 +352,7 @@ export function PagesMapView({
       initialEdges: rfEdges,
       hiddenInteractionCount,
     };
-  }, [pages, testInteractions]);
+  }, [pages, testInteractions, screenshotsByPageId, apiUrl]);
 
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);

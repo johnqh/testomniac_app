@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { useApi } from '@sudobility/building_blocks/firebase';
 import {
@@ -69,6 +69,36 @@ export default function PagesPage() {
   const isLoading = pagesLoading || elementsLoading;
   const error = pagesError || elementsError;
 
+  // Fetch page states for screenshot paths (used in map view)
+  const [screenshotsByPageId, setScreenshotsByPageId] = useState<Map<number, string>>(new Map());
+
+  useEffect(() => {
+    if (view !== 'map' || !runId || !token || pages.length === 0) return;
+    let cancelled = false;
+    (async () => {
+      try {
+        const res = await fetch(`${CONSTANTS.API_URL}/api/v1/runs/${runId}/page-states`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        const json = await res.json();
+        if (!cancelled && json.success && Array.isArray(json.data)) {
+          const map = new Map<number, string>();
+          for (const ps of json.data) {
+            if (ps.screenshotPath && !map.has(ps.pageId)) {
+              map.set(ps.pageId, ps.screenshotPath);
+            }
+          }
+          setScreenshotsByPageId(map);
+        }
+      } catch {
+        // Best effort
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [view, runId, token, pages.length]);
+
   if (isLoading) {
     return (
       <div className="p-6">
@@ -127,6 +157,8 @@ export default function PagesPage() {
           envId={envId!}
           entitySlug={entitySlug!}
           runId={runId}
+          screenshotsByPageId={screenshotsByPageId}
+          apiUrl={CONSTANTS.API_URL}
         />
       )}
     </div>
