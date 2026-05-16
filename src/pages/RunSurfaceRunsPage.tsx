@@ -2,15 +2,11 @@ import { useParams } from 'react-router-dom';
 import { useApi } from '@sudobility/building_blocks/firebase';
 import { useRunStructure } from '@sudobility/testomniac_client';
 import SEOHead from '@/components/SEOHead';
+import { formatDate } from '@sudobility/testomniac_lib';
 import { useLocalizedNavigate } from '../hooks/useLocalizedNavigate';
 import { CONSTANTS } from '../config/constants';
 import { StatusBadge } from '../components/scanner/StatusBadge';
 import BackLink from '../components/navigation/BackLink';
-
-function formatDate(dateStr: string | null): string {
-  if (!dateStr) return '-';
-  return new Date(dateStr).toLocaleString();
-}
 
 export default function RunSurfaceRunsPage() {
   const { entitySlug, envId, runId } = useParams<{

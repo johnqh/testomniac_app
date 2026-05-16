@@ -1,4 +1,5 @@
 import { useState, type FormEvent } from 'react';
+import { validateEmailDomain } from '@sudobility/testomniac_lib';
 
 interface ScanFormProps {
   onSubmit: (url: string, email?: string) => void;
@@ -11,17 +12,6 @@ export function ScanForm({ onSubmit, isSubmitting, error, showEmail = true }: Sc
   const [url, setUrl] = useState('');
   const [email, setEmail] = useState('');
   const [validationError, setValidationError] = useState<string | null>(null);
-
-  function validateEmailDomain(emailValue: string, urlValue: string): boolean {
-    if (!emailValue) return true;
-    try {
-      const urlDomain = new URL(urlValue).hostname.split('.').slice(-2).join('.');
-      const emailDomain = emailValue.split('@')[1]?.toLowerCase();
-      return emailDomain === urlDomain || emailDomain?.endsWith('.' + urlDomain);
-    } catch {
-      return false;
-    }
-  }
 
   function handleSubmit(e: FormEvent) {
     e.preventDefault();

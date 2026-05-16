@@ -4,6 +4,7 @@ import { createColumnHelper } from '@tanstack/react-table';
 import { useApi } from '@sudobility/building_blocks/firebase';
 import { useRunnerTestRuns } from '@sudobility/testomniac_client';
 import type { TestRunResponse } from '@sudobility/testomniac_types';
+import { formatDuration, useTestRunsAnalysis } from '@sudobility/testomniac_lib';
 import SEOHead from '@/components/SEOHead';
 import { CONSTANTS } from '../config/constants';
 import { DataTable } from '../components/data/DataTable';
@@ -16,16 +17,6 @@ interface TestRunRow {
   status: string;
   durationMs: number | null;
   errorMessage: string | null;
-}
-
-function formatDuration(ms: number | null): string {
-  if (ms == null) return '\u2014';
-  if (ms < 1000) return `${ms}ms`;
-  const seconds = ms / 1000;
-  if (seconds < 60) return `${seconds.toFixed(1)}s`;
-  const minutes = Math.floor(seconds / 60);
-  const remainingSeconds = Math.round(seconds % 60);
-  return `${minutes}m ${remainingSeconds}s`;
 }
 
 const columnHelper = createColumnHelper<TestRunRow>();
@@ -70,39 +61,6 @@ const columns = [
   }),
 ];
 
-interface StatusCounts {
-  completed: number;
-  passed: number;
-  failed: number;
-  error: number;
-  running: number;
-  pending: number;
-  planned: number;
-  other: number;
-}
-
-function computeStatusCounts(testRuns: TestRunRow[]): StatusCounts {
-  const counts: StatusCounts = {
-    completed: 0,
-    passed: 0,
-    failed: 0,
-    error: 0,
-    running: 0,
-    pending: 0,
-    planned: 0,
-    other: 0,
-  };
-  for (const run of testRuns) {
-    const s = run.status as keyof StatusCounts;
-    if (s in counts) {
-      counts[s]++;
-    } else {
-      counts.other++;
-    }
-  }
-  return counts;
-}
-
 interface SummaryChipProps {
   label: string;
   count: number;
@@ -143,7 +101,7 @@ export default function TestRunsPage() {
       })),
     [testRuns]
   );
-  const counts = useMemo(() => computeStatusCounts(rows), [rows]);
+  const { statusCounts: counts } = useTestRunsAnalysis(testRuns ?? []);
 
   if (error) {
     return (

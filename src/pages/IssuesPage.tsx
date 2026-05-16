@@ -1,8 +1,9 @@
-import { useMemo, useState } from 'react';
+import { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { createColumnHelper } from '@tanstack/react-table';
 import { useApi } from '@sudobility/building_blocks/firebase';
 import { useRunnerFindings } from '@sudobility/testomniac_client';
+import { parseExpertiseTitle, useFindingsAnalysis } from '@sudobility/testomniac_lib';
 import SEOHead from '@/components/SEOHead';
 import { CONSTANTS } from '../config/constants';
 import { DataTable } from '../components/data/DataTable';
@@ -117,15 +118,6 @@ const PRIORITY_CONFIG: Record<
   },
 };
 
-/** Parse `[expertise-name] Actual title` into { tag, title }. */
-function parseTitle(raw: string): { tag: string | null; title: string } {
-  const match = raw.match(/^\[([^\]]+)\]\s*(.*)$/);
-  if (match) {
-    return { tag: match[1], title: match[2] };
-  }
-  return { tag: null, title: raw };
-}
-
 const columnHelper = createColumnHelper<FindingRow>();
 
 const columns = [
@@ -191,7 +183,7 @@ const columns = [
     cell: info => {
       const raw = info.getValue();
       const description = info.row.original.description;
-      const { tag, title } = parseTitle(raw);
+      const { tag, title } = parseExpertiseTitle(raw);
       return (
         <div className="max-w-[400px]">
           <div className="flex items-center gap-1.5">
@@ -238,37 +230,14 @@ export default function IssuesPage() {
     enabled: !!envId && !!token,
   });
 
-  // Compute priority counts
-  const priorityCounts = useMemo(() => {
-    const counts: Record<number, number> = { 0: 0, 1: 0, 2: 0, 3: 0, 4: 0 };
-    for (const f of findings) {
-      const p = (f as FindingRow).priority;
-      if (p in counts) counts[p]++;
-    }
-    return counts;
-  }, [findings]);
+  const { priorityCounts, errorCount, warningCount, filteredFindings } = useFindingsAnalysis(
+    findings,
+    typeFilter === 'all' ? null : typeFilter,
+    priorityFilter
+  );
 
-  // Filtered data
-  const filteredData = useMemo(() => {
-    let result = findings as FindingRow[];
-    if (typeFilter !== 'all') {
-      result = result.filter(f => f.type === typeFilter);
-    }
-    if (priorityFilter !== null) {
-      result = result.filter(f => f.priority === priorityFilter);
-    }
-    return result;
-  }, [findings, typeFilter, priorityFilter]);
-
+  const filteredData = filteredFindings as FindingRow[];
   const totalCount = findings.length;
-  const errorCount = useMemo(
-    () => (findings as FindingRow[]).filter(f => f.type === 'error').length,
-    [findings]
-  );
-  const warningCount = useMemo(
-    () => (findings as FindingRow[]).filter(f => f.type === 'warning').length,
-    [findings]
-  );
 
   if (error) {
     return (

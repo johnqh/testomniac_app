@@ -10,25 +10,10 @@ import {
 import SEOHead from '@/components/SEOHead';
 import { CONSTANTS } from '../config/constants';
 import { StatusBadge } from '../components/scanner/StatusBadge';
+import { formatDurationFromTimestamps } from '@sudobility/testomniac_lib';
 import { formatDateTime } from '../utils/formatDateTime';
 
 type SectionId = 'coverage' | 'findings';
-
-function formatDuration(startedAt: string | null, completedAt: string | null): string | null {
-  if (!startedAt) return null;
-  const start = new Date(startedAt).getTime();
-  const end = completedAt ? new Date(completedAt).getTime() : Date.now();
-  if (Number.isNaN(start)) return null;
-  const diffMs = end - start;
-  const seconds = Math.floor(diffMs / 1000);
-  if (seconds < 60) return `${seconds}s`;
-  const minutes = Math.floor(seconds / 60);
-  const remainingSeconds = seconds % 60;
-  if (minutes < 60) return `${minutes}m ${remainingSeconds}s`;
-  const hours = Math.floor(minutes / 60);
-  const remainingMinutes = minutes % 60;
-  return `${hours}h ${remainingMinutes}m`;
-}
 
 /* ---------- Skeleton placeholders ---------- */
 
@@ -128,7 +113,7 @@ export default function RunDetailsPage() {
     a.localeCompare(b)
   );
 
-  const duration = formatDuration(run.startedAt, run.completedAt);
+  const duration = formatDurationFromTimestamps(run.startedAt, run.completedAt);
 
   const pagesCount = summary?.pagesFound ?? run.pagesFound ?? 0;
   const testRunsCount =

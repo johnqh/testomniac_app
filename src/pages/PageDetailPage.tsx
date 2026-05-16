@@ -11,6 +11,7 @@ import {
   useRunTestInteractions,
 } from '@sudobility/testomniac_client';
 import type { TestInteractionResponse } from '@sudobility/testomniac_types';
+import { usePageInteractionGroups } from '@sudobility/testomniac_lib';
 import SEOHead from '@/components/SEOHead';
 import { CONSTANTS } from '../config/constants';
 import { useLocalizedNavigate } from '../hooks/useLocalizedNavigate';
@@ -85,26 +86,10 @@ export default function PageDetailPage() {
     return map;
   }, [envPages]);
 
-  const { startingElements, landingElements, onPageElements } = useMemo(() => {
-    const starting: TestInteractionResponse[] = [];
-    const landing: TestInteractionResponse[] = [];
-    const onPage: TestInteractionResponse[] = [];
-
-    for (const el of testInteractions) {
-      const isSource = el.pageId === numericPageId;
-      const isTarget = el.targetPageId === numericPageId;
-
-      if (isSource && isTarget) {
-        onPage.push(el);
-      } else if (isSource) {
-        starting.push(el);
-      } else if (isTarget) {
-        landing.push(el);
-      }
-    }
-
-    return { startingElements: starting, landingElements: landing, onPageElements: onPage };
-  }, [testInteractions, numericPageId]);
+  const { startingElements, landingElements, onPageElements } = usePageInteractionGroups(
+    testInteractions,
+    numericPageId
+  );
 
   const { pageStates, isLoading } = usePageStates({
     networkClient,

@@ -2,16 +2,11 @@ import { useParams } from 'react-router-dom';
 import { useApi } from '@sudobility/building_blocks/firebase';
 import { useRunStructure } from '@sudobility/testomniac_client';
 import SEOHead from '@/components/SEOHead';
+import { formatDuration } from '@sudobility/testomniac_lib';
 import { useLocalizedNavigate } from '../hooks/useLocalizedNavigate';
 import { CONSTANTS } from '../config/constants';
 import { StatusBadge } from '../components/scanner/StatusBadge';
 import BackLink from '../components/navigation/BackLink';
-
-function formatDuration(ms: number | null): string {
-  if (ms == null) return '-';
-  if (ms < 1000) return `${ms}ms`;
-  return `${(ms / 1000).toFixed(1)}s`;
-}
 
 export default function RunTestInteractionRunsPage() {
   const { entitySlug, envId, runId, surfaceRunId, elementId } = useParams<{

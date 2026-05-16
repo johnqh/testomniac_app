@@ -1,20 +1,10 @@
 import { useParams } from 'react-router-dom';
 import type { TestRunResponse } from '@sudobility/testomniac_types';
+import { formatDuration, formatDate } from '@sudobility/testomniac_lib';
 import SEOHead from '@/components/SEOHead';
 import { useLocalizedNavigate } from '../hooks/useLocalizedNavigate';
 import { useDashboardEnvironmentContext } from '../hooks/useDashboardEnvironmentContext';
 import { StatusBadge } from '../components/scanner/StatusBadge';
-
-function formatDuration(ms: number | null): string {
-  if (ms === null) return '-';
-  if (ms < 1000) return `${ms}ms`;
-  return `${(ms / 1000).toFixed(1)}s`;
-}
-
-function formatDate(dateStr: string | null): string {
-  if (!dateStr) return '-';
-  return new Date(dateStr).toLocaleString();
-}
 
 export default function TestRunsListPage() {
   const { entitySlug, envId } = useParams<{ entitySlug: string; envId: string }>();

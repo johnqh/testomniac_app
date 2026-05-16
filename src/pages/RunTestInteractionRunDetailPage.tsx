@@ -6,22 +6,12 @@ import {
   useTestInteractionRun,
   useTestRunFindings,
 } from '@sudobility/testomniac_client';
+import { formatDate, formatMultilineLog } from '@sudobility/testomniac_lib';
 import SEOHead from '@/components/SEOHead';
 import { useLocalizedNavigate } from '../hooks/useLocalizedNavigate';
 import { CONSTANTS } from '../config/constants';
 import { StatusBadge } from '../components/scanner/StatusBadge';
 import BackLink from '../components/navigation/BackLink';
-
-function formatDate(dateStr: string | null): string {
-  if (!dateStr) return '-';
-  return new Date(dateStr).toLocaleString();
-}
-
-function formatMultilineLog(log: string | null | undefined): string | null {
-  if (!log) return null;
-  const trimmed = log.trim();
-  return trimmed.length > 0 ? trimmed : null;
-}
 
 export default function RunTestInteractionRunDetailPage() {
   const { entitySlug, envId, runId, surfaceRunId, elementId, elementRunId } = useParams<{

@@ -8,15 +8,11 @@ import {
   useTestRunFindings,
 } from '@sudobility/testomniac_client';
 import type { TestRunFindingResponse } from '@sudobility/testomniac_types';
+import { formatDate, formatMultilineLog } from '@sudobility/testomniac_lib';
 import BackLink from '../components/navigation/BackLink';
 import { useLocalizedNavigate } from '../hooks/useLocalizedNavigate';
 import { CONSTANTS } from '../config/constants';
 import { StatusBadge } from '../components/scanner/StatusBadge';
-
-function formatDate(dateStr: string | null): string {
-  if (!dateStr) return '-';
-  return new Date(dateStr).toLocaleString();
-}
 
 function FindingTypeBadge({ type }: { type: string }) {
   const colors =
@@ -33,12 +29,6 @@ function FindingTypeBadge({ type }: { type: string }) {
       {type}
     </span>
   );
-}
-
-function formatMultilineLog(log: string | null | undefined): string | null {
-  if (!log) return null;
-  const trimmed = log.trim();
-  return trimmed.length > 0 ? trimmed : null;
 }
 
 export default function TestRunDetailPage() {

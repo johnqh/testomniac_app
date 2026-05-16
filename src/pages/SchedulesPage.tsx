@@ -7,51 +7,19 @@ import {
   useEnvironmentTestInteractions,
   useEnvironmentTestSurfaces,
 } from '@sudobility/testomniac_client';
-import type { CreateTestScheduleRequest, TestScheduleResponse } from '@sudobility/testomniac_types';
+import type { CreateTestScheduleRequest } from '@sudobility/testomniac_types';
+import {
+  RECURRENCE_OPTIONS,
+  DAY_OPTIONS,
+  describeScheduleTarget,
+  describeRecurrence,
+} from '@sudobility/testomniac_lib';
 import SEOHead from '@/components/SEOHead';
 import { CONSTANTS } from '../config/constants';
 import { StatusBadge } from '../components/scanner/StatusBadge';
 import { useDashboardEnvironmentContext } from '../hooks/useDashboardEnvironmentContext';
 
 type TargetKind = 'bundle' | 'surface' | 'element';
-
-const RECURRENCE_OPTIONS = [
-  { value: 'one_time', label: 'One time' },
-  { value: 'daily', label: 'Daily' },
-  { value: 'weekday', label: 'Weekday' },
-  { value: 'weekly', label: 'Weekly' },
-] as const;
-
-const DAY_OPTIONS = [
-  { value: 0, label: 'Sunday' },
-  { value: 1, label: 'Monday' },
-  { value: 2, label: 'Tuesday' },
-  { value: 3, label: 'Wednesday' },
-  { value: 4, label: 'Thursday' },
-  { value: 5, label: 'Friday' },
-  { value: 6, label: 'Saturday' },
-] as const;
-
-function describeScheduleTarget(schedule: TestScheduleResponse) {
-  if (schedule.testSurfaceBundleId) return `Bundle #${schedule.testSurfaceBundleId}`;
-  if (schedule.testSurfaceId) return `Surface #${schedule.testSurfaceId}`;
-  if (schedule.testInteractionId) return `Element #${schedule.testInteractionId}`;
-  return 'Unknown target';
-}
-
-function describeRecurrence(schedule: TestScheduleResponse) {
-  if (schedule.recurrenceType === 'weekly' && schedule.dayOfWeek != null) {
-    const day = DAY_OPTIONS.find(option => option.value === schedule.dayOfWeek)?.label ?? 'Day';
-    return `Weekly on ${day} at ${schedule.timeOfDay}`;
-  }
-  if (schedule.recurrenceType === 'weekday') {
-    return `Weekdays at ${schedule.timeOfDay}`;
-  }
-  if (schedule.recurrenceType === 'daily') {
-    return `Daily at ${schedule.timeOfDay}`;
-  }
-  return `One time at ${schedule.timeOfDay}`;
-}
 
 export default function SchedulesPage() {
   const { envId } = useParams<{ envId: string }>();

@@ -4,6 +4,7 @@ import { useApi } from '@sudobility/building_blocks/firebase';
 import { useRunnerScans } from '@sudobility/testomniac_client';
 import SEOHead from '@/components/SEOHead';
 import { CONSTANTS } from '../config/constants';
+import { formatDurationFromTimestamps, formatDate } from '@sudobility/testomniac_lib';
 import { useLocalizedNavigate } from '../hooks/useLocalizedNavigate';
 import { DataTable } from '../components/data/DataTable';
 import { StatusBadge } from '../components/scanner/StatusBadge';
@@ -17,22 +18,6 @@ interface ScanRow {
 }
 
 const columnHelper = createColumnHelper<ScanRow>();
-
-function formatDuration(startedAt: string | null, endedAt: string | null): string {
-  if (!startedAt) return '-';
-  const start = new Date(startedAt).getTime();
-  const end = endedAt ? new Date(endedAt).getTime() : Date.now();
-  const seconds = Math.floor((end - start) / 1000);
-  if (seconds < 60) return `${seconds}s`;
-  const minutes = Math.floor(seconds / 60);
-  const remainingSeconds = seconds % 60;
-  return `${minutes}m ${remainingSeconds}s`;
-}
-
-function formatDate(iso: string | null): string {
-  if (!iso) return '-';
-  return new Date(iso).toLocaleString();
-}
 
 export default function ScansPage() {
   const { envId, entitySlug } = useParams<{ envId: string; entitySlug: string }>();
@@ -86,7 +71,7 @@ export default function ScansPage() {
       header: 'Duration',
       cell: ({ row }) => (
         <span className="text-xs text-gray-500 dark:text-gray-400">
-          {formatDuration(row.original.startedAt, row.original.completedAt)}
+          {formatDurationFromTimestamps(row.original.startedAt, row.original.completedAt) ?? '-'}
         </span>
       ),
     }),
