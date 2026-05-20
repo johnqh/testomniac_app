@@ -3,7 +3,7 @@
   "description": "Testomniac web application - React + Vite",
   "private": true,
   "license": "BUSL-1.1",
-  "version": "1.0.155",
+  "version": "1.0.156",
   "type": "module",
   "scripts": {
     "dev": "bun run process:static && vite",

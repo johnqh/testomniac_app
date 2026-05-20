@@ -51,6 +51,12 @@ const FindingsListPage = lazy(() => import('./pages/FindingsListPage'));
 const TestScenariosPage = lazy(() => import('./pages/TestScenariosPage'));
 const TestScenarioDetailPage = lazy(() => import('./pages/TestScenarioDetailPage'));
 const RunnerSettingsPage = lazy(() => import('./pages/RunnerSettingsPage'));
+const ProfilePage = lazy(() => import('./pages/ProfilePage'));
+const AccountPage = lazy(() => import('./pages/profile/AccountPage'));
+const ProfileWorkspacesPage = lazy(() => import('./pages/profile/ProfileWorkspacesPage'));
+const ProfileMembersPage = lazy(() => import('./pages/profile/ProfileMembersPage'));
+const ProfileInvitationsPage = lazy(() => import('./pages/profile/ProfileInvitationsPage'));
+const ApiKeysPage = lazy(() => import('./pages/profile/ApiKeysPage'));
 const LanguageRedirect = lazy(() => import('./components/layout/LanguageRedirect'));
 const EntityRedirect = lazy(() => import('./components/layout/EntityRedirect'));
 const ProtectedRoute = lazy(() => import('./components/layout/ProtectedRoute'));
@@ -233,6 +239,21 @@ function AppRoutes() {
                   <Route path="members" element={<MembersPage />} />
                   <Route path="invitations" element={<InvitationsPage />} />
                 </Route>
+              </Route>
+              <Route
+                path="profile"
+                element={
+                  <ProtectedRoute>
+                    <ProfilePage />
+                  </ProtectedRoute>
+                }
+              >
+                <Route index element={<Navigate to="account" replace />} />
+                <Route path="account" element={<AccountPage />} />
+                <Route path="workspaces" element={<ProfileWorkspacesPage />} />
+                <Route path="members" element={<ProfileMembersPage />} />
+                <Route path="invitations" element={<ProfileInvitationsPage />} />
+                <Route path="api-keys" element={<ApiKeysPage />} />
               </Route>
               <Route path="login" element={<LoginPage />} />
               <Route path="*" element={<Navigate to="." replace />} />

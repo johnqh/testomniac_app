@@ -31,6 +31,8 @@ PROJECTS=(
     "../testomniac_extension:0"
     "../testomniac_app:0"
     "../testomniac_app_rn:0"
+    "../testomniac_api_mcp:0"
+    "../testomniac_runner_mcp:0"
 )
 
 # Source reusable script: prefer local workflows repo, fall back to GitHub
