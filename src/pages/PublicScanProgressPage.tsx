@@ -1,3 +1,4 @@
+import { useEffect, useRef } from 'react';
 import { useParams } from 'react-router-dom';
 import { useScanProgressStore } from '@sudobility/testomniac_lib';
 import SEOHead from '@/components/SEOHead';
@@ -9,6 +10,14 @@ const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8027';
 export default function PublicScanProgressPage() {
   const { runId } = useParams<{ runId: string }>();
   const store = useScanProgressStore();
+  const prevRunId = useRef<string | undefined>(undefined);
+
+  useEffect(() => {
+    if (runId !== prevRunId.current) {
+      store.reset();
+      prevRunId.current = runId;
+    }
+  }, [runId, store]);
 
   // Stop SSE once scan is complete to prevent reconnection loop
   const sseUrl = runId && !store.isComplete ? `${API_URL}/api/v1/runs/${runId}/stream` : null;

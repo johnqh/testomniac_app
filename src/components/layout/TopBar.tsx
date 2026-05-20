@@ -2,13 +2,19 @@ import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   type MenuItemConfig,
+  type AuthMenuItem,
   type AuthActionProps,
   type TopBarConfig,
 } from '@sudobility/building_blocks';
 import { AuthAction, useAuthStatus } from '@sudobility/auth-components';
 import { useCurrentEntityOptional } from '@sudobility/entity_client';
 import type { ComponentType } from 'react';
-import { DocumentTextIcon, RectangleGroupIcon, Cog6ToothIcon } from '@heroicons/react/24/outline';
+import {
+  DocumentTextIcon,
+  RectangleGroupIcon,
+  Cog6ToothIcon,
+  UserCircleIcon,
+} from '@heroicons/react/24/outline';
 import { useLocalizedNavigate } from '../../hooks/useLocalizedNavigate';
 import { CONSTANTS, SUPPORTED_LANGUAGES, isLanguageSupported } from '../../config/constants';
 import LocalizedLink from './LocalizedLink';
@@ -97,6 +103,21 @@ export function useTopBarConfig(): TopBarConfig {
     return items;
   }, [t, entitySlug, isAuthenticated]);
 
+  const authenticatedMenuItems: AuthMenuItem[] = useMemo(
+    () =>
+      isAuthenticated
+        ? [
+            {
+              id: 'profile',
+              label: t('nav.profile', 'Profile'),
+              icon: <UserCircleIcon className="w-4 h-4" />,
+              onClick: () => navigate('/profile'),
+            },
+          ]
+        : [],
+    [isAuthenticated, t, navigate]
+  );
+
   const handleLanguageChange = (newLang: string) => {
     if (isLanguageSupported(newLang)) {
       switchLanguage(newLang);
@@ -117,7 +138,7 @@ export function useTopBarConfig(): TopBarConfig {
     LinkComponent: linkWrapper,
     AuthActionComponent: AuthAction as ComponentType<AuthActionProps>,
     onLoginClick: () => navigate('/login'),
-    authenticatedMenuItems: [],
+    authenticatedMenuItems,
     sticky: true,
   };
 }

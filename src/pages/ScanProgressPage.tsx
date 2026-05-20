@@ -1,3 +1,4 @@
+import { useEffect, useRef } from 'react';
 import { useParams } from 'react-router-dom';
 import { useScanProgressStore } from '@sudobility/testomniac_lib';
 import SEOHead from '@/components/SEOHead';
@@ -10,6 +11,15 @@ const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8027';
 export default function ScanProgressPage() {
   const { entitySlug, runId } = useParams<{ entitySlug: string; runId: string }>();
   const store = useScanProgressStore();
+  const prevRunId = useRef<string | undefined>(undefined);
+
+  // Reset store when viewing a different run (or on first mount)
+  useEffect(() => {
+    if (runId !== prevRunId.current) {
+      store.reset();
+      prevRunId.current = runId;
+    }
+  }, [runId, store]);
   const { navigate } = useLocalizedNavigate();
 
   const sseUrl = runId && !store.isComplete ? `${API_URL}/api/v1/runs/${runId}/stream` : null;
