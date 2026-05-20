@@ -23,6 +23,7 @@ src/
 ├── main.tsx                              # App entry point
 ├── App.tsx                               # Router setup, lazy-loaded routes
 ├── i18n.ts                               # i18next configuration
+seo.config.mjs                                # SEO route/meta configuration for build-time asset generation
 ├── config/
 │   ├── constants.ts                      # App constants, supported languages
 │   ├── auth-config.ts                    # Firebase auth configuration
@@ -91,7 +92,8 @@ src/
 
 ```bash
 bun run dev            # Vite dev server
-bun run build          # TypeScript check + Vite build
+bun run build          # TypeScript check + Vite build (also runs SEO asset generation)
+bun run seo:fetch      # Download generate-seo-assets.mjs script to /tmp
 bun run preview        # Preview production build
 bun run typecheck      # TypeScript check
 bun run lint           # Run ESLint
