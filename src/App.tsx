@@ -9,6 +9,7 @@ import { useDocumentLanguage } from './hooks/useDocumentLanguage';
 import { AuthProviderWrapper } from './components/providers/AuthProviderWrapper';
 import { ErrorBoundary } from './components/ErrorBoundary';
 import ScreenContainer from './components/layout/ScreenContainer';
+import { useAuthCleanup } from './hooks/useAuthCleanup';
 
 const HomePage = lazy(() => import('./pages/HomePage'));
 const LoginPage = lazy(() => import('./pages/LoginPage'));
@@ -96,6 +97,8 @@ function PerformancePanelComponent() {
 }
 
 function AppRoutes() {
+  useAuthCleanup();
+
   return (
     <DocumentLanguageSync>
       <ErrorBoundary>
