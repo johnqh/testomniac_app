@@ -78,6 +78,14 @@ const ScenariosIcon = () => (
   </svg>
 );
 
+/** Person silhouette / personas */
+const PersonasIcon = () => (
+  <svg {...iconProps}>
+    <circle cx="8" cy="5" r="2.5" />
+    <path d="M3 14.5c0-2.8 2.2-5 5-5s5 2.2 5 5" />
+  </svg>
+);
+
 /** Play-circle / runs */
 const RunsIcon = () => (
   <svg {...iconProps}>
@@ -160,6 +168,7 @@ const MENU_SECTIONS: MenuSection[] = [
       { label: 'Surfaces', path: 'test-surfaces', icon: SurfacesIcon },
       { label: 'Test Interactions', path: 'test-interactions', icon: InteractionsIcon },
       { label: 'Scenarios', path: 'test-scenarios', icon: ScenariosIcon },
+      { label: 'Personas', path: 'personas', icon: PersonasIcon },
     ],
   },
   {

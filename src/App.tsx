@@ -1,7 +1,7 @@
 import { Suspense, lazy, type ReactNode } from 'react';
 import { Routes, Route, Navigate, Outlet } from 'react-router-dom';
 import { SudobilityAppWithFirebaseAuthAndEntities } from '@sudobility/building_blocks/firebase';
-import { LanguageValidator, PerformancePanel } from '@sudobility/components';
+import { LanguageValidator, LanguageRedirect, PerformancePanel } from '@sudobility/components';
 import { variants } from '@sudobility/design';
 import { isLanguageSupported, CONSTANTS } from './config/constants';
 import i18n from './i18n';
@@ -57,7 +57,6 @@ const ProfileWorkspacesPage = lazy(() => import('./pages/profile/ProfileWorkspac
 const ProfileMembersPage = lazy(() => import('./pages/profile/ProfileMembersPage'));
 const ProfileInvitationsPage = lazy(() => import('./pages/profile/ProfileInvitationsPage'));
 const ApiKeysPage = lazy(() => import('./pages/profile/ApiKeysPage'));
-const LanguageRedirect = lazy(() => import('./components/layout/LanguageRedirect'));
 const EntityRedirect = lazy(() => import('./components/layout/EntityRedirect'));
 const ProtectedRoute = lazy(() => import('./components/layout/ProtectedRoute'));
 
@@ -110,7 +109,10 @@ function AppRoutes() {
       <ErrorBoundary>
         <Suspense fallback={<LoadingFallback />}>
           <Routes>
-            <Route path="/" element={<LanguageRedirect />} />
+            <Route
+              path="/"
+              element={<LanguageRedirect isLanguageSupported={isLanguageSupported} />}
+            />
             <Route
               path="/:lang"
               element={
@@ -258,7 +260,10 @@ function AppRoutes() {
               <Route path="login" element={<LoginPage />} />
               <Route path="*" element={<Navigate to="." replace />} />
             </Route>
-            <Route path="*" element={<LanguageRedirect />} />
+            <Route
+              path="*"
+              element={<LanguageRedirect isLanguageSupported={isLanguageSupported} />}
+            />
           </Routes>
           <PerformancePanelComponent />
         </Suspense>
