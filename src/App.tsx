@@ -242,20 +242,22 @@ function AppRoutes() {
                   <Route path="invitations" element={<InvitationsPage />} />
                 </Route>
               </Route>
-              <Route
-                path="profile"
-                element={
-                  <ProtectedRoute>
-                    <ProfilePage />
-                  </ProtectedRoute>
-                }
-              >
-                <Route index element={<Navigate to="account" replace />} />
-                <Route path="account" element={<AccountPage />} />
-                <Route path="workspaces" element={<ProfileWorkspacesPage />} />
-                <Route path="members" element={<ProfileMembersPage />} />
-                <Route path="invitations" element={<ProfileInvitationsPage />} />
-                <Route path="api-keys" element={<ApiKeysPage />} />
+              <Route element={<ScreenContainerLayout />}>
+                <Route
+                  path="profile"
+                  element={
+                    <ProtectedRoute>
+                      <ProfilePage />
+                    </ProtectedRoute>
+                  }
+                >
+                  <Route index element={<Navigate to="account" replace />} />
+                  <Route path="account" element={<AccountPage />} />
+                  <Route path="workspaces" element={<ProfileWorkspacesPage />} />
+                  <Route path="members" element={<ProfileMembersPage />} />
+                  <Route path="invitations" element={<ProfileInvitationsPage />} />
+                  <Route path="api-keys" element={<ApiKeysPage />} />
+                </Route>
               </Route>
               <Route path="login" element={<LoginPage />} />
               <Route path="*" element={<Navigate to="." replace />} />
