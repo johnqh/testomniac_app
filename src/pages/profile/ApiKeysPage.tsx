@@ -83,18 +83,41 @@ export default function ApiKeysPage() {
     setMutationError(null);
   }
 
+  const [newlyCreatedKey, setNewlyCreatedKey] = useState<string | null>(null);
+  const [copied, setCopied] = useState(false);
+
   async function handleCreate() {
     if (!title.trim()) return;
     setMutationError(null);
     try {
-      await createApiKey({
+      const result = await createApiKey({
         title: title.trim(),
         associatedPersonalEntityId: associatePersonal && personalEntity ? personalEntity.id : null,
       });
-      cancelForm();
+      setShowForm(false);
+      setTitle('');
+      setAssociatePersonal(false);
+      setMutationError(null);
+      // Show the full key so user can copy it
+      if (result?.data?.apiKey) {
+        setNewlyCreatedKey(result.data.apiKey);
+        setCopied(false);
+      }
     } catch (err) {
       setMutationError(err instanceof Error ? err.message : 'Failed to create API key');
     }
+  }
+
+  function handleCopyKey() {
+    if (newlyCreatedKey) {
+      navigator.clipboard.writeText(newlyCreatedKey);
+      setCopied(true);
+    }
+  }
+
+  function dismissKeyBanner() {
+    setNewlyCreatedKey(null);
+    setCopied(false);
   }
 
   async function handleDelete(id: number) {
@@ -147,6 +170,42 @@ export default function ApiKeysPage() {
                 </button>
               )}
             </div>
+
+            {/* Newly created key — show once for copying */}
+            {newlyCreatedKey && (
+              <div className="mb-4 rounded-lg border border-emerald-300 dark:border-emerald-700 bg-emerald-50 dark:bg-emerald-900/20 p-4">
+                <div className="flex items-start justify-between gap-3">
+                  <div className="min-w-0 flex-1">
+                    <p className="text-sm font-medium text-emerald-800 dark:text-emerald-200 mb-1">
+                      API key created — copy it now, it won't be shown again.
+                    </p>
+                    <code className="block text-sm font-mono text-emerald-900 dark:text-emerald-100 bg-emerald-100 dark:bg-emerald-800/40 rounded px-2 py-1.5 break-all select-all">
+                      {newlyCreatedKey}
+                    </code>
+                  </div>
+                  <div className="flex gap-2 shrink-0">
+                    <button
+                      type="button"
+                      onClick={handleCopyKey}
+                      className={`px-3 py-1.5 text-xs rounded-md font-medium transition-colors ${
+                        copied
+                          ? 'bg-emerald-600 text-white'
+                          : 'bg-white dark:bg-gray-800 border border-emerald-300 dark:border-emerald-600 text-emerald-700 dark:text-emerald-300 hover:bg-emerald-100 dark:hover:bg-emerald-800/40'
+                      }`}
+                    >
+                      {copied ? 'Copied!' : 'Copy'}
+                    </button>
+                    <button
+                      type="button"
+                      onClick={dismissKeyBanner}
+                      className="px-2 py-1.5 text-xs rounded-md text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+                    >
+                      Dismiss
+                    </button>
+                  </div>
+                </div>
+              </div>
+            )}
 
             {error && <div className="mb-4 text-sm text-red-600 dark:text-red-400">{error}</div>}
 
