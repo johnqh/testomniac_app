@@ -135,7 +135,11 @@ export default function FindingsListPage() {
                   </p>
                   <div className="flex items-center gap-3 mt-2">
                     <span className="text-xs text-gray-400 dark:text-gray-500">
-                      Run #{finding.testInteractionRunId}
+                      {(finding as any).interactionRunIds?.length > 0
+                        ? `Run #${(finding as any).interactionRunIds.join(', #')}`
+                        : (finding as any).testInteractionRunId
+                          ? `Run #${(finding as any).testInteractionRunId}`
+                          : ''}
                     </span>
                     {finding.createdAt && (
                       <span className="text-xs text-gray-400 dark:text-gray-500">

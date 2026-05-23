@@ -246,7 +246,7 @@ export default function PageDetailPage() {
               <div className="space-y-4">
                 {summary.runtimeSignals.map(signal => (
                   <div
-                    key={signal.testInteractionRunId}
+                    key={(signal as any).interactionRunIds?.[0] ?? signal.testInteractionRunId ?? (signal as any).id}
                     className="rounded-lg border border-gray-200 bg-white p-4 dark:border-gray-700 dark:bg-gray-900"
                   >
                     <div className="mb-3 flex items-center justify-between gap-3">
@@ -256,7 +256,7 @@ export default function PageDetailPage() {
                             `Test Interaction #${signal.testInteractionId}`}
                         </div>
                         <div className="mt-1 text-xs text-gray-500 dark:text-gray-400">
-                          Case run #{signal.testInteractionRunId}
+                          Case run #{(signal as any).interactionRunIds?.[0] ?? signal.testInteractionRunId}
                           {signal.completedAt
                             ? ` • ${new Date(signal.completedAt).toLocaleString()}`
                             : ''}
