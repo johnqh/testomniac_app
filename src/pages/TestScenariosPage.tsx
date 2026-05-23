@@ -1,6 +1,10 @@
 import { useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { useRunnerTestScenarios, useDeleteTestScenario } from '@sudobility/testomniac_client';
+import {
+  useRunnerTestScenarios,
+  useDeleteTestScenario,
+  useProductPersonas,
+} from '@sudobility/testomniac_client';
 import type { TestScenarioResponse } from '@sudobility/testomniac_types';
 import SEOHead from '@/components/SEOHead';
 import { useLocalizedNavigate } from '../hooks/useLocalizedNavigate';
@@ -15,6 +19,7 @@ export default function TestScenariosPage() {
   const {
     networkClient,
     token,
+    productId,
     primaryRunner,
     isLoading: contextLoading,
     error: contextError,
@@ -27,6 +32,14 @@ export default function TestScenariosPage() {
     runnerId: primaryRunner?.id ?? 0,
     token,
     enabled: !!envId && !!token && !!primaryRunner,
+  });
+
+  const { personas } = useProductPersonas({
+    networkClient,
+    baseUrl: CONSTANTS.API_URL,
+    productId,
+    token,
+    enabled: !!productId && !!token,
   });
 
   const { deleteTestScenario } = useDeleteTestScenario({
@@ -72,6 +85,7 @@ export default function TestScenariosPage() {
             networkClient={networkClient}
             token={token}
             runnerId={primaryRunner.id}
+            personas={personas}
             onCreated={() => {
               setShowForm(false);
               refetch();
@@ -117,6 +131,12 @@ export default function TestScenariosPage() {
                 </div>
               </button>
               <div className="flex items-center gap-2 flex-shrink-0">
+                {scenario.personaId && (
+                  <span className="text-xs text-gray-500 dark:text-gray-400">
+                    {personas.find(p => p.id === scenario.personaId)?.title ??
+                      `Persona #${scenario.personaId}`}
+                  </span>
+                )}
                 <StatusBadge status={scenario.sizeClass} />
                 <button
                   onClick={() => handleDelete(scenario.id)}

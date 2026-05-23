@@ -1,12 +1,21 @@
 import { useState } from 'react';
 import type { NetworkClient } from '@sudobility/types';
+import type { PersonaResponse } from '@sudobility/testomniac_types';
 import { useCreateTestScenario } from '@sudobility/testomniac_client';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@sudobility/components';
 import { CONSTANTS } from '../../config/constants';
 
 interface AddScenarioFormProps {
   networkClient: NetworkClient;
   token: string;
   runnerId: number;
+  personas: PersonaResponse[];
   defaultStartingPath?: string;
   onCreated: () => void;
   onCancel: () => void;
@@ -16,6 +25,7 @@ export function AddScenarioForm({
   networkClient,
   token,
   runnerId,
+  personas,
   defaultStartingPath = '/',
   onCreated,
   onCancel,
@@ -23,6 +33,7 @@ export function AddScenarioForm({
   const [title, setTitle] = useState('');
   const [startingPath, setStartingPath] = useState(defaultStartingPath);
   const [prompt, setPrompt] = useState('');
+  const [personaId, setPersonaId] = useState<number | undefined>(undefined);
   const [error, setError] = useState<string | null>(null);
 
   const { createTestScenario, isCreating } = useCreateTestScenario({
@@ -41,10 +52,12 @@ export function AddScenarioForm({
         title: title.trim(),
         startingPath: startingPath.trim(),
         prompt: prompt.trim(),
+        personaId,
       });
       setTitle('');
       setStartingPath(defaultStartingPath);
       setPrompt('');
+      setPersonaId(undefined);
       onCreated();
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to create scenario');
@@ -77,6 +90,28 @@ export function AddScenarioForm({
           className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 text-sm"
         />
       </div>
+      {personas.length > 0 && (
+        <div>
+          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+            Persona
+          </label>
+          <Select
+            value={personaId !== undefined ? String(personaId) : ''}
+            onValueChange={value => setPersonaId(value ? Number(value) : undefined)}
+          >
+            <SelectTrigger>
+              <SelectValue placeholder="None (optional)" />
+            </SelectTrigger>
+            <SelectContent>
+              {personas.map(persona => (
+                <SelectItem key={persona.id} value={String(persona.id)}>
+                  {persona.title}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+      )}
       <div>
         <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
           Prompt

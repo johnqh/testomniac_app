@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useMemo } from 'react';
 import { useParams } from 'react-router-dom';
 import { useApi } from '@sudobility/building_blocks/firebase';
 import {
@@ -6,6 +6,7 @@ import {
   useEnvironmentTestInteractions,
   useRunPages,
   useRunTestInteractions,
+  useRunnerPageStates,
 } from '@sudobility/testomniac_client';
 import SEOHead from '@/components/SEOHead';
 import { CONSTANTS } from '../config/constants';
@@ -69,35 +70,25 @@ export default function PagesPage() {
   const isLoading = pagesLoading || elementsLoading;
   const error = pagesError || elementsError;
 
-  // Fetch page states for screenshot paths (used in map view)
-  const [screenshotsByPageId, setScreenshotsByPageId] = useState<Map<number, string>>(new Map());
+  // Fetch page states for screenshot paths (used in both list and map views)
+  const primaryRunnerId = pages.length > 0 ? pages[0].runnerId : 0;
+  const { pageStates } = useRunnerPageStates({
+    networkClient,
+    baseUrl: CONSTANTS.API_URL,
+    runnerId: primaryRunnerId,
+    token: token ?? '',
+    enabled: !!primaryRunnerId && !!token,
+  });
 
-  useEffect(() => {
-    if (view !== 'map' || !runId || !token || pages.length === 0) return;
-    let cancelled = false;
-    (async () => {
-      try {
-        const res = await fetch(`${CONSTANTS.API_URL}/api/v1/runs/${runId}/page-states`, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-        const json = await res.json();
-        if (!cancelled && json.success && Array.isArray(json.data)) {
-          const map = new Map<number, string>();
-          for (const ps of json.data) {
-            if (ps.screenshotPath && !map.has(ps.pageId)) {
-              map.set(ps.pageId, ps.screenshotPath);
-            }
-          }
-          setScreenshotsByPageId(map);
-        }
-      } catch {
-        // Best effort
+  const screenshotsByPageId = useMemo(() => {
+    const map = new Map<number, string>();
+    for (const ps of pageStates) {
+      if (ps.screenshotPath && !map.has(ps.pageId)) {
+        map.set(ps.pageId, ps.screenshotPath);
       }
-    })();
-    return () => {
-      cancelled = true;
-    };
-  }, [view, runId, token, pages.length]);
+    }
+    return map;
+  }, [pageStates]);
 
   if (isLoading) {
     return (
@@ -149,7 +140,14 @@ export default function PagesPage() {
       {pages.length === 0 ? (
         <p className="text-gray-500 dark:text-gray-400">No pages discovered yet.</p>
       ) : view === 'list' ? (
-        <PagesListView pages={pages} envId={envId!} entitySlug={entitySlug!} runId={runId} />
+        <PagesListView
+          pages={pages}
+          envId={envId!}
+          entitySlug={entitySlug!}
+          runId={runId}
+          screenshotsByPageId={screenshotsByPageId}
+          apiUrl={CONSTANTS.API_URL}
+        />
       ) : (
         <PagesMapView
           pages={pages}

@@ -1,5 +1,9 @@
 import { useParams } from 'react-router-dom';
-import { useRunnerTestScenarios, useTestScenarioSequences } from '@sudobility/testomniac_client';
+import {
+  useRunnerTestScenarios,
+  useTestScenarioSequences,
+  useProductPersonas,
+} from '@sudobility/testomniac_client';
 import type { TestScenarioSequenceResponse } from '@sudobility/testomniac_types';
 import SEOHead from '@/components/SEOHead';
 import { useLocalizedNavigate } from '../hooks/useLocalizedNavigate';
@@ -17,6 +21,7 @@ export default function TestScenarioDetailPage() {
   const {
     networkClient,
     token,
+    productId,
     primaryRunner,
     error: contextError,
   } = useDashboardEnvironmentContext();
@@ -33,6 +38,18 @@ export default function TestScenarioDetailPage() {
   });
 
   const scenario = testScenarios.find(s => s.id === Number(scenarioId));
+
+  const { personas } = useProductPersonas({
+    networkClient,
+    baseUrl: CONSTANTS.API_URL,
+    productId,
+    token,
+    enabled: !!productId && !!token,
+  });
+
+  const personaName = scenario?.personaId
+    ? personas.find(p => p.id === scenario.personaId)?.title
+    : null;
 
   const {
     sequences,
@@ -93,8 +110,10 @@ export default function TestScenarioDetailPage() {
             </span>
             {scenario.personaId && (
               <span>
-                Persona ID:{' '}
-                <code className="text-gray-900 dark:text-gray-100">{scenario.personaId}</code>
+                Persona:{' '}
+                <code className="text-gray-900 dark:text-gray-100">
+                  {personaName ?? `#${scenario.personaId}`}
+                </code>
               </span>
             )}
           </div>

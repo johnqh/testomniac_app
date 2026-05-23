@@ -6,9 +6,18 @@ interface PagesListViewProps {
   envId: string;
   entitySlug: string;
   runId?: string;
+  screenshotsByPageId?: Map<number, string>;
+  apiUrl?: string;
 }
 
-export function PagesListView({ pages, envId, entitySlug, runId }: PagesListViewProps) {
+export function PagesListView({
+  pages,
+  envId,
+  entitySlug,
+  runId,
+  screenshotsByPageId,
+  apiUrl,
+}: PagesListViewProps) {
   const { navigate } = useLocalizedNavigate();
   const basePath = runId
     ? `/dashboard/${entitySlug}/environments/${envId}/runs/${runId}/pages`
@@ -27,6 +36,9 @@ export function PagesListView({ pages, envId, entitySlug, runId }: PagesListView
       <table className="w-full text-sm">
         <thead>
           <tr className="border-b border-gray-200 dark:border-gray-700">
+            <th className="px-3 py-2 text-left text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-400 w-16">
+              Preview
+            </th>
             <th className="px-3 py-2 text-left text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-400">
               Path
             </th>
@@ -41,6 +53,7 @@ export function PagesListView({ pages, envId, entitySlug, runId }: PagesListView
         <tbody>
           {sorted.map(page => {
             const isExternal = page.relativePath.startsWith('http');
+            const screenshotPath = screenshotsByPageId?.get(page.id);
 
             return (
               <tr
@@ -48,6 +61,29 @@ export function PagesListView({ pages, envId, entitySlug, runId }: PagesListView
                 onClick={() => navigate(`${basePath}/${page.id}`)}
                 className="cursor-pointer border-b border-gray-100 dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors"
               >
+                <td className="px-3 py-1">
+                  <div className="w-12 h-8 rounded overflow-hidden bg-gray-100 dark:bg-gray-800 flex items-center justify-center">
+                    {screenshotPath && apiUrl ? (
+                      <img
+                        src={`${apiUrl}/api/v1/artifacts/${screenshotPath}?thumbnail=true`}
+                        alt=""
+                        className="w-full h-full object-cover object-top"
+                        loading="lazy"
+                      />
+                    ) : (
+                      <svg
+                        className="w-4 h-4 text-gray-300 dark:text-gray-600"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="1.5"
+                      >
+                        <rect x="3" y="3" width="18" height="18" rx="2" />
+                        <path d="M3 15l5-5 4 4 3-3 6 6" />
+                      </svg>
+                    )}
+                  </div>
+                </td>
                 <td className="px-3 py-2 text-gray-900 dark:text-gray-100">
                   <div className="flex items-center gap-2">
                     <span className="truncate max-w-md">{page.relativePath}</span>

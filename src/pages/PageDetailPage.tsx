@@ -9,6 +9,7 @@ import {
   useCreateTestInteractionRun,
   useRunPages,
   useRunTestInteractions,
+  useProductPersonas,
 } from '@sudobility/testomniac_client';
 import type { TestInteractionResponse } from '@sudobility/testomniac_types';
 import { usePageInteractionGroups } from '@sudobility/testomniac_lib';
@@ -27,8 +28,16 @@ export default function PageDetailPage() {
   }>();
   const { networkClient, token } = useApi();
   const { navigate } = useLocalizedNavigate();
-  const { primaryRunner } = useDashboardEnvironmentContext();
+  const { primaryRunner, productId } = useDashboardEnvironmentContext();
   const [showScenarioForm, setShowScenarioForm] = useState(false);
+
+  const { personas } = useProductPersonas({
+    networkClient,
+    baseUrl: CONSTANTS.API_URL,
+    productId,
+    token: token ?? '',
+    enabled: !!productId && !!token,
+  });
 
   const numericPageId = Number(pageId);
 
@@ -152,6 +161,7 @@ export default function PageDetailPage() {
             networkClient={networkClient}
             token={token ?? ''}
             runnerId={primaryRunner.id}
+            personas={personas}
             defaultStartingPath={summary?.relativePath ?? currentPage?.relativePath ?? '/'}
             onCreated={() => setShowScenarioForm(false)}
             onCancel={() => setShowScenarioForm(false)}

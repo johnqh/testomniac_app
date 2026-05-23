@@ -167,8 +167,8 @@ const MENU_SECTIONS: MenuSection[] = [
       { label: 'Pages', path: 'pages', icon: PagesIcon },
       { label: 'Surfaces', path: 'test-surfaces', icon: SurfacesIcon },
       { label: 'Test Interactions', path: 'test-interactions', icon: InteractionsIcon },
-      { label: 'Scenarios', path: 'test-scenarios', icon: ScenariosIcon },
       { label: 'Personas', path: 'personas', icon: PersonasIcon },
+      { label: 'Scenarios', path: 'test-scenarios', icon: ScenariosIcon },
     ],
   },
   {
