@@ -29,6 +29,7 @@ export default function StartScanPage() {
 
   // Scan scope
   const [scanScopePath, setScanScopePath] = useState('');
+  const [quickScan, setQuickScan] = useState(false);
 
   // Login credential state
   const [continueWithLogin, setContinueWithLogin] = useState(false);
@@ -58,6 +59,7 @@ export default function StartScanPage() {
         sizeClass,
         ...(email ? { reportEmail: email } : {}),
         ...(scanScopePath.trim() ? { scanScopePath: scanScopePath.trim() } : {}),
+        ...(quickScan ? { quickScan: true } : {}),
         ...(continueWithLogin
           ? {
               continueWithLogin: true,
@@ -141,6 +143,22 @@ export default function StartScanPage() {
               />
               <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
                 Restrict scanning to URLs under this path prefix
+              </p>
+            </div>
+
+            {/* Quick Scan */}
+            <div>
+              <label className="flex items-center gap-2 cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={quickScan}
+                  onChange={e => setQuickScan(e.target.checked)}
+                  className="rounded border-gray-300 dark:border-gray-600 text-blue-600 focus:ring-blue-500"
+                />
+                <span className="text-sm text-gray-600 dark:text-gray-400">Quick scan</span>
+              </label>
+              <p className="mt-1 ml-6 text-xs text-gray-500 dark:text-gray-400">
+                Skip hover interactions on linked elements for faster discovery
               </p>
             </div>
 

@@ -246,7 +246,7 @@ export default function PageDetailPage() {
               <div className="space-y-4">
                 {summary.runtimeSignals.map(signal => (
                   <div
-                    key={signal.testInteractionRunId ?? signal.id}
+                    key={signal.testInteractionRunId}
                     className="rounded-lg border border-gray-200 bg-white p-4 dark:border-gray-700 dark:bg-gray-900"
                   >
                     <div className="mb-3 flex items-center justify-between gap-3">
