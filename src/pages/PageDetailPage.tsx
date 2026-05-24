@@ -14,6 +14,7 @@ import {
 import type { TestInteractionResponse } from '@sudobility/testomniac_types';
 import { usePageInteractionGroups } from '@sudobility/testomniac_lib';
 import SEOHead from '@/components/SEOHead';
+import BackLink from '../components/navigation/BackLink';
 import { CONSTANTS } from '../config/constants';
 import { useLocalizedNavigate } from '../hooks/useLocalizedNavigate';
 import { AddScenarioForm } from '../components/scenarios/AddScenarioForm';
@@ -124,9 +125,14 @@ export default function PageDetailPage() {
     );
   }
 
+  const pagesBasePath = runId
+    ? `/dashboard/${entitySlug}/environments/${envId}/runs/${runId}/pages`
+    : `/dashboard/${entitySlug}/environments/${envId}/pages`;
+
   return (
     <div className="p-6">
       <SEOHead title="Page Detail" description="" noIndex />
+      <BackLink label="Pages" onClick={() => navigate(pagesBasePath)} />
       <div className="flex items-center justify-between mb-6">
         <div>
           <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">Page Detail</h1>

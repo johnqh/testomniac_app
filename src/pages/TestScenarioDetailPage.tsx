@@ -6,6 +6,7 @@ import {
 } from '@sudobility/testomniac_client';
 import type { TestScenarioSequenceResponse } from '@sudobility/testomniac_types';
 import SEOHead from '@/components/SEOHead';
+import BackLink from '../components/navigation/BackLink';
 import { useLocalizedNavigate } from '../hooks/useLocalizedNavigate';
 import { CONSTANTS } from '../config/constants';
 import { useDashboardEnvironmentContext } from '../hooks/useDashboardEnvironmentContext';
@@ -77,19 +78,7 @@ export default function TestScenarioDetailPage() {
     <div className="p-6">
       <SEOHead title={scenario?.title ?? `Scenario #${scenarioId}`} description="" noIndex />
 
-      {/* Breadcrumb */}
-      <nav className="flex items-center gap-1 text-sm text-gray-500 dark:text-gray-400 mb-4">
-        <button
-          onClick={() => navigate(`${basePath}/test-scenarios`)}
-          className="hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
-        >
-          Test Scenarios
-        </button>
-        <span>/</span>
-        <span className="text-gray-900 dark:text-gray-100 font-medium">
-          {scenario?.title ?? `Scenario #${scenarioId}`}
-        </span>
-      </nav>
+      <BackLink label="Test Scenarios" onClick={() => navigate(`${basePath}/test-scenarios`)} />
 
       <div className="flex items-center justify-between mb-2">
         <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">

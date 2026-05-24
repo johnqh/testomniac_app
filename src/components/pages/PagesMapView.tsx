@@ -7,9 +7,12 @@ import {
   MiniMap,
   useNodesState,
   useEdgesState,
+  BezierEdge,
   type Node,
   type Edge,
+  type EdgeTypes,
   type NodeTypes,
+  type EdgeProps,
   MarkerType,
   Handle,
   Position,
@@ -95,6 +98,14 @@ function PageNode({
 
 const nodeTypes: NodeTypes = {
   pageNode: PageNode,
+};
+
+function CurvedEdge(props: EdgeProps) {
+  return <BezierEdge {...props} pathOptions={{ curvature: 0.8 }} />;
+}
+
+const edgeTypes: EdgeTypes = {
+  curved: CurvedEdge,
 };
 
 // --- Helpers ---
@@ -252,7 +263,7 @@ export function PagesMapView({
             id: `h-${rfEdges.length}`,
             source: parentPath,
             target: entry.path,
-            type: 'smoothstep',
+            type: 'curved',
             style: { stroke: '#94a3b8' },
             markerEnd: {
               type: MarkerType.ArrowClosed,
@@ -358,6 +369,7 @@ export function PagesMapView({
           nodes={nodes}
           edges={edges}
           nodeTypes={nodeTypes}
+          edgeTypes={edgeTypes}
           onNodesChange={onNodesChange}
           onEdgesChange={onEdgesChange}
           onNodeDoubleClick={handleNodeDoubleClick}

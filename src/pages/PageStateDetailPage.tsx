@@ -6,17 +6,22 @@ import {
   useHtmlElement,
   usePageStateScaffolds,
 } from '@sudobility/testomniac_client';
+import BackLink from '../components/navigation/BackLink';
 import { CONSTANTS } from '../config/constants';
+import { useLocalizedNavigate } from '../hooks/useLocalizedNavigate';
 
 type Tab = 'body' | 'content' | 'scaffolds';
 
 export default function PageStateDetailPage() {
-  const { pageStateId, pageId, envId } = useParams<{
+  const { pageStateId, pageId, envId, entitySlug, runId } = useParams<{
     pageStateId: string;
     pageId: string;
     envId: string;
+    entitySlug: string;
+    runId?: string;
   }>();
   const { networkClient, token } = useApi();
+  const { navigate } = useLocalizedNavigate();
 
   const [activeTab, setActiveTab] = useState<Tab>('body');
   const [bodyView, setBodyView] = useState<'rendered' | 'source'>('rendered');
@@ -83,8 +88,13 @@ export default function PageStateDetailPage() {
     { key: 'scaffolds', label: 'Scaffolds' },
   ];
 
+  const pageBasePath = runId
+    ? `/dashboard/${entitySlug}/environments/${envId}/runs/${runId}/pages/${pageId}`
+    : `/dashboard/${entitySlug}/environments/${envId}/pages/${pageId}`;
+
   return (
     <div className="p-6">
+      <BackLink label={`Page #${pageId}`} onClick={() => navigate(pageBasePath)} />
       <div className="mb-6">
         <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">
           Page State #{pageStateId}

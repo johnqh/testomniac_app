@@ -16,6 +16,7 @@ import type {
   TestScenarioResponse,
 } from '@sudobility/testomniac_types';
 import SEOHead from '@/components/SEOHead';
+import BackLink from '../components/navigation/BackLink';
 import { CONSTANTS } from '../config/constants';
 import { useDashboardEnvironmentContext } from '../hooks/useDashboardEnvironmentContext';
 import { useLocalizedNavigate } from '../hooks/useLocalizedNavigate';
@@ -218,6 +219,7 @@ export default function BundleDetailPage() {
   return (
     <div className="p-6">
       <SEOHead title={bundle.title} description="" noIndex />
+      <BackLink label="Bundles" onClick={() => navigate(`${basePath}/bundles`)} />
 
       {/* Header */}
       <div className="mb-6">

@@ -6,6 +6,7 @@ import {
   useTestInteractionActions,
 } from '@sudobility/testomniac_client';
 import type { TestActionResponse, TestInteractionResponse } from '@sudobility/testomniac_types';
+import BackLink from '../components/navigation/BackLink';
 import { useLocalizedNavigate } from '../hooks/useLocalizedNavigate';
 import { CONSTANTS } from '../config/constants';
 import { StatusBadge } from '../components/scanner/StatusBadge';
@@ -162,19 +163,10 @@ export default function TestInteractionDetailPage() {
 
   return (
     <div className="p-6">
-      {/* Breadcrumb */}
-      <nav className="flex items-center gap-1 text-sm text-gray-500 dark:text-gray-400 mb-4">
-        <button
-          onClick={() => navigate(`${basePath}/test-surfaces`)}
-          className="hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
-        >
-          Test Surfaces
-        </button>
-        <span>/</span>
-        <span className="text-gray-900 dark:text-gray-100 font-medium">
-          Test Interaction #{elementId}
-        </span>
-      </nav>
+      <BackLink
+        label="Test Interactions"
+        onClick={() => navigate(`${basePath}/test-interactions`)}
+      />
 
       <div className="flex items-center justify-between mb-2">
         <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">
