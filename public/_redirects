@@ -1,0 +1,5 @@
+# Serve pre-rendered HTML for SEO routes (takes priority over SPA fallback)
+/:lang/docs /:lang/docs/index.html 200
+
+# SPA fallback for all other routes
+/* /index.html 200
