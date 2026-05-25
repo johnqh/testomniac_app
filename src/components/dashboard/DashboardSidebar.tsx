@@ -103,6 +103,16 @@ const ScaffoldsIcon = () => (
   </svg>
 );
 
+/** Grid / patterns */
+const PatternsIcon = () => (
+  <svg {...iconProps}>
+    <rect x="2" y="2" width="5" height="5" rx="0.5" />
+    <rect x="9" y="2" width="5" height="5" rx="0.5" />
+    <rect x="2" y="9" width="5" height="5" rx="0.5" />
+    <rect x="9" y="9" width="5" height="5" rx="0.5" />
+  </svg>
+);
+
 /** Warning triangle / issues */
 const IssuesIcon = () => (
   <svg {...iconProps}>
@@ -176,6 +186,7 @@ const MENU_SECTIONS: MenuSection[] = [
     items: [
       { label: 'Issues', path: 'issues', icon: IssuesIcon },
       { label: 'Scaffolds', path: 'scaffolds', icon: ScaffoldsIcon },
+      { label: 'Patterns', path: 'patterns', icon: PatternsIcon },
     ],
   },
   {

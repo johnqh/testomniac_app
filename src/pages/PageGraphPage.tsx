@@ -14,16 +14,18 @@ import '@xyflow/react/dist/style.css';
 import dagre from 'dagre';
 import { useApi } from '@sudobility/building_blocks/firebase';
 import { usePageStates } from '@sudobility/testomniac_client';
+import SEOHead from '@/components/SEOHead';
+import BackLink from '../components/navigation/BackLink';
 import { CONSTANTS } from '../config/constants';
 import { useLocalizedNavigate } from '../hooks/useLocalizedNavigate';
 
-const NODE_WIDTH = 180;
-const NODE_HEIGHT = 50;
+const NODE_WIDTH = 200;
+const NODE_HEIGHT = 160;
 
 function layoutGraph(nodes: Node[], edges: Edge[]): Node[] {
   const g = new dagre.graphlib.Graph();
   g.setDefaultEdgeLabel(() => ({}));
-  g.setGraph({ rankdir: 'TB', nodesep: 50, ranksep: 70 });
+  g.setGraph({ rankdir: 'TB', nodesep: 60, ranksep: 80 });
 
   nodes.forEach(node => {
     g.setNode(node.id, { width: NODE_WIDTH, height: NODE_HEIGHT });
@@ -46,6 +48,44 @@ function layoutGraph(nodes: Node[], edges: Edge[]): Node[] {
     };
   });
 }
+
+function PageStateNode({ data }: { data: { label: string; screenshotUrl?: string } }) {
+  return (
+    <div
+      className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden shadow-sm"
+      style={{ width: NODE_WIDTH, height: NODE_HEIGHT }}
+    >
+      <div className="w-full h-[120px] bg-gray-100 dark:bg-gray-900 flex items-center justify-center overflow-hidden">
+        {data.screenshotUrl ? (
+          <img
+            src={data.screenshotUrl}
+            alt=""
+            className="w-full h-full object-cover object-top"
+            loading="lazy"
+          />
+        ) : (
+          <svg
+            className="w-8 h-8 text-gray-300 dark:text-gray-600"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1.5"
+          >
+            <rect x="3" y="3" width="18" height="18" rx="2" />
+            <path d="M3 15l5-5 4 4 3-3 6 6" />
+          </svg>
+        )}
+      </div>
+      <div className="px-2 py-1.5 text-center">
+        <span className="text-xs font-medium text-gray-700 dark:text-gray-300 truncate block">
+          {data.label}
+        </span>
+      </div>
+    </div>
+  );
+}
+
+const nodeTypes = { pageState: PageStateNode };
 
 export default function PageGraphPage() {
   const { pageId, envId, entitySlug } = useParams<{
@@ -70,20 +110,20 @@ export default function PageGraphPage() {
   const { initialNodes, initialEdges } = useMemo(() => {
     if (pageStates.length === 0) return { initialNodes: [], initialEdges: [] };
 
-    // Create nodes - one per page state
-    const rawNodes: Node[] = pageStates.map(ps => ({
-      id: String(ps.id),
-      data: { label: `${ps.sizeClass} (#${ps.id})` },
-      position: { x: 0, y: 0 },
-      style: {
-        background: '#fff',
-        border: '1px solid #e5e7eb',
-        borderRadius: '8px',
-        padding: '8px 12px',
-        fontSize: '12px',
-        width: NODE_WIDTH,
-      },
-    }));
+    const rawNodes: Node[] = pageStates.map(ps => {
+      const screenshotUrl = ps.screenshotPath
+        ? `${CONSTANTS.API_URL}/api/v1/artifacts/${ps.screenshotPath}?thumbnail=true`
+        : undefined;
+      return {
+        id: String(ps.id),
+        type: 'pageState',
+        data: {
+          label: `${ps.sizeClass} (#${ps.id})`,
+          screenshotUrl,
+        },
+        position: { x: 0, y: 0 },
+      };
+    });
 
     const rawEdges: Edge[] = [];
     const layoutNodes = layoutGraph(rawNodes, rawEdges);
@@ -100,6 +140,8 @@ export default function PageGraphPage() {
     [navigate, entitySlug, envId, pageId]
   );
 
+  const pagesBasePath = `/dashboard/${entitySlug}/environments/${envId}/pages/${pageId}`;
+
   if (isLoading) {
     return (
       <div className="p-6">
@@ -108,33 +150,32 @@ export default function PageGraphPage() {
     );
   }
 
-  if (pageStates.length === 0) {
-    return (
-      <div className="p-6">
-        <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-6">Page Graph</h1>
-        <p className="text-gray-500 dark:text-gray-400">No page states found.</p>
-      </div>
-    );
-  }
-
   return (
     <div className="p-6">
+      <SEOHead title="Page Graph" description="" noIndex />
+      <BackLink label="Page Detail" onClick={() => navigate(pagesBasePath)} />
       <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-6">Page Graph</h1>
-      <div className="w-full h-[600px] border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden">
-        <ReactFlow
-          nodes={nodes}
-          edges={edges}
-          onNodesChange={onNodesChange}
-          onEdgesChange={onEdgesChange}
-          onNodeClick={onNodeClick}
-          fitView
-          className="bg-gray-50 dark:bg-gray-900"
-        >
-          <Background />
-          <Controls />
-          <MiniMap />
-        </ReactFlow>
-      </div>
+
+      {pageStates.length === 0 ? (
+        <p className="text-gray-500 dark:text-gray-400">No page states found.</p>
+      ) : (
+        <div className="w-full h-[600px] border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden">
+          <ReactFlow
+            nodes={nodes}
+            edges={edges}
+            onNodesChange={onNodesChange}
+            onEdgesChange={onEdgesChange}
+            onNodeClick={onNodeClick}
+            nodeTypes={nodeTypes}
+            fitView
+            className="bg-gray-50 dark:bg-gray-900"
+          >
+            <Background />
+            <Controls />
+            <MiniMap />
+          </ReactFlow>
+        </div>
+      )}
     </div>
   );
 }

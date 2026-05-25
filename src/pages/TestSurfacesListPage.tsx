@@ -1,3 +1,4 @@
+import { useState, useMemo } from 'react';
 import { useParams } from 'react-router-dom';
 import { useApi } from '@sudobility/building_blocks/firebase';
 import { useEnvironmentTestSurfaces } from '@sudobility/testomniac_client';
@@ -46,10 +47,17 @@ function PriorityBadge({ priority }: { priority: number }) {
   );
 }
 
+type DeviceFilter = 'all' | 'desktop' | 'mobile';
+type PriorityFilter = 'all' | 'critical' | 'high' | 'medium' | 'low';
+
 export default function TestSurfacesListPage() {
   const { entitySlug, envId } = useParams<{ entitySlug: string; envId: string }>();
   const { networkClient, token } = useApi();
   const { navigate } = useLocalizedNavigate();
+
+  const [deviceFilter, setDeviceFilter] = useState<DeviceFilter>('all');
+  const [priorityFilter, setPriorityFilter] = useState<PriorityFilter>('all');
+  const [typeFilter, setTypeFilter] = useState<string>('all');
 
   const { testSurfaces, isLoading, error } = useEnvironmentTestSurfaces({
     networkClient,
@@ -59,7 +67,51 @@ export default function TestSurfacesListPage() {
     enabled: !!envId && !!token,
   });
 
+  const typeOptions = useMemo(() => {
+    const types = new Set<string>();
+    for (const surface of testSurfaces) {
+      if (surface.scaffoldType) types.add(surface.scaffoldType);
+      if (surface.patternType) types.add(surface.patternType);
+    }
+    return Array.from(types).sort();
+  }, [testSurfaces]);
+
+  const filteredSurfaces = useMemo(() => {
+    return testSurfaces.filter((surface: TestSurfaceResponse) => {
+      // Device filter
+      if (deviceFilter !== 'all' && surface.sizeClass !== deviceFilter) {
+        return false;
+      }
+
+      // Priority filter
+      if (priorityFilter === 'critical' && surface.priority < 8) return false;
+      if (priorityFilter === 'high' && (surface.priority < 5 || surface.priority >= 8))
+        return false;
+      if (priorityFilter === 'medium' && (surface.priority < 3 || surface.priority >= 5))
+        return false;
+      if (priorityFilter === 'low' && surface.priority >= 3) return false;
+
+      // Type filter
+      if (
+        typeFilter !== 'all' &&
+        surface.scaffoldType !== typeFilter &&
+        surface.patternType !== typeFilter
+      ) {
+        return false;
+      }
+
+      return true;
+    });
+  }, [testSurfaces, deviceFilter, priorityFilter, typeFilter]);
+
   const basePath = `/dashboard/${entitySlug}/environments/${envId}`;
+
+  const deviceButtonClass = (value: DeviceFilter) =>
+    `px-3 py-1.5 text-sm font-medium transition-colors ${
+      deviceFilter === value
+        ? 'bg-blue-600 text-white'
+        : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700'
+    }`;
 
   if (error) {
     return (
@@ -74,9 +126,87 @@ export default function TestSurfacesListPage() {
       <SEOHead title="Test Surfaces" description="" noIndex />
       <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-6">Test Surfaces</h1>
 
+      {/* Filter controls */}
+      {!isLoading && testSurfaces.length > 0 && (
+        <div className="flex flex-wrap items-center gap-4 mb-6">
+          {/* Device filter */}
+          <div className="flex items-center gap-2">
+            <span className="text-sm text-gray-500 dark:text-gray-400">Device:</span>
+            <div className="flex items-center rounded-lg border border-gray-200 dark:border-gray-700 overflow-hidden">
+              <button onClick={() => setDeviceFilter('all')} className={deviceButtonClass('all')}>
+                All
+              </button>
+              <button
+                onClick={() => setDeviceFilter('desktop')}
+                className={deviceButtonClass('desktop')}
+              >
+                Desktop
+              </button>
+              <button
+                onClick={() => setDeviceFilter('mobile')}
+                className={deviceButtonClass('mobile')}
+              >
+                Mobile
+              </button>
+            </div>
+          </div>
+
+          {/* Priority filter */}
+          <div className="flex items-center gap-2">
+            <span className="text-sm text-gray-500 dark:text-gray-400">Priority:</span>
+            <select
+              value={priorityFilter}
+              onChange={e => setPriorityFilter(e.target.value as PriorityFilter)}
+              className="rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-sm text-gray-700 dark:text-gray-300 px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            >
+              <option value="all">All priorities</option>
+              <option value="critical">Critical (8+)</option>
+              <option value="high">High (5-7)</option>
+              <option value="medium">Medium (3-4)</option>
+              <option value="low">Low (&lt;3)</option>
+            </select>
+          </div>
+
+          {/* Type filter */}
+          {typeOptions.length > 0 && (
+            <div className="flex items-center gap-2">
+              <span className="text-sm text-gray-500 dark:text-gray-400">Type:</span>
+              <select
+                value={typeFilter}
+                onChange={e => setTypeFilter(e.target.value)}
+                className="rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-sm text-gray-700 dark:text-gray-300 px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              >
+                <option value="all">All types</option>
+                {typeOptions.map(type => (
+                  <option key={type} value={type}>
+                    {type}
+                  </option>
+                ))}
+              </select>
+            </div>
+          )}
+
+          {/* Result count */}
+          <span className="text-sm text-gray-400 dark:text-gray-500">
+            {filteredSurfaces.length} of {testSurfaces.length}
+          </span>
+        </div>
+      )}
+
       {isLoading && (
         <div className="text-sm text-gray-500 dark:text-gray-400 py-8 text-center">
           Loading test surfaces...
+        </div>
+      )}
+
+      {!isLoading && filteredSurfaces.length === 0 && testSurfaces.length > 0 && (
+        <div className="rounded-xl border border-dashed border-gray-200 dark:border-gray-700 p-8 text-center">
+          <div className="text-lg font-semibold text-gray-900 dark:text-gray-100">
+            No matching test surfaces
+          </div>
+          <p className="text-sm text-gray-500 dark:text-gray-400 mt-2">
+            Try adjusting the filters to see more results.
+          </p>
         </div>
       )}
 
@@ -91,9 +221,9 @@ export default function TestSurfacesListPage() {
         </div>
       )}
 
-      {!isLoading && testSurfaces.length > 0 && (
+      {!isLoading && filteredSurfaces.length > 0 && (
         <div className="space-y-2">
-          {testSurfaces.map((surface: TestSurfaceResponse) => (
+          {filteredSurfaces.map((surface: TestSurfaceResponse) => (
             <button
               key={surface.id}
               onClick={() => navigate(`${basePath}/test-surfaces/${surface.id}`)}

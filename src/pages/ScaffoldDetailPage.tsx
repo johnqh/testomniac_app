@@ -1,8 +1,8 @@
 import { type ReactNode } from 'react';
 import { useParams } from 'react-router-dom';
-import { useApi } from '@sudobility/building_blocks/firebase';
 import { useRunScaffolds } from '@sudobility/testomniac_client';
 import SEOHead from '@/components/SEOHead';
+import BackLink from '../components/navigation/BackLink';
 import { CONSTANTS } from '../config/constants';
 import { useDashboardEnvironmentContext } from '../hooks/useDashboardEnvironmentContext';
 import { useLocalizedNavigate } from '../hooks/useLocalizedNavigate';
@@ -28,8 +28,8 @@ const SCAFFOLD_LABELS: Record<string, string> = {
 const SCAFFOLD_ICONS: Record<string, ReactNode> = {
   topMenu: (
     <svg
-      width="14"
-      height="14"
+      width="20"
+      height="20"
       viewBox="0 0 14 14"
       fill="none"
       stroke="currentColor"
@@ -44,8 +44,8 @@ const SCAFFOLD_ICONS: Record<string, ReactNode> = {
   ),
   footer: (
     <svg
-      width="14"
-      height="14"
+      width="20"
+      height="20"
       viewBox="0 0 14 14"
       fill="none"
       stroke="currentColor"
@@ -58,8 +58,8 @@ const SCAFFOLD_ICONS: Record<string, ReactNode> = {
   ),
   breadcrumb: (
     <svg
-      width="14"
-      height="14"
+      width="20"
+      height="20"
       viewBox="0 0 14 14"
       fill="none"
       stroke="currentColor"
@@ -74,8 +74,8 @@ const SCAFFOLD_ICONS: Record<string, ReactNode> = {
   ),
   leftMenu: (
     <svg
-      width="14"
-      height="14"
+      width="20"
+      height="20"
       viewBox="0 0 14 14"
       fill="none"
       stroke="currentColor"
@@ -91,8 +91,8 @@ const SCAFFOLD_ICONS: Record<string, ReactNode> = {
   ),
   hamburgerMenu: (
     <svg
-      width="14"
-      height="14"
+      width="20"
+      height="20"
       viewBox="0 0 14 14"
       fill="none"
       stroke="currentColor"
@@ -106,8 +106,8 @@ const SCAFFOLD_ICONS: Record<string, ReactNode> = {
   ),
   rightSidebar: (
     <svg
-      width="14"
-      height="14"
+      width="20"
+      height="20"
       viewBox="0 0 14 14"
       fill="none"
       stroke="currentColor"
@@ -122,8 +122,8 @@ const SCAFFOLD_ICONS: Record<string, ReactNode> = {
   ),
   searchBar: (
     <svg
-      width="14"
-      height="14"
+      width="20"
+      height="20"
       viewBox="0 0 14 14"
       fill="none"
       stroke="currentColor"
@@ -136,8 +136,8 @@ const SCAFFOLD_ICONS: Record<string, ReactNode> = {
   ),
   userMenu: (
     <svg
-      width="14"
-      height="14"
+      width="20"
+      height="20"
       viewBox="0 0 14 14"
       fill="none"
       stroke="currentColor"
@@ -150,8 +150,8 @@ const SCAFFOLD_ICONS: Record<string, ReactNode> = {
   ),
   cookieBanner: (
     <svg
-      width="14"
-      height="14"
+      width="20"
+      height="20"
       viewBox="0 0 14 14"
       fill="none"
       stroke="currentColor"
@@ -166,8 +166,8 @@ const SCAFFOLD_ICONS: Record<string, ReactNode> = {
   ),
   chatWidget: (
     <svg
-      width="14"
-      height="14"
+      width="20"
+      height="20"
       viewBox="0 0 14 14"
       fill="none"
       stroke="currentColor"
@@ -180,8 +180,8 @@ const SCAFFOLD_ICONS: Record<string, ReactNode> = {
   ),
   socialLinks: (
     <svg
-      width="14"
-      height="14"
+      width="20"
+      height="20"
       viewBox="0 0 14 14"
       fill="none"
       stroke="currentColor"
@@ -197,8 +197,8 @@ const SCAFFOLD_ICONS: Record<string, ReactNode> = {
   ),
   skipNav: (
     <svg
-      width="14"
-      height="14"
+      width="20"
+      height="20"
       viewBox="0 0 14 14"
       fill="none"
       stroke="currentColor"
@@ -214,8 +214,8 @@ const SCAFFOLD_ICONS: Record<string, ReactNode> = {
   ),
   languageSwitcher: (
     <svg
-      width="14"
-      height="14"
+      width="20"
+      height="20"
       viewBox="0 0 14 14"
       fill="none"
       stroke="currentColor"
@@ -229,8 +229,8 @@ const SCAFFOLD_ICONS: Record<string, ReactNode> = {
   ),
   announcementBar: (
     <svg
-      width="14"
-      height="14"
+      width="20"
+      height="20"
       viewBox="0 0 14 14"
       fill="none"
       stroke="currentColor"
@@ -245,8 +245,8 @@ const SCAFFOLD_ICONS: Record<string, ReactNode> = {
   ),
   backToTop: (
     <svg
-      width="14"
-      height="14"
+      width="20"
+      height="20"
       viewBox="0 0 14 14"
       fill="none"
       stroke="currentColor"
@@ -260,24 +260,36 @@ const SCAFFOLD_ICONS: Record<string, ReactNode> = {
   ),
 };
 
-export default function ScaffoldsPage() {
-  const { entitySlug, envId } = useParams<{ entitySlug: string; envId: string }>();
-  const { networkClient, token } = useApi();
+export default function ScaffoldDetailPage() {
+  const { entitySlug, envId, scaffoldId } = useParams<{
+    entitySlug: string;
+    envId: string;
+    scaffoldId: string;
+  }>();
   const { navigate } = useLocalizedNavigate();
   const {
+    networkClient,
+    token,
     latestRun,
     isLoading: contextLoading,
     error: contextError,
   } = useDashboardEnvironmentContext();
+
   const basePath = `/dashboard/${entitySlug}/environments/${envId}`;
 
   const { scaffolds, isLoading, error } = useRunScaffolds({
     networkClient,
     baseUrl: CONSTANTS.API_URL,
     runId: latestRun?.id ?? 0,
-    token: token ?? '',
+    token,
     enabled: !!envId && !!token && !!latestRun,
   });
+
+  const numericScaffoldId = Number(scaffoldId);
+  const scaffold = scaffolds.find(s => s.id === numericScaffoldId);
+  const pagePaths = Array.isArray((scaffold as unknown as { pagePaths?: string[] })?.pagePaths)
+    ? (scaffold as unknown as { pagePaths: string[] }).pagePaths
+    : [];
 
   if (contextLoading || isLoading) {
     return (
@@ -297,54 +309,81 @@ export default function ScaffoldsPage() {
     );
   }
 
+  if (!scaffold) {
+    return (
+      <div className="p-6">
+        <BackLink label="Scaffolds" onClick={() => navigate(`${basePath}/scaffolds`)} />
+        <div className="text-center text-gray-500 dark:text-gray-400 py-8">Scaffold not found</div>
+      </div>
+    );
+  }
+
+  const label = SCAFFOLD_LABELS[scaffold.type] ?? scaffold.type;
+
   return (
     <div className="p-6">
-      <SEOHead title="Scaffolds" description="" noIndex />
-      <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-6">Scaffolds</h1>
+      <SEOHead title={label} description="" noIndex />
+      <BackLink label="Scaffolds" onClick={() => navigate(`${basePath}/scaffolds`)} />
 
-      {scaffolds.length === 0 ? (
-        <p className="text-gray-500 dark:text-gray-400">No scaffolds detected.</p>
-      ) : (
-        <div className="space-y-3">
-          {scaffolds.map(scaffold => {
-            const pagePaths = Array.isArray(
-              (scaffold as unknown as { pagePaths?: string[] }).pagePaths
-            )
-              ? (scaffold as unknown as { pagePaths: string[] }).pagePaths
-              : [];
-            return (
-              <button
-                key={scaffold.id}
-                onClick={() => navigate(`${basePath}/scaffolds/${scaffold.id}`)}
-                className="w-full text-left p-4 rounded-lg border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors"
-              >
-                <div className="flex items-center justify-between">
-                  <div>
-                    <div className="flex items-center gap-1.5 text-sm font-medium text-gray-900 dark:text-gray-100">
-                      {SCAFFOLD_ICONS[scaffold.type]}
-                      {SCAFFOLD_LABELS[scaffold.type] ?? scaffold.type}
-                    </div>
-                    {pagePaths.length > 0 && (
-                      <div className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                        {pagePaths.length} {pagePaths.length === 1 ? 'page' : 'pages'}
-                      </div>
-                    )}
-                  </div>
-                  <svg
-                    className="h-4 w-4 text-gray-400 dark:text-gray-500"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                  >
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
-                  </svg>
-                </div>
-              </button>
-            );
-          })}
+      {/* Header */}
+      <div className="mb-6">
+        <div className="flex items-center gap-2 text-gray-900 dark:text-gray-100">
+          <span className="text-gray-500 dark:text-gray-400">{SCAFFOLD_ICONS[scaffold.type]}</span>
+          <h1 className="text-2xl font-bold">{label}</h1>
         </div>
-      )}
+      </div>
+
+      {/* Details */}
+      <div className="space-y-4">
+        <div className="rounded-lg border border-gray-200 dark:border-gray-700 divide-y divide-gray-200 dark:divide-gray-700">
+          <DetailRow label="Type" value={scaffold.type} />
+          <DetailRow label="Element ID" value={String(scaffold.htmlElementId)} mono />
+          {scaffold.htmlHash && <DetailRow label="HTML Hash" value={scaffold.htmlHash} mono />}
+          {scaffold.createdAt && (
+            <DetailRow label="Created" value={new Date(scaffold.createdAt).toLocaleString()} />
+          )}
+        </div>
+
+        {/* Page paths */}
+        {pagePaths.length > 0 && (
+          <div>
+            <h2 className="text-sm font-semibold text-gray-900 dark:text-gray-100 mb-2">
+              Page paths ({pagePaths.length})
+            </h2>
+            <div className="rounded-lg border border-gray-200 dark:border-gray-700 divide-y divide-gray-200 dark:divide-gray-700">
+              {pagePaths.map((path: string) => (
+                <div
+                  key={path}
+                  className="px-4 py-2.5 text-sm font-mono text-gray-700 dark:text-gray-300"
+                >
+                  {path}
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+function DetailRow({
+  label,
+  value,
+  mono = false,
+}: {
+  label: string;
+  value: string;
+  mono?: boolean;
+}) {
+  return (
+    <div className="flex items-center px-4 py-3">
+      <span className="text-sm font-medium text-gray-500 dark:text-gray-400 w-32 shrink-0">
+        {label}
+      </span>
+      <span className={`text-sm text-gray-900 dark:text-gray-100 ${mono ? 'font-mono' : ''}`}>
+        {value}
+      </span>
     </div>
   );
 }
