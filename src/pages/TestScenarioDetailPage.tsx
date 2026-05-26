@@ -1,9 +1,11 @@
+import { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import {
   useRunnerTestScenarios,
   useTestScenarioSequences,
   useProductPersonas,
 } from '@sudobility/testomniac_client';
+import { useSequenceGenerator } from '@sudobility/testomniac_lib';
 import type { TestScenarioSequenceResponse } from '@sudobility/testomniac_types';
 import SEOHead from '@/components/SEOHead';
 import BackLink from '../components/navigation/BackLink';
@@ -24,6 +26,7 @@ export default function TestScenarioDetailPage() {
     token,
     productId,
     primaryRunner,
+    envId: numericEnvId,
     error: contextError,
   } = useDashboardEnvironmentContext();
 
@@ -56,6 +59,7 @@ export default function TestScenarioDetailPage() {
     sequences,
     isLoading: sequencesLoading,
     error: sequencesError,
+    refetch: refetchSequences,
   } = useTestScenarioSequences({
     networkClient,
     baseUrl: CONSTANTS.API_URL,
@@ -63,6 +67,28 @@ export default function TestScenarioDetailPage() {
     token: token ?? '',
     enabled: !!scenarioId && !!token,
   });
+
+  const {
+    generate,
+    isGenerating,
+    error: generateError,
+  } = useSequenceGenerator({
+    networkClient,
+    baseUrl: CONSTANTS.API_URL,
+    token,
+  });
+
+  const [generateErrorMsg, setGenerateErrorMsg] = useState<string | null>(null);
+
+  const handleGenerateSequence = async () => {
+    setGenerateErrorMsg(null);
+    const result = await generate(Number(scenarioId), numericEnvId);
+    if (result) {
+      refetchSequences();
+    } else if (generateError) {
+      setGenerateErrorMsg(generateError);
+    }
+  };
 
   if (contextError || sequencesError) {
     return (
@@ -116,9 +142,24 @@ export default function TestScenarioDetailPage() {
       )}
 
       {/* Sequences */}
-      <h2 className="text-sm font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-3">
-        Sequences
-      </h2>
+      <div className="flex items-center justify-between mb-3">
+        <h2 className="text-sm font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+          Sequences
+        </h2>
+        <button
+          onClick={handleGenerateSequence}
+          disabled={isGenerating || !scenarioId}
+          className="px-4 py-2 text-sm font-medium text-white bg-purple-600 rounded-lg hover:bg-purple-700 disabled:opacity-50 transition-colors"
+        >
+          {isGenerating ? 'Generating...' : 'Generate Sequence'}
+        </button>
+      </div>
+
+      {(generateErrorMsg || generateError) && (
+        <div className="mb-3 p-3 rounded-lg bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 text-sm text-red-600 dark:text-red-400">
+          {generateErrorMsg || generateError}
+        </div>
+      )}
 
       {sequencesLoading && (
         <div className="text-sm text-gray-500 dark:text-gray-400 py-8 text-center">Loading...</div>
