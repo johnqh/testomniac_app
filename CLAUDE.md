@@ -2,7 +2,7 @@
 
 Web application for the Testomniac project.
 
-**Package**: `@sudobility/entitytestomniac_app` (private, BUSL-1.1)
+**Package**: `@sudobility/testomniac_app` (private, BUSL-1.1)
 
 ## Tech Stack
 
@@ -23,82 +23,91 @@ src/
 ├── main.tsx                              # App entry point
 ├── App.tsx                               # Router setup, lazy-loaded routes
 ├── i18n.ts                               # i18next configuration
-seo.config.mjs                                # SEO route/meta configuration for build-time asset generation
 ├── config/
 │   ├── constants.ts                      # App constants, supported languages
 │   ├── auth-config.ts                    # Firebase auth configuration
-│   └── initialize.ts                     # App initialization
+│   └── initialize.ts                     # App initialization (DI + Firebase + i18n)
 ├── context/
-│   └── ThemeContext.tsx                   # Theme provider
+│   └── ThemeContext.tsx                   # Theme provider (light/dark)
 ├── components/
-│   ├── ErrorBoundary.tsx                 # Error boundary with retry support
+│   ├── ErrorBoundary.tsx                 # Error boundary with retry + analytics
+│   ├── SEOHead.tsx                       # Helmet wrapper for SEO meta tags
 │   ├── layout/
 │   │   ├── TopBar.tsx                    # Navigation bar
 │   │   ├── Footer.tsx                    # Page footer
-│   │   ├── ScreenContainer.tsx           # Page wrapper
+│   │   ├── ScreenContainer.tsx           # Page wrapper with breadcrumbs
 │   │   ├── ProtectedRoute.tsx            # Auth guard
 │   │   ├── LocalizedLink.tsx             # Language-aware links
-│   │   ├── LanguageRedirect.tsx          # Auto-redirect to lang prefix
 │   │   └── EntityRedirect.tsx            # Redirect to user's default entity
 │   ├── providers/
 │   │   └── AuthProviderWrapper.tsx       # Firebase auth provider
-│   ├── scanner/
-│   │   ├── EventLog.tsx                  # Real-time scan event stream
-│   │   ├── LiveCounters.tsx              # Live scan statistics
-│   │   ├── PhaseIndicator.tsx            # Current scan phase display
-│   │   ├── RunSummaryCard.tsx            # Run overview card
-│   │   ├── ScanForm.tsx                  # New scan submission form
-│   │   ├── ScanProgressPanel.tsx         # Scan progress visualization
-│   │   └── StatusBadge.tsx               # Run status indicator
-│   ├── data/
-│   │   ├── JsonViewer.tsx                # Collapsible JSON display
-│   │   └── DataTable.tsx                 # Reusable data table
-│   └── dashboard/
-│       └── DashboardSidebar.tsx          # Dashboard navigation sidebar
+│   ├── scanner/                          # Scan progress components
+│   │   ├── ScanForm.tsx                  # URL + email input form
+│   │   ├── EventLog.tsx                  # Real-time event stream (SSE)
+│   │   ├── LiveCounters.tsx, PhaseIndicator.tsx, StatusBadge.tsx
+│   │   ├── RunSummaryCard.tsx, ScanProgressPanel.tsx
+│   └── data/
+│       ├── DataTable.tsx                 # TanStack Table (sorting, pagination, filtering)
+│       └── JsonViewer.tsx                # Collapsible JSON display
 ├── hooks/
-│   ├── useLocalizedNavigate.ts           # Navigate with lang prefix
-│   ├── useDocumentLanguage.ts            # Set HTML lang attribute
+│   ├── useLocalizedNavigate.ts           # Navigate with lang prefix + switchLanguage()
+│   ├── useDocumentLanguage.ts            # Sync HTML lang + RTL dir attribute
 │   ├── useBreadcrumbs.ts                 # Breadcrumb navigation
-│   ├── useBuildingBlocksAnalytics.ts     # Analytics integration
 │   ├── useEventSource.ts                 # SSE event stream hook
 │   └── usePageConfig.ts                  # Page title/meta configuration
 ├── utils/
 │   └── formatDateTime.ts                 # Locale-aware date/time formatting
-└── pages/
-    ├── HomePage.tsx                      # Landing page
+└── pages/                                # 52 lazy-loaded pages
+    ├── HomePage.tsx                      # Landing page with ScanForm
     ├── LoginPage.tsx                     # Authentication page
-    ├── DocsPage.tsx                      # Documentation
-    ├── SitemapPage.tsx                   # Sitemap
-    ├── DashboardPage.tsx                 # Dashboard layout (with sidebar + Outlet)
-    ├── DashboardOverview.tsx             # Dashboard home / project overview
-    ├── StartScanPage.tsx                 # New scan form page
-    ├── ScanProgressPage.tsx              # Authenticated scan progress
-    ├── PublicScanProgressPage.tsx        # Public scan progress (no auth)
-    ├── RunDetailsPage.tsx                # Individual run details
-    ├── TestElementsPage.tsx                 # Generated test elements list
-    ├── TestRunsPage.tsx                  # Test execution results
-    ├── IssuesPage.tsx                    # Detected issues list
-    ├── PagesPage.tsx                     # Discovered pages list
-    ├── MapPage.tsx                       # Site map visualization
-    ├── ScaffoldsPage.tsx                # Detected scaffolds list
+    ├── DashboardPage.tsx                 # Dashboard layout (master-detail sidebar)
+    ├── DashboardOverview.tsx             # Stats + product/environment cards
+    ├── StartScanPage.tsx                 # New scan submission
+    ├── ScanProgressPage.tsx              # Authenticated scan progress (SSE)
+    ├── PublicScanProgressPage.tsx         # Public scan progress (no auth)
+    ├── TestSurfacesListPage.tsx          # Test surfaces list
+    ├── TestSurfaceDetailPage.tsx         # Test surface detail
+    ├── TestInteractionsPage.tsx          # Test interactions list
+    ├── TestInteractionDetailPage.tsx     # Interaction detail
+    ├── TestRunsListPage.tsx              # Test execution results
+    ├── TestRunDetailPage.tsx             # Test run detail
+    ├── BundlesPage.tsx                   # Test bundles list
+    ├── BundleDetailPage.tsx              # Bundle detail
+    ├── FindingsListPage.tsx              # Findings/issues list
+    ├── PagesPage.tsx                     # Discovered pages
+    ├── PageDetailPage.tsx                # Page detail + states
+    ├── PageStateDetailPage.tsx           # Page state details
+    ├── RunnerGraphPage.tsx               # Site map visualization (ReactFlow)
+    ├── PageGraphPage.tsx                 # Page state graph
+    ├── ScaffoldsPage.tsx                 # Detected scaffolds
+    ├── ScaffoldDetailPage.tsx            # Scaffold detail
+    ├── PatternsPage.tsx                  # UI patterns
     ├── PersonasPage.tsx                  # AI-generated personas
-    ├── SettingsPage.tsx                  # User settings
+    ├── SchedulesPage.tsx                 # Test schedules
+    ├── TestScenariosPage.tsx             # Test scenarios list
+    ├── TestScenarioDetailPage.tsx        # Scenario detail
+    ├── RunnerSettingsPage.tsx            # Environment/runner settings
+    ├── SettingsPage.tsx                  # Entity settings
     ├── WorkspacesPage.tsx                # Workspace management
     ├── MembersPage.tsx                   # Team members
-    └── InvitationsPage.tsx              # Pending invitations
+    ├── InvitationsPage.tsx               # Pending invitations
+    └── profile/                          # Profile sub-pages
+        ├── AccountPage.tsx, ApiKeysPage.tsx
+        ├── ProfileWorkspacesPage.tsx, ProfileMembersPage.tsx
+        └── ProfileInvitationsPage.tsx
 ```
 
 ## Commands
 
 ```bash
-bun run dev            # Vite dev server
-bun run build          # TypeScript check + Vite build (also runs SEO asset generation)
-bun run seo:fetch      # Download generate-seo-assets.mjs script to /tmp
+bun run dev            # Vite dev server (port 5135)
+bun run build          # Full prod build: typecheck + seo:fetch + generate assets + tsc + vite build
 bun run preview        # Preview production build
 bun run typecheck      # TypeScript check
 bun run lint           # Run ESLint
 bun run format         # Format with Prettier
-bun run verify         # Run typecheck + lint + format:check (no test surface; relies on type checking)
+bun run verify         # typecheck + lint + format:check
+bun run localize       # Batch localization via Whisperly API
 ```
 
 ## Routing
@@ -113,31 +122,45 @@ Pages are lazy-loaded with React Suspense.
 
 - `/:lang/` — Home
 - `/:lang/login` — Login
-- `/:lang/docs` — Documentation
-- `/:lang/sitemap` — Sitemap
 - `/:lang/scan/:runId/progress` — Public scan progress (no auth)
 - `/:lang/dashboard` — Redirects to default entity
 - `/:lang/dashboard/:entitySlug/` — Dashboard overview
 - `/:lang/dashboard/:entitySlug/scan/new` — Start new scan
 - `/:lang/dashboard/:entitySlug/runs/:runId` — Run details
 - `/:lang/dashboard/:entitySlug/runs/:runId/progress` — Scan progress
-- `/:lang/dashboard/:entitySlug/runs/:runId/test-elements` — Test cases
+- `/:lang/dashboard/:entitySlug/runs/:runId/test-surfaces` — Test surfaces
+- `/:lang/dashboard/:entitySlug/runs/:runId/test-surfaces/:surfaceId` — Surface detail
+- `/:lang/dashboard/:entitySlug/runs/:runId/test-interactions` — Test interactions
+- `/:lang/dashboard/:entitySlug/runs/:runId/test-interactions/:interactionId` — Interaction detail
 - `/:lang/dashboard/:entitySlug/runs/:runId/test-runs` — Test runs
-- `/:lang/dashboard/:entitySlug/runs/:runId/issues` — Issues
+- `/:lang/dashboard/:entitySlug/runs/:runId/test-runs/:testRunId` — Test run detail
+- `/:lang/dashboard/:entitySlug/runs/:runId/bundles` — Bundles
+- `/:lang/dashboard/:entitySlug/runs/:runId/bundles/:bundleId` — Bundle detail
+- `/:lang/dashboard/:entitySlug/runs/:runId/findings` — Findings
 - `/:lang/dashboard/:entitySlug/runs/:runId/pages` — Pages
-- `/:lang/dashboard/:entitySlug/runs/:runId/map` — Site map
+- `/:lang/dashboard/:entitySlug/runs/:runId/pages/:pageId` — Page detail
+- `/:lang/dashboard/:entitySlug/runs/:runId/map` — Site map graph
 - `/:lang/dashboard/:entitySlug/runners/:runnerId/scaffolds` — Scaffolds
+- `/:lang/dashboard/:entitySlug/runners/:runnerId/patterns` — Patterns
 - `/:lang/dashboard/:entitySlug/runs/:runId/personas` — Personas
-- `/:lang/dashboard/:entitySlug/settings` — Settings
+- `/:lang/dashboard/:entitySlug/runners/:runnerId/scenarios` — Scenarios
+- `/:lang/dashboard/:entitySlug/runners/:runnerId/schedules` — Schedules
+- `/:lang/dashboard/:entitySlug/runners/:runnerId/settings` — Runner settings
+- `/:lang/dashboard/:entitySlug/settings` — Entity settings
 - `/:lang/dashboard/:entitySlug/workspaces` — Workspaces
 - `/:lang/dashboard/:entitySlug/members` — Members
 - `/:lang/dashboard/:entitySlug/invitations` — Invitations
+- `/:lang/profile/*` — Profile sub-routes (account, API keys, workspaces, members, invitations)
 
 ## Shared Components
 
 Uses `@sudobility/building_blocks` for:
 
 - TopBar, LoginPage, SettingsPage, SudobilityAppWithFirebaseAuth
+
+Uses `@sudobility/components` for:
+
+- MasterDetailLayout, Combobox, Input, LanguageValidator
 
 ## Environment Variables
 
@@ -147,35 +170,36 @@ Uses `@sudobility/building_blocks` for:
 | `VITE_FIREBASE_API_KEY`     | Firebase API key     | required                |
 | `VITE_FIREBASE_AUTH_DOMAIN` | Firebase auth domain | required                |
 | `VITE_FIREBASE_PROJECT_ID`  | Firebase project ID  | required                |
-| `VITE_APP_NAME`             | Application name     | `Testomniac`        |
+| `VITE_APP_NAME`             | Application name     | `Testomniac`            |
 | `VITE_APP_DOMAIN`           | Application domain   | `localhost`             |
 
 **Note**: The default API URL in constants is `http://localhost:8027`, matching the API server's default port.
 
 ## Related Projects
 
-- **entitytestomniac_types** — Shared type definitions; imported transitively via entitytestomniac_client
-- **entitytestomniac_client** — API client SDK with TanStack Query hooks; provides data fetching layer
-- **entitytestomniac_lib** — Business logic library with `useScanManager`, `useDashboardManager`, `useRunManager` hooks; primary integration point for this app
-- **entitytestomniac_api** — Backend server that this app communicates with (web defaults to `localhost:8027`)
-- **entityentitytestomniac_app_rn** — React Native counterpart of this web app; shares entitytestomniac_client, entitytestomniac_lib, and entitytestomniac_types
+- **testomniac_types** — Shared type definitions; imported transitively via testomniac_client
+- **testomniac_client** — API client SDK with TanStack Query hooks; provides data fetching layer
+- **testomniac_lib** — Business logic library with hooks (`useScanManager`, `useDashboardManager`, `useRunManager`, etc.); primary integration point
+- **testomniac_api** — Backend server (defaults to `localhost:8027`)
 
-Uses `@sudobility/building_blocks` for shared shell components (TopBar, LoginPage, SettingsPage, SudobilityAppWithFirebaseAuth).
+Uses `@sudobility/building_blocks` for shared shell components (TopBar, LoginPage, SettingsPage).
 
 ## Coding Patterns
 
-- All routes are language-prefixed: `/:lang/*` (e.g., `/en/dashboard`, `/ja/settings`) -- never create routes without the language prefix
+- All routes are language-prefixed: `/:lang/*` — never create routes without the language prefix
 - Pages are lazy-loaded with `React.lazy()` and wrapped in `<Suspense>` for code splitting
-- 16 languages are supported with RTL support (Arabic) -- use `LocalizedLink` and `useLocalizedNavigate` for navigation
+- 16 languages are supported with RTL support (Arabic) — use `LocalizedLink` and `useLocalizedNavigate` for navigation
 - `ThemeContext` provides light/dark theme switching throughout the app
-- `ProtectedRoute` component guards authenticated pages -- wrap any page requiring auth with it
+- `ProtectedRoute` component guards authenticated pages — wrap any page requiring auth with it
 - Vite config deduplicates React and shared dependencies to prevent multiple React instances
 - i18next is configured in `src/i18n.ts` with language detection and fallback to English
+- Path alias `@/` maps to `src/` for imports
 
 ## Gotchas
 
-- API URL: `.env` defaults to `localhost:8027` to match the API server (`entitytestomniac_api`) -- verify `VITE_API_URL` matches your running API if using a different port
-- Vite deduplicates React and shared deps in its config -- if you add new shared dependencies, check if they need deduplication
-- All routes MUST be under the `/:lang/` prefix -- routes without the language prefix will not work correctly
-- Firebase configuration requires all `VITE_FIREBASE_*` environment variables to be set; missing any will break authentication
-- `@sudobility/building_blocks` provides shared UI components -- check there before creating duplicate components
+- API URL: `.env` defaults to `localhost:8027` to match the API server — verify `VITE_API_URL` matches your running API
+- Vite deduplicates React and shared deps — if you add new shared dependencies, check if they need deduplication
+- All routes MUST be under the `/:lang/` prefix — routes without the language prefix will not work correctly
+- Firebase configuration requires all `VITE_FIREBASE_*` environment variables to be set
+- `@sudobility/building_blocks` provides shared UI components — check there before creating duplicate components
+- Dev server runs on port 5135
