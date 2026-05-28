@@ -26,7 +26,7 @@ PROJECTS=(
     "../testomniac_api:0"
     "../testomniac_runner_service:60"
     "../testomniac_client:60"
-    "../testomniac_runner:0"
+    "../testomniac_runner:60"
     "../testomniac_lib:60"
     "../testomniac_extension:0"
     "../testomniac_app:0"
