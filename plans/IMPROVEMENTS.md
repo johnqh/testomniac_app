@@ -1,4 +1,4 @@
-# Improvement Plans for @sudobility/starter_app
+# Improvement Plans for @sudobility/testomniac_app
 
 ## Priority 1 - High Impact
 
@@ -20,10 +20,10 @@
 ### 3. Fix API URL Port Mismatch Default ✅
 
 - ~~`constants.ts` defaults `API_URL` to `http://localhost:3001` but the API server runs on port `8022`~~
-- ~~This mismatch is documented in both the CLAUDE.md for starter_app and starter_api but remains a source of confusion~~
+- ~~This mismatch is documented in both the CLAUDE.md for testomniac_app and testomniac_api but remains a source of confusion~~
 - The RN app's `env.ts` defaults to `localhost:3001` as well, compounding the issue
 - ~~Both defaults should be aligned with the actual API port, or the default should be removed entirely to force explicit configuration~~
-- **Done**: Changed default in `constants.ts` from `localhost:3001` to `localhost:8022`. RN app (`starter_app_rn`) is a separate project and should be updated there.
+- **Done**: Changed default in `constants.ts` from `localhost:3001` to `localhost:8022`. RN app (`testomniac_app_rn`) is a separate project and should be updated there.
 
 ## Priority 2 - Medium Impact
 
@@ -55,7 +55,7 @@
 ### 6. Extract Duplicated Calculation Logic ✅
 
 - ~~HistoriesPage.tsx calculates `histories.reduce((sum, h) => sum + h.value, 0)` directly in JSX, duplicating the same calculation that `useHistoriesManager` performs internally for the percentage~~
-- The `userTotal` could be exposed as a dedicated field from `useHistoriesManager` in starter_lib to avoid this redundancy
+- The `userTotal` could be exposed as a dedicated field from `useHistoriesManager` in testomniac_lib to avoid this redundancy
 - ~~Date formatting (`new Date(history.datetime).toLocaleString()`) is repeated across multiple components with no consistent formatting utility~~
 - **Done**: Extracted the inline `histories.reduce(...)` into a `useMemo`-wrapped `userTotal` variable. Created `src/utils/formatDateTime.ts` utility using `Intl.DateTimeFormat` for locale-aware formatting. Replaced all `new Date(...).toLocaleString()` calls in HistoriesPage and HistoryDetailPage with `formatDateTime()`.
 

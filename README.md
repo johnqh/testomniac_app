@@ -1,4 +1,4 @@
-# @sudobility/starter_app
+# @sudobility/testomniac_app
 
 Web application for the Starter project. Built with React 19, Vite 6, and Tailwind CSS.
 
@@ -54,11 +54,11 @@ bun run verify         # typecheck + lint + format:check
 
 ## Related Packages
 
-- **starter_types** -- Shared type definitions
-- **starter_client** -- API client SDK with TanStack Query hooks
-- **starter_lib** -- Business logic library (`useHistoriesManager`)
-- **starter_api** -- Backend server (default port 8027)
-- **starter_app_rn** -- React Native counterpart of this web app
+- **testomniac_types** -- Shared type definitions
+- **testomniac_client** -- API client SDK with TanStack Query hooks
+- **testomniac_lib** -- Business logic library (`useHistoriesManager`)
+- **testomniac_api** -- Backend server (default port 8027)
+- **testomniac_app_rn** -- React Native counterpart of this web app
 
 ## License
 

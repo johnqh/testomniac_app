@@ -1,6 +1,6 @@
 # Starter App Implementation Plan
 
-> **Note**: This plan will also be saved to `./starter_app/plans/START.md` during implementation.
+> **Note**: This plan will also be saved to `./testomniac_app/plans/START.md` during implementation.
 
 ## Context
 
@@ -13,8 +13,8 @@ The domain is simple: users create "history" records (datetime + value), and can
 - **Database**: PostgreSQL + Drizzle ORM
 - **Client caching**: TanStack Query (useQuery/useMutation) -- differs from shapeshyft_client's plain React state
 - **Packages**: Use @sudobility/\* packages (building_blocks, components, auth-components, auth_lib, di_web, di, types)
-- **Package scope**: @sudobility/starter_types, @sudobility/starter_client, etc.
-- **starter_lib**: Zustand stores + manager hooks wrapping client hooks
+- **Package scope**: @sudobility/testomniac_types, @sudobility/testomniac_client, etc.
+- **testomniac_lib**: Zustand stores + manager hooks wrapping client hooks
 - **API auth**: @sudobility/auth_service (no entity_service)
 
 ## Reference Files
@@ -30,15 +30,15 @@ The domain is simple: users create "history" records (datetime + value), and can
 
 ---
 
-## Project 1: starter_types
+## Project 1: testomniac_types
 
-**Location**: `./starter_types`
-**Package**: `@sudobility/starter_types`
+**Location**: `./testomniac_types`
+**Package**: `@sudobility/testomniac_types`
 
 ### Files
 
 ```
-starter_types/
+testomniac_types/
   package.json
   tsconfig.json
   tsconfig.build.json
@@ -48,7 +48,7 @@ starter_types/
 
 ### package.json key fields
 
-- name: `@sudobility/starter_types`
+- name: `@sudobility/testomniac_types`
 - dependencies: `@sudobility/types`
 - devDependencies: `typescript ~5.9.3`, `eslint`, `prettier`
 - scripts: `build`, `lint`, `typecheck`
@@ -106,15 +106,15 @@ export function errorResponse(error: string): BaseResponse<never> {
 
 ---
 
-## Project 2: starter_api
+## Project 2: testomniac_api
 
-**Location**: `./starter_api`
-**Package**: `starter_api` (private)
+**Location**: `./testomniac_api`
+**Package**: `testomniac_api` (private)
 
 ### Files
 
 ```
-starter_api/
+testomniac_api/
   package.json
   tsconfig.json
   .env.example
@@ -142,7 +142,7 @@ starter_api/
 - `drizzle-orm`, `postgres` (pg driver)
 - `firebase-admin`
 - `@sudobility/auth_service`
-- `@sudobility/starter_types`
+- `@sudobility/testomniac_types`
 - `@sudobility/types`
 
 ### Database Schema (src/db/schema.ts)
@@ -204,15 +204,15 @@ PORT=3001
 
 ---
 
-## Project 3: starter_client
+## Project 3: testomniac_client
 
-**Location**: `./starter_client`
-**Package**: `@sudobility/starter_client`
+**Location**: `./testomniac_client`
+**Package**: `@sudobility/testomniac_client`
 
 ### Files
 
 ```
-starter_client/
+testomniac_client/
   package.json
   tsconfig.json
   tsconfig.build.json
@@ -234,16 +234,16 @@ starter_client/
 
 ### package.json key fields
 
-- name: `@sudobility/starter_client`
-- peerDependencies: `@sudobility/starter_types`, `@sudobility/types`, `@tanstack/react-query >=5.0.0`, `react >=18.0.0`
+- name: `@sudobility/testomniac_client`
+- peerDependencies: `@sudobility/testomniac_types`, `@sudobility/types`, `@tanstack/react-query >=5.0.0`, `react >=18.0.0`
 - dependencies: `react`, `@tanstack/react-query`
 
 ### StarterClient class (src/network/StarterClient.ts)
 
 ```typescript
 import type { NetworkClient } from '@sudobility/types';
-import type { History, HistoryCreateRequest, HistoryUpdateRequest, HistoryTotalResponse } from '@sudobility/starter_types';
-import type { BaseResponse } from '@sudobility/starter_types';
+import type { History, HistoryCreateRequest, HistoryUpdateRequest, HistoryTotalResponse } from '@sudobility/testomniac_types';
+import type { BaseResponse } from '@sudobility/testomniac_types';
 
 interface StarterClientConfig {
   baseUrl: string;
@@ -310,15 +310,15 @@ export const QUERY_KEYS = {
 
 ---
 
-## Project 4: starter_lib
+## Project 4: testomniac_lib
 
-**Location**: `./starter_lib`
-**Package**: `@sudobility/starter_lib`
+**Location**: `./testomniac_lib`
+**Package**: `@sudobility/testomniac_lib`
 
 ### Files
 
 ```
-starter_lib/
+testomniac_lib/
   package.json
   tsconfig.json
   tsconfig.build.json
@@ -336,8 +336,8 @@ starter_lib/
 
 ### package.json key fields
 
-- name: `@sudobility/starter_lib`
-- peerDependencies: `@sudobility/starter_client`, `@sudobility/starter_types`, `zustand >=5.0.0`
+- name: `@sudobility/testomniac_lib`
+- peerDependencies: `@sudobility/testomniac_client`, `@sudobility/testomniac_types`, `zustand >=5.0.0`
 - dependencies: `zustand`, `react`
 
 ### historiesStore.ts
@@ -376,7 +376,7 @@ export interface UseHistoriesManagerReturn {
 
 **Logic**:
 
-1. Uses `useHistories()` and `useHistoriesTotal()` from starter_client
+1. Uses `useHistories()` and `useHistoriesTotal()` from testomniac_client
 2. Uses `useHistoryMutations()` for create/update/delete
 3. Syncs TanStack Query results → Zustand store for offline/cache fallback
 4. Calculates percentage: `(userSum / total) * 100`
@@ -384,15 +384,15 @@ export interface UseHistoriesManagerReturn {
 
 ---
 
-## Project 5: starter_app
+## Project 5: testomniac_app
 
-**Location**: `./starter_app`
-**Package**: `@sudobility/starter_app` (private)
+**Location**: `./testomniac_app`
+**Package**: `@sudobility/testomniac_app` (private)
 
 ### Files
 
 ```
-starter_app/
+testomniac_app/
   package.json
   tsconfig.json
   vite.config.ts
@@ -451,7 +451,7 @@ starter_app/
 - `tailwindcss`, `postcss`, `autoprefixer`
 - `@sudobility/building_blocks`, `@sudobility/components`, `@sudobility/auth-components`, `@sudobility/auth_lib`
 - `@sudobility/di_web`, `@sudobility/di`, `@sudobility/types`
-- `@sudobility/starter_client`, `@sudobility/starter_lib`, `@sudobility/starter_types`
+- `@sudobility/testomniac_client`, `@sudobility/testomniac_lib`, `@sudobility/testomniac_types`
 - `@sudobility/seo_lib`, `@sudobility/design`
 
 ### Route Structure (App.tsx)
@@ -475,12 +475,12 @@ starter_app/
 
 - Master: sidebar with sections (API, Client, Lib, App)
 - Detail: content describing what each project does
-- Sections: starter_api, starter_client, starter_lib, starter_app
+- Sections: testomniac_api, testomniac_client, testomniac_lib, testomniac_app
 
 **HistoriesPage**:
 
 - If not logged in: "Log in" button → navigates to /:lang/login
-- If logged in: uses `useHistoriesManager` from starter_lib
+- If logged in: uses `useHistoriesManager` from testomniac_lib
   - Shows percentage bar/number
   - Lists histories (datetime, value) as clickable items
   - "Add History" button → modal or inline form (POST)
@@ -524,7 +524,7 @@ Translation files at `public/locales/{lang}/common.json` with keys for:
 ### .env.example
 
 ```
-VITE_STARTER_API_URL=http://localhost:3001
+VITE_testomniac_api_URL=http://localhost:3001
 VITE_FIREBASE_API_KEY=
 VITE_FIREBASE_AUTH_DOMAIN=
 VITE_FIREBASE_PROJECT_ID=
@@ -535,15 +535,15 @@ VITE_FIREBASE_APP_ID=
 
 ---
 
-## Project 6: starter_app_rn
+## Project 6: testomniac_app_rn
 
-**Location**: `./starter_app_rn`
-**Package**: `starter_app_rn` (private)
+**Location**: `./testomniac_app_rn`
+**Package**: `testomniac_app_rn` (private)
 
 ### Files
 
 ```
-starter_app_rn/
+testomniac_app_rn/
   package.json
   tsconfig.json
   app.json
@@ -595,7 +595,7 @@ starter_app_rn/
 - `react-native-safe-area-context`, `react-native-screens`, `react-native-gesture-handler`
 - `react-native-heroicons`
 - `@sudobility/building_blocks_rn`, `@sudobility/di`, `@sudobility/types`
-- `@sudobility/starter_client`, `@sudobility/starter_lib`, `@sudobility/starter_types`
+- `@sudobility/testomniac_client`, `@sudobility/testomniac_lib`, `@sudobility/testomniac_types`
 
 ### App.tsx structure
 
@@ -627,12 +627,12 @@ GestureHandlerRootView
 
 ## Implementation Order
 
-1. **starter_types** (no dependencies)
-2. **starter_api** (depends on starter_types)
-3. **starter_client** (depends on starter_types)
-4. **starter_lib** (depends on starter_client + starter_types)
-5. **starter_app** (depends on starter_client + starter_lib + starter_types)
-6. **starter_app_rn** (depends on starter_client + starter_lib + starter_types)
+1. **testomniac_types** (no dependencies)
+2. **testomniac_api** (depends on testomniac_types)
+3. **testomniac_client** (depends on testomniac_types)
+4. **testomniac_lib** (depends on testomniac_client + testomniac_types)
+5. **testomniac_app** (depends on testomniac_client + testomniac_lib + testomniac_types)
+6. **testomniac_app_rn** (depends on testomniac_client + testomniac_lib + testomniac_types)
 
 Each project: create package.json → tsconfig → source files → `bun install`
 
@@ -640,32 +640,32 @@ Each project: create package.json → tsconfig → source files → `bun install
 
 ## Verification
 
-### starter_types
+### testomniac_types
 
-- `cd starter_types && bun install && bun run typecheck`
+- `cd testomniac_types && bun install && bun run typecheck`
 
-### starter_api
+### testomniac_api
 
-- `cd starter_api && bun install && bun run typecheck`
+- `cd testomniac_api && bun install && bun run typecheck`
 - Create PostgreSQL database, set DATABASE_URL in .env.local
 - `bun run dev` → test `GET /` returns health check
 - Use curl to test endpoints
 
-### starter_client
+### testomniac_client
 
-- `cd starter_client && bun install && bun run typecheck`
+- `cd testomniac_client && bun install && bun run typecheck`
 
-### starter_lib
+### testomniac_lib
 
-- `cd starter_lib && bun install && bun run typecheck`
+- `cd testomniac_lib && bun install && bun run typecheck`
 
-### starter_app
+### testomniac_app
 
-- `cd starter_app && bun install && bun run dev`
+- `cd testomniac_app && bun install && bun run dev`
 - Open browser: navigate pages, test language switching, login, histories CRUD
 
-### starter_app_rn
+### testomniac_app_rn
 
-- `cd starter_app_rn && bun install`
+- `cd testomniac_app_rn && bun install`
 - `npx expo start` → test on iOS/Android simulator
 - Test: auth flow, histories display, settings
