@@ -2,6 +2,13 @@
 
 set -euo pipefail
 
+# Load DATABASE_URL from testomniac_api's .env if not already set
+if [[ -z "${DATABASE_URL:-}" ]]; then
+  API_ENV="$(dirname "$0")/../../testomniac_api/.env"
+  if [[ -f "$API_ENV" ]]; then
+    DATABASE_URL="$(grep -E '^DATABASE_URL=' "$API_ENV" | tail -1 | cut -d= -f2-)"
+  fi
+fi
 DATABASE_URL="${DATABASE_URL:-postgresql://localhost:5432/testomniac}"
 TARGET_SCHEMA="${TARGET_SCHEMA:-testomniac}"
 
