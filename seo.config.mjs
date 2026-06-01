@@ -5,17 +5,20 @@
  * per-route localized index.html files, sitemap.xml, and robots.txt.
  */
 
+import { config } from 'dotenv';
+config();
+
 const APP_NAME = process.env.VITE_APP_NAME || 'Testomniac';
+const APP_DOMAIN = process.env.VITE_APP_DOMAIN || 'localhost';
 
 export default {
   supportedLanguages: [
-    'en', 'ar', 'de', 'es', 'fr', 'it', 'ja', 'ko',
+    'en', 'de', 'es', 'fr', 'it', 'ja', 'ko',
     'pt', 'ru', 'sv', 'th', 'uk', 'vi', 'zh', 'zh-hant',
   ],
 
   languageHreflangMap: {
     en: 'en',
-    ar: 'ar',
     de: 'de',
     es: 'es',
     fr: 'fr',
@@ -32,9 +35,9 @@ export default {
     'zh-hant': 'zh-Hant',
   },
 
-  primaryDomain: 'localhost',
+  primaryDomain: APP_DOMAIN,
   appName: APP_NAME,
-  appDomain: process.env.VITE_APP_DOMAIN || 'localhost',
+  appDomain: APP_DOMAIN,
   robotsDisallowPaths: ['/*/dashboard/', '/*/login'],
 
   routes: [

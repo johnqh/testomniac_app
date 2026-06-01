@@ -13,48 +13,13 @@ export const CONSTANTS = {
   DEV_MODE: import.meta.env.VITE_DEV_MODE === 'true',
   SHOW_PERFORMANCE_MONITOR: import.meta.env.VITE_SHOW_PERFORMANCE_MONITOR === 'true',
 
-  // RevenueCat
-  REVENUECAT_API_KEY: '',
-  REVENUECAT_API_KEY_SANDBOX: '',
-
-  // Social handles (without @ or full URL)
+  // SEO
   TWITTER_HANDLE: import.meta.env.VITE_TWITTER_HANDLE || '',
-  DISCORD_INVITE: import.meta.env.VITE_DISCORD_INVITE || '',
-  LINKEDIN_COMPANY: import.meta.env.VITE_LINKEDIN_COMPANY || '',
-  GITHUB_ORG: import.meta.env.VITE_GITHUB_ORG || '',
-
-  // Social links (full URLs) - property names must match SocialLinksConfig from building_blocks
-  SOCIAL_LINKS: {
-    twitterUrl: import.meta.env.VITE_TWITTER_URL || '',
-    redditUrl: import.meta.env.VITE_REDDIT_URL || '',
-    discordUrl: import.meta.env.VITE_DISCORD_URL || '',
-    linkedinUrl: import.meta.env.VITE_LINKEDIN_URL || '',
-    farcasterUrl: import.meta.env.VITE_FARCASTER_URL || '',
-    telegramUrl: import.meta.env.VITE_TELEGRAM_URL || '',
-    githubUrl: import.meta.env.VITE_GITHUB_URL || '',
-  },
-
-  // External pages
-  STATUS_PAGE_URL: import.meta.env.VITE_STATUS_PAGE_URL || '',
-  STATUS_PAGE_API_URL: import.meta.env.VITE_STATUS_PAGE_URL
-    ? `${import.meta.env.VITE_STATUS_PAGE_URL}/api/v2/status.json`
-    : '',
-
-  // Founder meeting link (e.g., Cal.com, Calendly)
-  MEET_FOUNDER_URL: import.meta.env.VITE_MEET_FOUNDER_URL || '',
-
-  // Navigation items
-  NAV_ITEMS: [
-    { label: 'home', href: '/' },
-    { label: 'docs', href: '/docs' },
-    { label: 'histories', href: '/histories', protected: true },
-  ],
 } as const;
 
 /** All language codes the application supports for i18n routing. */
 export const SUPPORTED_LANGUAGES = [
   'en',
-  'ar',
   'de',
   'es',
   'fr',

@@ -3,739 +3,663 @@
         xmlns:xhtml="http://www.w3.org/1999/xhtml">
 
   <url>
-    <loc>https://localhost/en</loc>
-    <lastmod>2026-05-29</lastmod>
+    <loc>https://testomniac.com/en</loc>
+    <lastmod>2026-06-01</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
-    <xhtml:link rel="alternate" hreflang="en" href="https://localhost/en" />
-    <xhtml:link rel="alternate" hreflang="ar" href="https://localhost/ar" />
-    <xhtml:link rel="alternate" hreflang="de" href="https://localhost/de" />
-    <xhtml:link rel="alternate" hreflang="es" href="https://localhost/es" />
-    <xhtml:link rel="alternate" hreflang="fr" href="https://localhost/fr" />
-    <xhtml:link rel="alternate" hreflang="it" href="https://localhost/it" />
-    <xhtml:link rel="alternate" hreflang="ja" href="https://localhost/ja" />
-    <xhtml:link rel="alternate" hreflang="ko" href="https://localhost/ko" />
-    <xhtml:link rel="alternate" hreflang="pt" href="https://localhost/pt" />
-    <xhtml:link rel="alternate" hreflang="ru" href="https://localhost/ru" />
-    <xhtml:link rel="alternate" hreflang="sv" href="https://localhost/sv" />
-    <xhtml:link rel="alternate" hreflang="th" href="https://localhost/th" />
-    <xhtml:link rel="alternate" hreflang="uk" href="https://localhost/uk" />
-    <xhtml:link rel="alternate" hreflang="vi" href="https://localhost/vi" />
-    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://localhost/zh" />
-    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://localhost/zh-hant" />
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://localhost/en" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://testomniac.com/en" />
+    <xhtml:link rel="alternate" hreflang="de" href="https://testomniac.com/de" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://testomniac.com/es" />
+    <xhtml:link rel="alternate" hreflang="fr" href="https://testomniac.com/fr" />
+    <xhtml:link rel="alternate" hreflang="it" href="https://testomniac.com/it" />
+    <xhtml:link rel="alternate" hreflang="ja" href="https://testomniac.com/ja" />
+    <xhtml:link rel="alternate" hreflang="ko" href="https://testomniac.com/ko" />
+    <xhtml:link rel="alternate" hreflang="pt" href="https://testomniac.com/pt" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://testomniac.com/ru" />
+    <xhtml:link rel="alternate" hreflang="sv" href="https://testomniac.com/sv" />
+    <xhtml:link rel="alternate" hreflang="th" href="https://testomniac.com/th" />
+    <xhtml:link rel="alternate" hreflang="uk" href="https://testomniac.com/uk" />
+    <xhtml:link rel="alternate" hreflang="vi" href="https://testomniac.com/vi" />
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://testomniac.com/zh" />
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://testomniac.com/zh-hant" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://testomniac.com/en" />
   </url>
   <url>
-    <loc>https://localhost/ar</loc>
-    <lastmod>2026-05-29</lastmod>
+    <loc>https://testomniac.com/de</loc>
+    <lastmod>2026-06-01</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
-    <xhtml:link rel="alternate" hreflang="en" href="https://localhost/en" />
-    <xhtml:link rel="alternate" hreflang="ar" href="https://localhost/ar" />
-    <xhtml:link rel="alternate" hreflang="de" href="https://localhost/de" />
-    <xhtml:link rel="alternate" hreflang="es" href="https://localhost/es" />
-    <xhtml:link rel="alternate" hreflang="fr" href="https://localhost/fr" />
-    <xhtml:link rel="alternate" hreflang="it" href="https://localhost/it" />
-    <xhtml:link rel="alternate" hreflang="ja" href="https://localhost/ja" />
-    <xhtml:link rel="alternate" hreflang="ko" href="https://localhost/ko" />
-    <xhtml:link rel="alternate" hreflang="pt" href="https://localhost/pt" />
-    <xhtml:link rel="alternate" hreflang="ru" href="https://localhost/ru" />
-    <xhtml:link rel="alternate" hreflang="sv" href="https://localhost/sv" />
-    <xhtml:link rel="alternate" hreflang="th" href="https://localhost/th" />
-    <xhtml:link rel="alternate" hreflang="uk" href="https://localhost/uk" />
-    <xhtml:link rel="alternate" hreflang="vi" href="https://localhost/vi" />
-    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://localhost/zh" />
-    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://localhost/zh-hant" />
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://localhost/en" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://testomniac.com/en" />
+    <xhtml:link rel="alternate" hreflang="de" href="https://testomniac.com/de" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://testomniac.com/es" />
+    <xhtml:link rel="alternate" hreflang="fr" href="https://testomniac.com/fr" />
+    <xhtml:link rel="alternate" hreflang="it" href="https://testomniac.com/it" />
+    <xhtml:link rel="alternate" hreflang="ja" href="https://testomniac.com/ja" />
+    <xhtml:link rel="alternate" hreflang="ko" href="https://testomniac.com/ko" />
+    <xhtml:link rel="alternate" hreflang="pt" href="https://testomniac.com/pt" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://testomniac.com/ru" />
+    <xhtml:link rel="alternate" hreflang="sv" href="https://testomniac.com/sv" />
+    <xhtml:link rel="alternate" hreflang="th" href="https://testomniac.com/th" />
+    <xhtml:link rel="alternate" hreflang="uk" href="https://testomniac.com/uk" />
+    <xhtml:link rel="alternate" hreflang="vi" href="https://testomniac.com/vi" />
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://testomniac.com/zh" />
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://testomniac.com/zh-hant" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://testomniac.com/en" />
   </url>
   <url>
-    <loc>https://localhost/de</loc>
-    <lastmod>2026-05-29</lastmod>
+    <loc>https://testomniac.com/es</loc>
+    <lastmod>2026-06-01</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
-    <xhtml:link rel="alternate" hreflang="en" href="https://localhost/en" />
-    <xhtml:link rel="alternate" hreflang="ar" href="https://localhost/ar" />
-    <xhtml:link rel="alternate" hreflang="de" href="https://localhost/de" />
-    <xhtml:link rel="alternate" hreflang="es" href="https://localhost/es" />
-    <xhtml:link rel="alternate" hreflang="fr" href="https://localhost/fr" />
-    <xhtml:link rel="alternate" hreflang="it" href="https://localhost/it" />
-    <xhtml:link rel="alternate" hreflang="ja" href="https://localhost/ja" />
-    <xhtml:link rel="alternate" hreflang="ko" href="https://localhost/ko" />
-    <xhtml:link rel="alternate" hreflang="pt" href="https://localhost/pt" />
-    <xhtml:link rel="alternate" hreflang="ru" href="https://localhost/ru" />
-    <xhtml:link rel="alternate" hreflang="sv" href="https://localhost/sv" />
-    <xhtml:link rel="alternate" hreflang="th" href="https://localhost/th" />
-    <xhtml:link rel="alternate" hreflang="uk" href="https://localhost/uk" />
-    <xhtml:link rel="alternate" hreflang="vi" href="https://localhost/vi" />
-    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://localhost/zh" />
-    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://localhost/zh-hant" />
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://localhost/en" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://testomniac.com/en" />
+    <xhtml:link rel="alternate" hreflang="de" href="https://testomniac.com/de" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://testomniac.com/es" />
+    <xhtml:link rel="alternate" hreflang="fr" href="https://testomniac.com/fr" />
+    <xhtml:link rel="alternate" hreflang="it" href="https://testomniac.com/it" />
+    <xhtml:link rel="alternate" hreflang="ja" href="https://testomniac.com/ja" />
+    <xhtml:link rel="alternate" hreflang="ko" href="https://testomniac.com/ko" />
+    <xhtml:link rel="alternate" hreflang="pt" href="https://testomniac.com/pt" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://testomniac.com/ru" />
+    <xhtml:link rel="alternate" hreflang="sv" href="https://testomniac.com/sv" />
+    <xhtml:link rel="alternate" hreflang="th" href="https://testomniac.com/th" />
+    <xhtml:link rel="alternate" hreflang="uk" href="https://testomniac.com/uk" />
+    <xhtml:link rel="alternate" hreflang="vi" href="https://testomniac.com/vi" />
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://testomniac.com/zh" />
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://testomniac.com/zh-hant" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://testomniac.com/en" />
   </url>
   <url>
-    <loc>https://localhost/es</loc>
-    <lastmod>2026-05-29</lastmod>
+    <loc>https://testomniac.com/fr</loc>
+    <lastmod>2026-06-01</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
-    <xhtml:link rel="alternate" hreflang="en" href="https://localhost/en" />
-    <xhtml:link rel="alternate" hreflang="ar" href="https://localhost/ar" />
-    <xhtml:link rel="alternate" hreflang="de" href="https://localhost/de" />
-    <xhtml:link rel="alternate" hreflang="es" href="https://localhost/es" />
-    <xhtml:link rel="alternate" hreflang="fr" href="https://localhost/fr" />
-    <xhtml:link rel="alternate" hreflang="it" href="https://localhost/it" />
-    <xhtml:link rel="alternate" hreflang="ja" href="https://localhost/ja" />
-    <xhtml:link rel="alternate" hreflang="ko" href="https://localhost/ko" />
-    <xhtml:link rel="alternate" hreflang="pt" href="https://localhost/pt" />
-    <xhtml:link rel="alternate" hreflang="ru" href="https://localhost/ru" />
-    <xhtml:link rel="alternate" hreflang="sv" href="https://localhost/sv" />
-    <xhtml:link rel="alternate" hreflang="th" href="https://localhost/th" />
-    <xhtml:link rel="alternate" hreflang="uk" href="https://localhost/uk" />
-    <xhtml:link rel="alternate" hreflang="vi" href="https://localhost/vi" />
-    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://localhost/zh" />
-    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://localhost/zh-hant" />
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://localhost/en" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://testomniac.com/en" />
+    <xhtml:link rel="alternate" hreflang="de" href="https://testomniac.com/de" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://testomniac.com/es" />
+    <xhtml:link rel="alternate" hreflang="fr" href="https://testomniac.com/fr" />
+    <xhtml:link rel="alternate" hreflang="it" href="https://testomniac.com/it" />
+    <xhtml:link rel="alternate" hreflang="ja" href="https://testomniac.com/ja" />
+    <xhtml:link rel="alternate" hreflang="ko" href="https://testomniac.com/ko" />
+    <xhtml:link rel="alternate" hreflang="pt" href="https://testomniac.com/pt" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://testomniac.com/ru" />
+    <xhtml:link rel="alternate" hreflang="sv" href="https://testomniac.com/sv" />
+    <xhtml:link rel="alternate" hreflang="th" href="https://testomniac.com/th" />
+    <xhtml:link rel="alternate" hreflang="uk" href="https://testomniac.com/uk" />
+    <xhtml:link rel="alternate" hreflang="vi" href="https://testomniac.com/vi" />
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://testomniac.com/zh" />
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://testomniac.com/zh-hant" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://testomniac.com/en" />
   </url>
   <url>
-    <loc>https://localhost/fr</loc>
-    <lastmod>2026-05-29</lastmod>
+    <loc>https://testomniac.com/it</loc>
+    <lastmod>2026-06-01</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
-    <xhtml:link rel="alternate" hreflang="en" href="https://localhost/en" />
-    <xhtml:link rel="alternate" hreflang="ar" href="https://localhost/ar" />
-    <xhtml:link rel="alternate" hreflang="de" href="https://localhost/de" />
-    <xhtml:link rel="alternate" hreflang="es" href="https://localhost/es" />
-    <xhtml:link rel="alternate" hreflang="fr" href="https://localhost/fr" />
-    <xhtml:link rel="alternate" hreflang="it" href="https://localhost/it" />
-    <xhtml:link rel="alternate" hreflang="ja" href="https://localhost/ja" />
-    <xhtml:link rel="alternate" hreflang="ko" href="https://localhost/ko" />
-    <xhtml:link rel="alternate" hreflang="pt" href="https://localhost/pt" />
-    <xhtml:link rel="alternate" hreflang="ru" href="https://localhost/ru" />
-    <xhtml:link rel="alternate" hreflang="sv" href="https://localhost/sv" />
-    <xhtml:link rel="alternate" hreflang="th" href="https://localhost/th" />
-    <xhtml:link rel="alternate" hreflang="uk" href="https://localhost/uk" />
-    <xhtml:link rel="alternate" hreflang="vi" href="https://localhost/vi" />
-    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://localhost/zh" />
-    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://localhost/zh-hant" />
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://localhost/en" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://testomniac.com/en" />
+    <xhtml:link rel="alternate" hreflang="de" href="https://testomniac.com/de" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://testomniac.com/es" />
+    <xhtml:link rel="alternate" hreflang="fr" href="https://testomniac.com/fr" />
+    <xhtml:link rel="alternate" hreflang="it" href="https://testomniac.com/it" />
+    <xhtml:link rel="alternate" hreflang="ja" href="https://testomniac.com/ja" />
+    <xhtml:link rel="alternate" hreflang="ko" href="https://testomniac.com/ko" />
+    <xhtml:link rel="alternate" hreflang="pt" href="https://testomniac.com/pt" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://testomniac.com/ru" />
+    <xhtml:link rel="alternate" hreflang="sv" href="https://testomniac.com/sv" />
+    <xhtml:link rel="alternate" hreflang="th" href="https://testomniac.com/th" />
+    <xhtml:link rel="alternate" hreflang="uk" href="https://testomniac.com/uk" />
+    <xhtml:link rel="alternate" hreflang="vi" href="https://testomniac.com/vi" />
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://testomniac.com/zh" />
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://testomniac.com/zh-hant" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://testomniac.com/en" />
   </url>
   <url>
-    <loc>https://localhost/it</loc>
-    <lastmod>2026-05-29</lastmod>
+    <loc>https://testomniac.com/ja</loc>
+    <lastmod>2026-06-01</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
-    <xhtml:link rel="alternate" hreflang="en" href="https://localhost/en" />
-    <xhtml:link rel="alternate" hreflang="ar" href="https://localhost/ar" />
-    <xhtml:link rel="alternate" hreflang="de" href="https://localhost/de" />
-    <xhtml:link rel="alternate" hreflang="es" href="https://localhost/es" />
-    <xhtml:link rel="alternate" hreflang="fr" href="https://localhost/fr" />
-    <xhtml:link rel="alternate" hreflang="it" href="https://localhost/it" />
-    <xhtml:link rel="alternate" hreflang="ja" href="https://localhost/ja" />
-    <xhtml:link rel="alternate" hreflang="ko" href="https://localhost/ko" />
-    <xhtml:link rel="alternate" hreflang="pt" href="https://localhost/pt" />
-    <xhtml:link rel="alternate" hreflang="ru" href="https://localhost/ru" />
-    <xhtml:link rel="alternate" hreflang="sv" href="https://localhost/sv" />
-    <xhtml:link rel="alternate" hreflang="th" href="https://localhost/th" />
-    <xhtml:link rel="alternate" hreflang="uk" href="https://localhost/uk" />
-    <xhtml:link rel="alternate" hreflang="vi" href="https://localhost/vi" />
-    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://localhost/zh" />
-    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://localhost/zh-hant" />
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://localhost/en" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://testomniac.com/en" />
+    <xhtml:link rel="alternate" hreflang="de" href="https://testomniac.com/de" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://testomniac.com/es" />
+    <xhtml:link rel="alternate" hreflang="fr" href="https://testomniac.com/fr" />
+    <xhtml:link rel="alternate" hreflang="it" href="https://testomniac.com/it" />
+    <xhtml:link rel="alternate" hreflang="ja" href="https://testomniac.com/ja" />
+    <xhtml:link rel="alternate" hreflang="ko" href="https://testomniac.com/ko" />
+    <xhtml:link rel="alternate" hreflang="pt" href="https://testomniac.com/pt" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://testomniac.com/ru" />
+    <xhtml:link rel="alternate" hreflang="sv" href="https://testomniac.com/sv" />
+    <xhtml:link rel="alternate" hreflang="th" href="https://testomniac.com/th" />
+    <xhtml:link rel="alternate" hreflang="uk" href="https://testomniac.com/uk" />
+    <xhtml:link rel="alternate" hreflang="vi" href="https://testomniac.com/vi" />
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://testomniac.com/zh" />
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://testomniac.com/zh-hant" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://testomniac.com/en" />
   </url>
   <url>
-    <loc>https://localhost/ja</loc>
-    <lastmod>2026-05-29</lastmod>
+    <loc>https://testomniac.com/ko</loc>
+    <lastmod>2026-06-01</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
-    <xhtml:link rel="alternate" hreflang="en" href="https://localhost/en" />
-    <xhtml:link rel="alternate" hreflang="ar" href="https://localhost/ar" />
-    <xhtml:link rel="alternate" hreflang="de" href="https://localhost/de" />
-    <xhtml:link rel="alternate" hreflang="es" href="https://localhost/es" />
-    <xhtml:link rel="alternate" hreflang="fr" href="https://localhost/fr" />
-    <xhtml:link rel="alternate" hreflang="it" href="https://localhost/it" />
-    <xhtml:link rel="alternate" hreflang="ja" href="https://localhost/ja" />
-    <xhtml:link rel="alternate" hreflang="ko" href="https://localhost/ko" />
-    <xhtml:link rel="alternate" hreflang="pt" href="https://localhost/pt" />
-    <xhtml:link rel="alternate" hreflang="ru" href="https://localhost/ru" />
-    <xhtml:link rel="alternate" hreflang="sv" href="https://localhost/sv" />
-    <xhtml:link rel="alternate" hreflang="th" href="https://localhost/th" />
-    <xhtml:link rel="alternate" hreflang="uk" href="https://localhost/uk" />
-    <xhtml:link rel="alternate" hreflang="vi" href="https://localhost/vi" />
-    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://localhost/zh" />
-    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://localhost/zh-hant" />
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://localhost/en" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://testomniac.com/en" />
+    <xhtml:link rel="alternate" hreflang="de" href="https://testomniac.com/de" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://testomniac.com/es" />
+    <xhtml:link rel="alternate" hreflang="fr" href="https://testomniac.com/fr" />
+    <xhtml:link rel="alternate" hreflang="it" href="https://testomniac.com/it" />
+    <xhtml:link rel="alternate" hreflang="ja" href="https://testomniac.com/ja" />
+    <xhtml:link rel="alternate" hreflang="ko" href="https://testomniac.com/ko" />
+    <xhtml:link rel="alternate" hreflang="pt" href="https://testomniac.com/pt" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://testomniac.com/ru" />
+    <xhtml:link rel="alternate" hreflang="sv" href="https://testomniac.com/sv" />
+    <xhtml:link rel="alternate" hreflang="th" href="https://testomniac.com/th" />
+    <xhtml:link rel="alternate" hreflang="uk" href="https://testomniac.com/uk" />
+    <xhtml:link rel="alternate" hreflang="vi" href="https://testomniac.com/vi" />
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://testomniac.com/zh" />
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://testomniac.com/zh-hant" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://testomniac.com/en" />
   </url>
   <url>
-    <loc>https://localhost/ko</loc>
-    <lastmod>2026-05-29</lastmod>
+    <loc>https://testomniac.com/pt</loc>
+    <lastmod>2026-06-01</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
-    <xhtml:link rel="alternate" hreflang="en" href="https://localhost/en" />
-    <xhtml:link rel="alternate" hreflang="ar" href="https://localhost/ar" />
-    <xhtml:link rel="alternate" hreflang="de" href="https://localhost/de" />
-    <xhtml:link rel="alternate" hreflang="es" href="https://localhost/es" />
-    <xhtml:link rel="alternate" hreflang="fr" href="https://localhost/fr" />
-    <xhtml:link rel="alternate" hreflang="it" href="https://localhost/it" />
-    <xhtml:link rel="alternate" hreflang="ja" href="https://localhost/ja" />
-    <xhtml:link rel="alternate" hreflang="ko" href="https://localhost/ko" />
-    <xhtml:link rel="alternate" hreflang="pt" href="https://localhost/pt" />
-    <xhtml:link rel="alternate" hreflang="ru" href="https://localhost/ru" />
-    <xhtml:link rel="alternate" hreflang="sv" href="https://localhost/sv" />
-    <xhtml:link rel="alternate" hreflang="th" href="https://localhost/th" />
-    <xhtml:link rel="alternate" hreflang="uk" href="https://localhost/uk" />
-    <xhtml:link rel="alternate" hreflang="vi" href="https://localhost/vi" />
-    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://localhost/zh" />
-    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://localhost/zh-hant" />
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://localhost/en" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://testomniac.com/en" />
+    <xhtml:link rel="alternate" hreflang="de" href="https://testomniac.com/de" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://testomniac.com/es" />
+    <xhtml:link rel="alternate" hreflang="fr" href="https://testomniac.com/fr" />
+    <xhtml:link rel="alternate" hreflang="it" href="https://testomniac.com/it" />
+    <xhtml:link rel="alternate" hreflang="ja" href="https://testomniac.com/ja" />
+    <xhtml:link rel="alternate" hreflang="ko" href="https://testomniac.com/ko" />
+    <xhtml:link rel="alternate" hreflang="pt" href="https://testomniac.com/pt" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://testomniac.com/ru" />
+    <xhtml:link rel="alternate" hreflang="sv" href="https://testomniac.com/sv" />
+    <xhtml:link rel="alternate" hreflang="th" href="https://testomniac.com/th" />
+    <xhtml:link rel="alternate" hreflang="uk" href="https://testomniac.com/uk" />
+    <xhtml:link rel="alternate" hreflang="vi" href="https://testomniac.com/vi" />
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://testomniac.com/zh" />
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://testomniac.com/zh-hant" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://testomniac.com/en" />
   </url>
   <url>
-    <loc>https://localhost/pt</loc>
-    <lastmod>2026-05-29</lastmod>
+    <loc>https://testomniac.com/ru</loc>
+    <lastmod>2026-06-01</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
-    <xhtml:link rel="alternate" hreflang="en" href="https://localhost/en" />
-    <xhtml:link rel="alternate" hreflang="ar" href="https://localhost/ar" />
-    <xhtml:link rel="alternate" hreflang="de" href="https://localhost/de" />
-    <xhtml:link rel="alternate" hreflang="es" href="https://localhost/es" />
-    <xhtml:link rel="alternate" hreflang="fr" href="https://localhost/fr" />
-    <xhtml:link rel="alternate" hreflang="it" href="https://localhost/it" />
-    <xhtml:link rel="alternate" hreflang="ja" href="https://localhost/ja" />
-    <xhtml:link rel="alternate" hreflang="ko" href="https://localhost/ko" />
-    <xhtml:link rel="alternate" hreflang="pt" href="https://localhost/pt" />
-    <xhtml:link rel="alternate" hreflang="ru" href="https://localhost/ru" />
-    <xhtml:link rel="alternate" hreflang="sv" href="https://localhost/sv" />
-    <xhtml:link rel="alternate" hreflang="th" href="https://localhost/th" />
-    <xhtml:link rel="alternate" hreflang="uk" href="https://localhost/uk" />
-    <xhtml:link rel="alternate" hreflang="vi" href="https://localhost/vi" />
-    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://localhost/zh" />
-    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://localhost/zh-hant" />
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://localhost/en" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://testomniac.com/en" />
+    <xhtml:link rel="alternate" hreflang="de" href="https://testomniac.com/de" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://testomniac.com/es" />
+    <xhtml:link rel="alternate" hreflang="fr" href="https://testomniac.com/fr" />
+    <xhtml:link rel="alternate" hreflang="it" href="https://testomniac.com/it" />
+    <xhtml:link rel="alternate" hreflang="ja" href="https://testomniac.com/ja" />
+    <xhtml:link rel="alternate" hreflang="ko" href="https://testomniac.com/ko" />
+    <xhtml:link rel="alternate" hreflang="pt" href="https://testomniac.com/pt" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://testomniac.com/ru" />
+    <xhtml:link rel="alternate" hreflang="sv" href="https://testomniac.com/sv" />
+    <xhtml:link rel="alternate" hreflang="th" href="https://testomniac.com/th" />
+    <xhtml:link rel="alternate" hreflang="uk" href="https://testomniac.com/uk" />
+    <xhtml:link rel="alternate" hreflang="vi" href="https://testomniac.com/vi" />
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://testomniac.com/zh" />
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://testomniac.com/zh-hant" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://testomniac.com/en" />
   </url>
   <url>
-    <loc>https://localhost/ru</loc>
-    <lastmod>2026-05-29</lastmod>
+    <loc>https://testomniac.com/sv</loc>
+    <lastmod>2026-06-01</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
-    <xhtml:link rel="alternate" hreflang="en" href="https://localhost/en" />
-    <xhtml:link rel="alternate" hreflang="ar" href="https://localhost/ar" />
-    <xhtml:link rel="alternate" hreflang="de" href="https://localhost/de" />
-    <xhtml:link rel="alternate" hreflang="es" href="https://localhost/es" />
-    <xhtml:link rel="alternate" hreflang="fr" href="https://localhost/fr" />
-    <xhtml:link rel="alternate" hreflang="it" href="https://localhost/it" />
-    <xhtml:link rel="alternate" hreflang="ja" href="https://localhost/ja" />
-    <xhtml:link rel="alternate" hreflang="ko" href="https://localhost/ko" />
-    <xhtml:link rel="alternate" hreflang="pt" href="https://localhost/pt" />
-    <xhtml:link rel="alternate" hreflang="ru" href="https://localhost/ru" />
-    <xhtml:link rel="alternate" hreflang="sv" href="https://localhost/sv" />
-    <xhtml:link rel="alternate" hreflang="th" href="https://localhost/th" />
-    <xhtml:link rel="alternate" hreflang="uk" href="https://localhost/uk" />
-    <xhtml:link rel="alternate" hreflang="vi" href="https://localhost/vi" />
-    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://localhost/zh" />
-    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://localhost/zh-hant" />
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://localhost/en" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://testomniac.com/en" />
+    <xhtml:link rel="alternate" hreflang="de" href="https://testomniac.com/de" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://testomniac.com/es" />
+    <xhtml:link rel="alternate" hreflang="fr" href="https://testomniac.com/fr" />
+    <xhtml:link rel="alternate" hreflang="it" href="https://testomniac.com/it" />
+    <xhtml:link rel="alternate" hreflang="ja" href="https://testomniac.com/ja" />
+    <xhtml:link rel="alternate" hreflang="ko" href="https://testomniac.com/ko" />
+    <xhtml:link rel="alternate" hreflang="pt" href="https://testomniac.com/pt" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://testomniac.com/ru" />
+    <xhtml:link rel="alternate" hreflang="sv" href="https://testomniac.com/sv" />
+    <xhtml:link rel="alternate" hreflang="th" href="https://testomniac.com/th" />
+    <xhtml:link rel="alternate" hreflang="uk" href="https://testomniac.com/uk" />
+    <xhtml:link rel="alternate" hreflang="vi" href="https://testomniac.com/vi" />
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://testomniac.com/zh" />
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://testomniac.com/zh-hant" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://testomniac.com/en" />
   </url>
   <url>
-    <loc>https://localhost/sv</loc>
-    <lastmod>2026-05-29</lastmod>
+    <loc>https://testomniac.com/th</loc>
+    <lastmod>2026-06-01</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
-    <xhtml:link rel="alternate" hreflang="en" href="https://localhost/en" />
-    <xhtml:link rel="alternate" hreflang="ar" href="https://localhost/ar" />
-    <xhtml:link rel="alternate" hreflang="de" href="https://localhost/de" />
-    <xhtml:link rel="alternate" hreflang="es" href="https://localhost/es" />
-    <xhtml:link rel="alternate" hreflang="fr" href="https://localhost/fr" />
-    <xhtml:link rel="alternate" hreflang="it" href="https://localhost/it" />
-    <xhtml:link rel="alternate" hreflang="ja" href="https://localhost/ja" />
-    <xhtml:link rel="alternate" hreflang="ko" href="https://localhost/ko" />
-    <xhtml:link rel="alternate" hreflang="pt" href="https://localhost/pt" />
-    <xhtml:link rel="alternate" hreflang="ru" href="https://localhost/ru" />
-    <xhtml:link rel="alternate" hreflang="sv" href="https://localhost/sv" />
-    <xhtml:link rel="alternate" hreflang="th" href="https://localhost/th" />
-    <xhtml:link rel="alternate" hreflang="uk" href="https://localhost/uk" />
-    <xhtml:link rel="alternate" hreflang="vi" href="https://localhost/vi" />
-    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://localhost/zh" />
-    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://localhost/zh-hant" />
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://localhost/en" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://testomniac.com/en" />
+    <xhtml:link rel="alternate" hreflang="de" href="https://testomniac.com/de" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://testomniac.com/es" />
+    <xhtml:link rel="alternate" hreflang="fr" href="https://testomniac.com/fr" />
+    <xhtml:link rel="alternate" hreflang="it" href="https://testomniac.com/it" />
+    <xhtml:link rel="alternate" hreflang="ja" href="https://testomniac.com/ja" />
+    <xhtml:link rel="alternate" hreflang="ko" href="https://testomniac.com/ko" />
+    <xhtml:link rel="alternate" hreflang="pt" href="https://testomniac.com/pt" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://testomniac.com/ru" />
+    <xhtml:link rel="alternate" hreflang="sv" href="https://testomniac.com/sv" />
+    <xhtml:link rel="alternate" hreflang="th" href="https://testomniac.com/th" />
+    <xhtml:link rel="alternate" hreflang="uk" href="https://testomniac.com/uk" />
+    <xhtml:link rel="alternate" hreflang="vi" href="https://testomniac.com/vi" />
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://testomniac.com/zh" />
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://testomniac.com/zh-hant" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://testomniac.com/en" />
   </url>
   <url>
-    <loc>https://localhost/th</loc>
-    <lastmod>2026-05-29</lastmod>
+    <loc>https://testomniac.com/uk</loc>
+    <lastmod>2026-06-01</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
-    <xhtml:link rel="alternate" hreflang="en" href="https://localhost/en" />
-    <xhtml:link rel="alternate" hreflang="ar" href="https://localhost/ar" />
-    <xhtml:link rel="alternate" hreflang="de" href="https://localhost/de" />
-    <xhtml:link rel="alternate" hreflang="es" href="https://localhost/es" />
-    <xhtml:link rel="alternate" hreflang="fr" href="https://localhost/fr" />
-    <xhtml:link rel="alternate" hreflang="it" href="https://localhost/it" />
-    <xhtml:link rel="alternate" hreflang="ja" href="https://localhost/ja" />
-    <xhtml:link rel="alternate" hreflang="ko" href="https://localhost/ko" />
-    <xhtml:link rel="alternate" hreflang="pt" href="https://localhost/pt" />
-    <xhtml:link rel="alternate" hreflang="ru" href="https://localhost/ru" />
-    <xhtml:link rel="alternate" hreflang="sv" href="https://localhost/sv" />
-    <xhtml:link rel="alternate" hreflang="th" href="https://localhost/th" />
-    <xhtml:link rel="alternate" hreflang="uk" href="https://localhost/uk" />
-    <xhtml:link rel="alternate" hreflang="vi" href="https://localhost/vi" />
-    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://localhost/zh" />
-    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://localhost/zh-hant" />
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://localhost/en" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://testomniac.com/en" />
+    <xhtml:link rel="alternate" hreflang="de" href="https://testomniac.com/de" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://testomniac.com/es" />
+    <xhtml:link rel="alternate" hreflang="fr" href="https://testomniac.com/fr" />
+    <xhtml:link rel="alternate" hreflang="it" href="https://testomniac.com/it" />
+    <xhtml:link rel="alternate" hreflang="ja" href="https://testomniac.com/ja" />
+    <xhtml:link rel="alternate" hreflang="ko" href="https://testomniac.com/ko" />
+    <xhtml:link rel="alternate" hreflang="pt" href="https://testomniac.com/pt" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://testomniac.com/ru" />
+    <xhtml:link rel="alternate" hreflang="sv" href="https://testomniac.com/sv" />
+    <xhtml:link rel="alternate" hreflang="th" href="https://testomniac.com/th" />
+    <xhtml:link rel="alternate" hreflang="uk" href="https://testomniac.com/uk" />
+    <xhtml:link rel="alternate" hreflang="vi" href="https://testomniac.com/vi" />
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://testomniac.com/zh" />
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://testomniac.com/zh-hant" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://testomniac.com/en" />
   </url>
   <url>
-    <loc>https://localhost/uk</loc>
-    <lastmod>2026-05-29</lastmod>
+    <loc>https://testomniac.com/vi</loc>
+    <lastmod>2026-06-01</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
-    <xhtml:link rel="alternate" hreflang="en" href="https://localhost/en" />
-    <xhtml:link rel="alternate" hreflang="ar" href="https://localhost/ar" />
-    <xhtml:link rel="alternate" hreflang="de" href="https://localhost/de" />
-    <xhtml:link rel="alternate" hreflang="es" href="https://localhost/es" />
-    <xhtml:link rel="alternate" hreflang="fr" href="https://localhost/fr" />
-    <xhtml:link rel="alternate" hreflang="it" href="https://localhost/it" />
-    <xhtml:link rel="alternate" hreflang="ja" href="https://localhost/ja" />
-    <xhtml:link rel="alternate" hreflang="ko" href="https://localhost/ko" />
-    <xhtml:link rel="alternate" hreflang="pt" href="https://localhost/pt" />
-    <xhtml:link rel="alternate" hreflang="ru" href="https://localhost/ru" />
-    <xhtml:link rel="alternate" hreflang="sv" href="https://localhost/sv" />
-    <xhtml:link rel="alternate" hreflang="th" href="https://localhost/th" />
-    <xhtml:link rel="alternate" hreflang="uk" href="https://localhost/uk" />
-    <xhtml:link rel="alternate" hreflang="vi" href="https://localhost/vi" />
-    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://localhost/zh" />
-    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://localhost/zh-hant" />
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://localhost/en" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://testomniac.com/en" />
+    <xhtml:link rel="alternate" hreflang="de" href="https://testomniac.com/de" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://testomniac.com/es" />
+    <xhtml:link rel="alternate" hreflang="fr" href="https://testomniac.com/fr" />
+    <xhtml:link rel="alternate" hreflang="it" href="https://testomniac.com/it" />
+    <xhtml:link rel="alternate" hreflang="ja" href="https://testomniac.com/ja" />
+    <xhtml:link rel="alternate" hreflang="ko" href="https://testomniac.com/ko" />
+    <xhtml:link rel="alternate" hreflang="pt" href="https://testomniac.com/pt" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://testomniac.com/ru" />
+    <xhtml:link rel="alternate" hreflang="sv" href="https://testomniac.com/sv" />
+    <xhtml:link rel="alternate" hreflang="th" href="https://testomniac.com/th" />
+    <xhtml:link rel="alternate" hreflang="uk" href="https://testomniac.com/uk" />
+    <xhtml:link rel="alternate" hreflang="vi" href="https://testomniac.com/vi" />
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://testomniac.com/zh" />
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://testomniac.com/zh-hant" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://testomniac.com/en" />
   </url>
   <url>
-    <loc>https://localhost/vi</loc>
-    <lastmod>2026-05-29</lastmod>
+    <loc>https://testomniac.com/zh</loc>
+    <lastmod>2026-06-01</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
-    <xhtml:link rel="alternate" hreflang="en" href="https://localhost/en" />
-    <xhtml:link rel="alternate" hreflang="ar" href="https://localhost/ar" />
-    <xhtml:link rel="alternate" hreflang="de" href="https://localhost/de" />
-    <xhtml:link rel="alternate" hreflang="es" href="https://localhost/es" />
-    <xhtml:link rel="alternate" hreflang="fr" href="https://localhost/fr" />
-    <xhtml:link rel="alternate" hreflang="it" href="https://localhost/it" />
-    <xhtml:link rel="alternate" hreflang="ja" href="https://localhost/ja" />
-    <xhtml:link rel="alternate" hreflang="ko" href="https://localhost/ko" />
-    <xhtml:link rel="alternate" hreflang="pt" href="https://localhost/pt" />
-    <xhtml:link rel="alternate" hreflang="ru" href="https://localhost/ru" />
-    <xhtml:link rel="alternate" hreflang="sv" href="https://localhost/sv" />
-    <xhtml:link rel="alternate" hreflang="th" href="https://localhost/th" />
-    <xhtml:link rel="alternate" hreflang="uk" href="https://localhost/uk" />
-    <xhtml:link rel="alternate" hreflang="vi" href="https://localhost/vi" />
-    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://localhost/zh" />
-    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://localhost/zh-hant" />
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://localhost/en" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://testomniac.com/en" />
+    <xhtml:link rel="alternate" hreflang="de" href="https://testomniac.com/de" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://testomniac.com/es" />
+    <xhtml:link rel="alternate" hreflang="fr" href="https://testomniac.com/fr" />
+    <xhtml:link rel="alternate" hreflang="it" href="https://testomniac.com/it" />
+    <xhtml:link rel="alternate" hreflang="ja" href="https://testomniac.com/ja" />
+    <xhtml:link rel="alternate" hreflang="ko" href="https://testomniac.com/ko" />
+    <xhtml:link rel="alternate" hreflang="pt" href="https://testomniac.com/pt" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://testomniac.com/ru" />
+    <xhtml:link rel="alternate" hreflang="sv" href="https://testomniac.com/sv" />
+    <xhtml:link rel="alternate" hreflang="th" href="https://testomniac.com/th" />
+    <xhtml:link rel="alternate" hreflang="uk" href="https://testomniac.com/uk" />
+    <xhtml:link rel="alternate" hreflang="vi" href="https://testomniac.com/vi" />
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://testomniac.com/zh" />
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://testomniac.com/zh-hant" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://testomniac.com/en" />
   </url>
   <url>
-    <loc>https://localhost/zh</loc>
-    <lastmod>2026-05-29</lastmod>
+    <loc>https://testomniac.com/zh-hant</loc>
+    <lastmod>2026-06-01</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
-    <xhtml:link rel="alternate" hreflang="en" href="https://localhost/en" />
-    <xhtml:link rel="alternate" hreflang="ar" href="https://localhost/ar" />
-    <xhtml:link rel="alternate" hreflang="de" href="https://localhost/de" />
-    <xhtml:link rel="alternate" hreflang="es" href="https://localhost/es" />
-    <xhtml:link rel="alternate" hreflang="fr" href="https://localhost/fr" />
-    <xhtml:link rel="alternate" hreflang="it" href="https://localhost/it" />
-    <xhtml:link rel="alternate" hreflang="ja" href="https://localhost/ja" />
-    <xhtml:link rel="alternate" hreflang="ko" href="https://localhost/ko" />
-    <xhtml:link rel="alternate" hreflang="pt" href="https://localhost/pt" />
-    <xhtml:link rel="alternate" hreflang="ru" href="https://localhost/ru" />
-    <xhtml:link rel="alternate" hreflang="sv" href="https://localhost/sv" />
-    <xhtml:link rel="alternate" hreflang="th" href="https://localhost/th" />
-    <xhtml:link rel="alternate" hreflang="uk" href="https://localhost/uk" />
-    <xhtml:link rel="alternate" hreflang="vi" href="https://localhost/vi" />
-    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://localhost/zh" />
-    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://localhost/zh-hant" />
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://localhost/en" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://testomniac.com/en" />
+    <xhtml:link rel="alternate" hreflang="de" href="https://testomniac.com/de" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://testomniac.com/es" />
+    <xhtml:link rel="alternate" hreflang="fr" href="https://testomniac.com/fr" />
+    <xhtml:link rel="alternate" hreflang="it" href="https://testomniac.com/it" />
+    <xhtml:link rel="alternate" hreflang="ja" href="https://testomniac.com/ja" />
+    <xhtml:link rel="alternate" hreflang="ko" href="https://testomniac.com/ko" />
+    <xhtml:link rel="alternate" hreflang="pt" href="https://testomniac.com/pt" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://testomniac.com/ru" />
+    <xhtml:link rel="alternate" hreflang="sv" href="https://testomniac.com/sv" />
+    <xhtml:link rel="alternate" hreflang="th" href="https://testomniac.com/th" />
+    <xhtml:link rel="alternate" hreflang="uk" href="https://testomniac.com/uk" />
+    <xhtml:link rel="alternate" hreflang="vi" href="https://testomniac.com/vi" />
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://testomniac.com/zh" />
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://testomniac.com/zh-hant" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://testomniac.com/en" />
   </url>
   <url>
-    <loc>https://localhost/zh-hant</loc>
-    <lastmod>2026-05-29</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>1.0</priority>
-    <xhtml:link rel="alternate" hreflang="en" href="https://localhost/en" />
-    <xhtml:link rel="alternate" hreflang="ar" href="https://localhost/ar" />
-    <xhtml:link rel="alternate" hreflang="de" href="https://localhost/de" />
-    <xhtml:link rel="alternate" hreflang="es" href="https://localhost/es" />
-    <xhtml:link rel="alternate" hreflang="fr" href="https://localhost/fr" />
-    <xhtml:link rel="alternate" hreflang="it" href="https://localhost/it" />
-    <xhtml:link rel="alternate" hreflang="ja" href="https://localhost/ja" />
-    <xhtml:link rel="alternate" hreflang="ko" href="https://localhost/ko" />
-    <xhtml:link rel="alternate" hreflang="pt" href="https://localhost/pt" />
-    <xhtml:link rel="alternate" hreflang="ru" href="https://localhost/ru" />
-    <xhtml:link rel="alternate" hreflang="sv" href="https://localhost/sv" />
-    <xhtml:link rel="alternate" hreflang="th" href="https://localhost/th" />
-    <xhtml:link rel="alternate" hreflang="uk" href="https://localhost/uk" />
-    <xhtml:link rel="alternate" hreflang="vi" href="https://localhost/vi" />
-    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://localhost/zh" />
-    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://localhost/zh-hant" />
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://localhost/en" />
-  </url>
-  <url>
-    <loc>https://localhost/en/docs</loc>
-    <lastmod>2026-05-29</lastmod>
+    <loc>https://testomniac.com/en/docs</loc>
+    <lastmod>2026-06-01</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
-    <xhtml:link rel="alternate" hreflang="en" href="https://localhost/en/docs" />
-    <xhtml:link rel="alternate" hreflang="ar" href="https://localhost/ar/docs" />
-    <xhtml:link rel="alternate" hreflang="de" href="https://localhost/de/docs" />
-    <xhtml:link rel="alternate" hreflang="es" href="https://localhost/es/docs" />
-    <xhtml:link rel="alternate" hreflang="fr" href="https://localhost/fr/docs" />
-    <xhtml:link rel="alternate" hreflang="it" href="https://localhost/it/docs" />
-    <xhtml:link rel="alternate" hreflang="ja" href="https://localhost/ja/docs" />
-    <xhtml:link rel="alternate" hreflang="ko" href="https://localhost/ko/docs" />
-    <xhtml:link rel="alternate" hreflang="pt" href="https://localhost/pt/docs" />
-    <xhtml:link rel="alternate" hreflang="ru" href="https://localhost/ru/docs" />
-    <xhtml:link rel="alternate" hreflang="sv" href="https://localhost/sv/docs" />
-    <xhtml:link rel="alternate" hreflang="th" href="https://localhost/th/docs" />
-    <xhtml:link rel="alternate" hreflang="uk" href="https://localhost/uk/docs" />
-    <xhtml:link rel="alternate" hreflang="vi" href="https://localhost/vi/docs" />
-    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://localhost/zh/docs" />
-    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://localhost/zh-hant/docs" />
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://localhost/en/docs" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://testomniac.com/en/docs" />
+    <xhtml:link rel="alternate" hreflang="de" href="https://testomniac.com/de/docs" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://testomniac.com/es/docs" />
+    <xhtml:link rel="alternate" hreflang="fr" href="https://testomniac.com/fr/docs" />
+    <xhtml:link rel="alternate" hreflang="it" href="https://testomniac.com/it/docs" />
+    <xhtml:link rel="alternate" hreflang="ja" href="https://testomniac.com/ja/docs" />
+    <xhtml:link rel="alternate" hreflang="ko" href="https://testomniac.com/ko/docs" />
+    <xhtml:link rel="alternate" hreflang="pt" href="https://testomniac.com/pt/docs" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://testomniac.com/ru/docs" />
+    <xhtml:link rel="alternate" hreflang="sv" href="https://testomniac.com/sv/docs" />
+    <xhtml:link rel="alternate" hreflang="th" href="https://testomniac.com/th/docs" />
+    <xhtml:link rel="alternate" hreflang="uk" href="https://testomniac.com/uk/docs" />
+    <xhtml:link rel="alternate" hreflang="vi" href="https://testomniac.com/vi/docs" />
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://testomniac.com/zh/docs" />
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://testomniac.com/zh-hant/docs" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://testomniac.com/en/docs" />
   </url>
   <url>
-    <loc>https://localhost/ar/docs</loc>
-    <lastmod>2026-05-29</lastmod>
+    <loc>https://testomniac.com/de/docs</loc>
+    <lastmod>2026-06-01</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
-    <xhtml:link rel="alternate" hreflang="en" href="https://localhost/en/docs" />
-    <xhtml:link rel="alternate" hreflang="ar" href="https://localhost/ar/docs" />
-    <xhtml:link rel="alternate" hreflang="de" href="https://localhost/de/docs" />
-    <xhtml:link rel="alternate" hreflang="es" href="https://localhost/es/docs" />
-    <xhtml:link rel="alternate" hreflang="fr" href="https://localhost/fr/docs" />
-    <xhtml:link rel="alternate" hreflang="it" href="https://localhost/it/docs" />
-    <xhtml:link rel="alternate" hreflang="ja" href="https://localhost/ja/docs" />
-    <xhtml:link rel="alternate" hreflang="ko" href="https://localhost/ko/docs" />
-    <xhtml:link rel="alternate" hreflang="pt" href="https://localhost/pt/docs" />
-    <xhtml:link rel="alternate" hreflang="ru" href="https://localhost/ru/docs" />
-    <xhtml:link rel="alternate" hreflang="sv" href="https://localhost/sv/docs" />
-    <xhtml:link rel="alternate" hreflang="th" href="https://localhost/th/docs" />
-    <xhtml:link rel="alternate" hreflang="uk" href="https://localhost/uk/docs" />
-    <xhtml:link rel="alternate" hreflang="vi" href="https://localhost/vi/docs" />
-    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://localhost/zh/docs" />
-    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://localhost/zh-hant/docs" />
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://localhost/en/docs" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://testomniac.com/en/docs" />
+    <xhtml:link rel="alternate" hreflang="de" href="https://testomniac.com/de/docs" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://testomniac.com/es/docs" />
+    <xhtml:link rel="alternate" hreflang="fr" href="https://testomniac.com/fr/docs" />
+    <xhtml:link rel="alternate" hreflang="it" href="https://testomniac.com/it/docs" />
+    <xhtml:link rel="alternate" hreflang="ja" href="https://testomniac.com/ja/docs" />
+    <xhtml:link rel="alternate" hreflang="ko" href="https://testomniac.com/ko/docs" />
+    <xhtml:link rel="alternate" hreflang="pt" href="https://testomniac.com/pt/docs" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://testomniac.com/ru/docs" />
+    <xhtml:link rel="alternate" hreflang="sv" href="https://testomniac.com/sv/docs" />
+    <xhtml:link rel="alternate" hreflang="th" href="https://testomniac.com/th/docs" />
+    <xhtml:link rel="alternate" hreflang="uk" href="https://testomniac.com/uk/docs" />
+    <xhtml:link rel="alternate" hreflang="vi" href="https://testomniac.com/vi/docs" />
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://testomniac.com/zh/docs" />
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://testomniac.com/zh-hant/docs" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://testomniac.com/en/docs" />
   </url>
   <url>
-    <loc>https://localhost/de/docs</loc>
-    <lastmod>2026-05-29</lastmod>
+    <loc>https://testomniac.com/es/docs</loc>
+    <lastmod>2026-06-01</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
-    <xhtml:link rel="alternate" hreflang="en" href="https://localhost/en/docs" />
-    <xhtml:link rel="alternate" hreflang="ar" href="https://localhost/ar/docs" />
-    <xhtml:link rel="alternate" hreflang="de" href="https://localhost/de/docs" />
-    <xhtml:link rel="alternate" hreflang="es" href="https://localhost/es/docs" />
-    <xhtml:link rel="alternate" hreflang="fr" href="https://localhost/fr/docs" />
-    <xhtml:link rel="alternate" hreflang="it" href="https://localhost/it/docs" />
-    <xhtml:link rel="alternate" hreflang="ja" href="https://localhost/ja/docs" />
-    <xhtml:link rel="alternate" hreflang="ko" href="https://localhost/ko/docs" />
-    <xhtml:link rel="alternate" hreflang="pt" href="https://localhost/pt/docs" />
-    <xhtml:link rel="alternate" hreflang="ru" href="https://localhost/ru/docs" />
-    <xhtml:link rel="alternate" hreflang="sv" href="https://localhost/sv/docs" />
-    <xhtml:link rel="alternate" hreflang="th" href="https://localhost/th/docs" />
-    <xhtml:link rel="alternate" hreflang="uk" href="https://localhost/uk/docs" />
-    <xhtml:link rel="alternate" hreflang="vi" href="https://localhost/vi/docs" />
-    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://localhost/zh/docs" />
-    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://localhost/zh-hant/docs" />
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://localhost/en/docs" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://testomniac.com/en/docs" />
+    <xhtml:link rel="alternate" hreflang="de" href="https://testomniac.com/de/docs" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://testomniac.com/es/docs" />
+    <xhtml:link rel="alternate" hreflang="fr" href="https://testomniac.com/fr/docs" />
+    <xhtml:link rel="alternate" hreflang="it" href="https://testomniac.com/it/docs" />
+    <xhtml:link rel="alternate" hreflang="ja" href="https://testomniac.com/ja/docs" />
+    <xhtml:link rel="alternate" hreflang="ko" href="https://testomniac.com/ko/docs" />
+    <xhtml:link rel="alternate" hreflang="pt" href="https://testomniac.com/pt/docs" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://testomniac.com/ru/docs" />
+    <xhtml:link rel="alternate" hreflang="sv" href="https://testomniac.com/sv/docs" />
+    <xhtml:link rel="alternate" hreflang="th" href="https://testomniac.com/th/docs" />
+    <xhtml:link rel="alternate" hreflang="uk" href="https://testomniac.com/uk/docs" />
+    <xhtml:link rel="alternate" hreflang="vi" href="https://testomniac.com/vi/docs" />
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://testomniac.com/zh/docs" />
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://testomniac.com/zh-hant/docs" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://testomniac.com/en/docs" />
   </url>
   <url>
-    <loc>https://localhost/es/docs</loc>
-    <lastmod>2026-05-29</lastmod>
+    <loc>https://testomniac.com/fr/docs</loc>
+    <lastmod>2026-06-01</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
-    <xhtml:link rel="alternate" hreflang="en" href="https://localhost/en/docs" />
-    <xhtml:link rel="alternate" hreflang="ar" href="https://localhost/ar/docs" />
-    <xhtml:link rel="alternate" hreflang="de" href="https://localhost/de/docs" />
-    <xhtml:link rel="alternate" hreflang="es" href="https://localhost/es/docs" />
-    <xhtml:link rel="alternate" hreflang="fr" href="https://localhost/fr/docs" />
-    <xhtml:link rel="alternate" hreflang="it" href="https://localhost/it/docs" />
-    <xhtml:link rel="alternate" hreflang="ja" href="https://localhost/ja/docs" />
-    <xhtml:link rel="alternate" hreflang="ko" href="https://localhost/ko/docs" />
-    <xhtml:link rel="alternate" hreflang="pt" href="https://localhost/pt/docs" />
-    <xhtml:link rel="alternate" hreflang="ru" href="https://localhost/ru/docs" />
-    <xhtml:link rel="alternate" hreflang="sv" href="https://localhost/sv/docs" />
-    <xhtml:link rel="alternate" hreflang="th" href="https://localhost/th/docs" />
-    <xhtml:link rel="alternate" hreflang="uk" href="https://localhost/uk/docs" />
-    <xhtml:link rel="alternate" hreflang="vi" href="https://localhost/vi/docs" />
-    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://localhost/zh/docs" />
-    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://localhost/zh-hant/docs" />
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://localhost/en/docs" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://testomniac.com/en/docs" />
+    <xhtml:link rel="alternate" hreflang="de" href="https://testomniac.com/de/docs" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://testomniac.com/es/docs" />
+    <xhtml:link rel="alternate" hreflang="fr" href="https://testomniac.com/fr/docs" />
+    <xhtml:link rel="alternate" hreflang="it" href="https://testomniac.com/it/docs" />
+    <xhtml:link rel="alternate" hreflang="ja" href="https://testomniac.com/ja/docs" />
+    <xhtml:link rel="alternate" hreflang="ko" href="https://testomniac.com/ko/docs" />
+    <xhtml:link rel="alternate" hreflang="pt" href="https://testomniac.com/pt/docs" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://testomniac.com/ru/docs" />
+    <xhtml:link rel="alternate" hreflang="sv" href="https://testomniac.com/sv/docs" />
+    <xhtml:link rel="alternate" hreflang="th" href="https://testomniac.com/th/docs" />
+    <xhtml:link rel="alternate" hreflang="uk" href="https://testomniac.com/uk/docs" />
+    <xhtml:link rel="alternate" hreflang="vi" href="https://testomniac.com/vi/docs" />
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://testomniac.com/zh/docs" />
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://testomniac.com/zh-hant/docs" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://testomniac.com/en/docs" />
   </url>
   <url>
-    <loc>https://localhost/fr/docs</loc>
-    <lastmod>2026-05-29</lastmod>
+    <loc>https://testomniac.com/it/docs</loc>
+    <lastmod>2026-06-01</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
-    <xhtml:link rel="alternate" hreflang="en" href="https://localhost/en/docs" />
-    <xhtml:link rel="alternate" hreflang="ar" href="https://localhost/ar/docs" />
-    <xhtml:link rel="alternate" hreflang="de" href="https://localhost/de/docs" />
-    <xhtml:link rel="alternate" hreflang="es" href="https://localhost/es/docs" />
-    <xhtml:link rel="alternate" hreflang="fr" href="https://localhost/fr/docs" />
-    <xhtml:link rel="alternate" hreflang="it" href="https://localhost/it/docs" />
-    <xhtml:link rel="alternate" hreflang="ja" href="https://localhost/ja/docs" />
-    <xhtml:link rel="alternate" hreflang="ko" href="https://localhost/ko/docs" />
-    <xhtml:link rel="alternate" hreflang="pt" href="https://localhost/pt/docs" />
-    <xhtml:link rel="alternate" hreflang="ru" href="https://localhost/ru/docs" />
-    <xhtml:link rel="alternate" hreflang="sv" href="https://localhost/sv/docs" />
-    <xhtml:link rel="alternate" hreflang="th" href="https://localhost/th/docs" />
-    <xhtml:link rel="alternate" hreflang="uk" href="https://localhost/uk/docs" />
-    <xhtml:link rel="alternate" hreflang="vi" href="https://localhost/vi/docs" />
-    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://localhost/zh/docs" />
-    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://localhost/zh-hant/docs" />
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://localhost/en/docs" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://testomniac.com/en/docs" />
+    <xhtml:link rel="alternate" hreflang="de" href="https://testomniac.com/de/docs" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://testomniac.com/es/docs" />
+    <xhtml:link rel="alternate" hreflang="fr" href="https://testomniac.com/fr/docs" />
+    <xhtml:link rel="alternate" hreflang="it" href="https://testomniac.com/it/docs" />
+    <xhtml:link rel="alternate" hreflang="ja" href="https://testomniac.com/ja/docs" />
+    <xhtml:link rel="alternate" hreflang="ko" href="https://testomniac.com/ko/docs" />
+    <xhtml:link rel="alternate" hreflang="pt" href="https://testomniac.com/pt/docs" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://testomniac.com/ru/docs" />
+    <xhtml:link rel="alternate" hreflang="sv" href="https://testomniac.com/sv/docs" />
+    <xhtml:link rel="alternate" hreflang="th" href="https://testomniac.com/th/docs" />
+    <xhtml:link rel="alternate" hreflang="uk" href="https://testomniac.com/uk/docs" />
+    <xhtml:link rel="alternate" hreflang="vi" href="https://testomniac.com/vi/docs" />
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://testomniac.com/zh/docs" />
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://testomniac.com/zh-hant/docs" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://testomniac.com/en/docs" />
   </url>
   <url>
-    <loc>https://localhost/it/docs</loc>
-    <lastmod>2026-05-29</lastmod>
+    <loc>https://testomniac.com/ja/docs</loc>
+    <lastmod>2026-06-01</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
-    <xhtml:link rel="alternate" hreflang="en" href="https://localhost/en/docs" />
-    <xhtml:link rel="alternate" hreflang="ar" href="https://localhost/ar/docs" />
-    <xhtml:link rel="alternate" hreflang="de" href="https://localhost/de/docs" />
-    <xhtml:link rel="alternate" hreflang="es" href="https://localhost/es/docs" />
-    <xhtml:link rel="alternate" hreflang="fr" href="https://localhost/fr/docs" />
-    <xhtml:link rel="alternate" hreflang="it" href="https://localhost/it/docs" />
-    <xhtml:link rel="alternate" hreflang="ja" href="https://localhost/ja/docs" />
-    <xhtml:link rel="alternate" hreflang="ko" href="https://localhost/ko/docs" />
-    <xhtml:link rel="alternate" hreflang="pt" href="https://localhost/pt/docs" />
-    <xhtml:link rel="alternate" hreflang="ru" href="https://localhost/ru/docs" />
-    <xhtml:link rel="alternate" hreflang="sv" href="https://localhost/sv/docs" />
-    <xhtml:link rel="alternate" hreflang="th" href="https://localhost/th/docs" />
-    <xhtml:link rel="alternate" hreflang="uk" href="https://localhost/uk/docs" />
-    <xhtml:link rel="alternate" hreflang="vi" href="https://localhost/vi/docs" />
-    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://localhost/zh/docs" />
-    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://localhost/zh-hant/docs" />
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://localhost/en/docs" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://testomniac.com/en/docs" />
+    <xhtml:link rel="alternate" hreflang="de" href="https://testomniac.com/de/docs" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://testomniac.com/es/docs" />
+    <xhtml:link rel="alternate" hreflang="fr" href="https://testomniac.com/fr/docs" />
+    <xhtml:link rel="alternate" hreflang="it" href="https://testomniac.com/it/docs" />
+    <xhtml:link rel="alternate" hreflang="ja" href="https://testomniac.com/ja/docs" />
+    <xhtml:link rel="alternate" hreflang="ko" href="https://testomniac.com/ko/docs" />
+    <xhtml:link rel="alternate" hreflang="pt" href="https://testomniac.com/pt/docs" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://testomniac.com/ru/docs" />
+    <xhtml:link rel="alternate" hreflang="sv" href="https://testomniac.com/sv/docs" />
+    <xhtml:link rel="alternate" hreflang="th" href="https://testomniac.com/th/docs" />
+    <xhtml:link rel="alternate" hreflang="uk" href="https://testomniac.com/uk/docs" />
+    <xhtml:link rel="alternate" hreflang="vi" href="https://testomniac.com/vi/docs" />
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://testomniac.com/zh/docs" />
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://testomniac.com/zh-hant/docs" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://testomniac.com/en/docs" />
   </url>
   <url>
-    <loc>https://localhost/ja/docs</loc>
-    <lastmod>2026-05-29</lastmod>
+    <loc>https://testomniac.com/ko/docs</loc>
+    <lastmod>2026-06-01</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
-    <xhtml:link rel="alternate" hreflang="en" href="https://localhost/en/docs" />
-    <xhtml:link rel="alternate" hreflang="ar" href="https://localhost/ar/docs" />
-    <xhtml:link rel="alternate" hreflang="de" href="https://localhost/de/docs" />
-    <xhtml:link rel="alternate" hreflang="es" href="https://localhost/es/docs" />
-    <xhtml:link rel="alternate" hreflang="fr" href="https://localhost/fr/docs" />
-    <xhtml:link rel="alternate" hreflang="it" href="https://localhost/it/docs" />
-    <xhtml:link rel="alternate" hreflang="ja" href="https://localhost/ja/docs" />
-    <xhtml:link rel="alternate" hreflang="ko" href="https://localhost/ko/docs" />
-    <xhtml:link rel="alternate" hreflang="pt" href="https://localhost/pt/docs" />
-    <xhtml:link rel="alternate" hreflang="ru" href="https://localhost/ru/docs" />
-    <xhtml:link rel="alternate" hreflang="sv" href="https://localhost/sv/docs" />
-    <xhtml:link rel="alternate" hreflang="th" href="https://localhost/th/docs" />
-    <xhtml:link rel="alternate" hreflang="uk" href="https://localhost/uk/docs" />
-    <xhtml:link rel="alternate" hreflang="vi" href="https://localhost/vi/docs" />
-    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://localhost/zh/docs" />
-    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://localhost/zh-hant/docs" />
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://localhost/en/docs" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://testomniac.com/en/docs" />
+    <xhtml:link rel="alternate" hreflang="de" href="https://testomniac.com/de/docs" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://testomniac.com/es/docs" />
+    <xhtml:link rel="alternate" hreflang="fr" href="https://testomniac.com/fr/docs" />
+    <xhtml:link rel="alternate" hreflang="it" href="https://testomniac.com/it/docs" />
+    <xhtml:link rel="alternate" hreflang="ja" href="https://testomniac.com/ja/docs" />
+    <xhtml:link rel="alternate" hreflang="ko" href="https://testomniac.com/ko/docs" />
+    <xhtml:link rel="alternate" hreflang="pt" href="https://testomniac.com/pt/docs" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://testomniac.com/ru/docs" />
+    <xhtml:link rel="alternate" hreflang="sv" href="https://testomniac.com/sv/docs" />
+    <xhtml:link rel="alternate" hreflang="th" href="https://testomniac.com/th/docs" />
+    <xhtml:link rel="alternate" hreflang="uk" href="https://testomniac.com/uk/docs" />
+    <xhtml:link rel="alternate" hreflang="vi" href="https://testomniac.com/vi/docs" />
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://testomniac.com/zh/docs" />
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://testomniac.com/zh-hant/docs" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://testomniac.com/en/docs" />
   </url>
   <url>
-    <loc>https://localhost/ko/docs</loc>
-    <lastmod>2026-05-29</lastmod>
+    <loc>https://testomniac.com/pt/docs</loc>
+    <lastmod>2026-06-01</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
-    <xhtml:link rel="alternate" hreflang="en" href="https://localhost/en/docs" />
-    <xhtml:link rel="alternate" hreflang="ar" href="https://localhost/ar/docs" />
-    <xhtml:link rel="alternate" hreflang="de" href="https://localhost/de/docs" />
-    <xhtml:link rel="alternate" hreflang="es" href="https://localhost/es/docs" />
-    <xhtml:link rel="alternate" hreflang="fr" href="https://localhost/fr/docs" />
-    <xhtml:link rel="alternate" hreflang="it" href="https://localhost/it/docs" />
-    <xhtml:link rel="alternate" hreflang="ja" href="https://localhost/ja/docs" />
-    <xhtml:link rel="alternate" hreflang="ko" href="https://localhost/ko/docs" />
-    <xhtml:link rel="alternate" hreflang="pt" href="https://localhost/pt/docs" />
-    <xhtml:link rel="alternate" hreflang="ru" href="https://localhost/ru/docs" />
-    <xhtml:link rel="alternate" hreflang="sv" href="https://localhost/sv/docs" />
-    <xhtml:link rel="alternate" hreflang="th" href="https://localhost/th/docs" />
-    <xhtml:link rel="alternate" hreflang="uk" href="https://localhost/uk/docs" />
-    <xhtml:link rel="alternate" hreflang="vi" href="https://localhost/vi/docs" />
-    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://localhost/zh/docs" />
-    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://localhost/zh-hant/docs" />
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://localhost/en/docs" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://testomniac.com/en/docs" />
+    <xhtml:link rel="alternate" hreflang="de" href="https://testomniac.com/de/docs" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://testomniac.com/es/docs" />
+    <xhtml:link rel="alternate" hreflang="fr" href="https://testomniac.com/fr/docs" />
+    <xhtml:link rel="alternate" hreflang="it" href="https://testomniac.com/it/docs" />
+    <xhtml:link rel="alternate" hreflang="ja" href="https://testomniac.com/ja/docs" />
+    <xhtml:link rel="alternate" hreflang="ko" href="https://testomniac.com/ko/docs" />
+    <xhtml:link rel="alternate" hreflang="pt" href="https://testomniac.com/pt/docs" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://testomniac.com/ru/docs" />
+    <xhtml:link rel="alternate" hreflang="sv" href="https://testomniac.com/sv/docs" />
+    <xhtml:link rel="alternate" hreflang="th" href="https://testomniac.com/th/docs" />
+    <xhtml:link rel="alternate" hreflang="uk" href="https://testomniac.com/uk/docs" />
+    <xhtml:link rel="alternate" hreflang="vi" href="https://testomniac.com/vi/docs" />
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://testomniac.com/zh/docs" />
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://testomniac.com/zh-hant/docs" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://testomniac.com/en/docs" />
   </url>
   <url>
-    <loc>https://localhost/pt/docs</loc>
-    <lastmod>2026-05-29</lastmod>
+    <loc>https://testomniac.com/ru/docs</loc>
+    <lastmod>2026-06-01</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
-    <xhtml:link rel="alternate" hreflang="en" href="https://localhost/en/docs" />
-    <xhtml:link rel="alternate" hreflang="ar" href="https://localhost/ar/docs" />
-    <xhtml:link rel="alternate" hreflang="de" href="https://localhost/de/docs" />
-    <xhtml:link rel="alternate" hreflang="es" href="https://localhost/es/docs" />
-    <xhtml:link rel="alternate" hreflang="fr" href="https://localhost/fr/docs" />
-    <xhtml:link rel="alternate" hreflang="it" href="https://localhost/it/docs" />
-    <xhtml:link rel="alternate" hreflang="ja" href="https://localhost/ja/docs" />
-    <xhtml:link rel="alternate" hreflang="ko" href="https://localhost/ko/docs" />
-    <xhtml:link rel="alternate" hreflang="pt" href="https://localhost/pt/docs" />
-    <xhtml:link rel="alternate" hreflang="ru" href="https://localhost/ru/docs" />
-    <xhtml:link rel="alternate" hreflang="sv" href="https://localhost/sv/docs" />
-    <xhtml:link rel="alternate" hreflang="th" href="https://localhost/th/docs" />
-    <xhtml:link rel="alternate" hreflang="uk" href="https://localhost/uk/docs" />
-    <xhtml:link rel="alternate" hreflang="vi" href="https://localhost/vi/docs" />
-    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://localhost/zh/docs" />
-    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://localhost/zh-hant/docs" />
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://localhost/en/docs" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://testomniac.com/en/docs" />
+    <xhtml:link rel="alternate" hreflang="de" href="https://testomniac.com/de/docs" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://testomniac.com/es/docs" />
+    <xhtml:link rel="alternate" hreflang="fr" href="https://testomniac.com/fr/docs" />
+    <xhtml:link rel="alternate" hreflang="it" href="https://testomniac.com/it/docs" />
+    <xhtml:link rel="alternate" hreflang="ja" href="https://testomniac.com/ja/docs" />
+    <xhtml:link rel="alternate" hreflang="ko" href="https://testomniac.com/ko/docs" />
+    <xhtml:link rel="alternate" hreflang="pt" href="https://testomniac.com/pt/docs" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://testomniac.com/ru/docs" />
+    <xhtml:link rel="alternate" hreflang="sv" href="https://testomniac.com/sv/docs" />
+    <xhtml:link rel="alternate" hreflang="th" href="https://testomniac.com/th/docs" />
+    <xhtml:link rel="alternate" hreflang="uk" href="https://testomniac.com/uk/docs" />
+    <xhtml:link rel="alternate" hreflang="vi" href="https://testomniac.com/vi/docs" />
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://testomniac.com/zh/docs" />
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://testomniac.com/zh-hant/docs" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://testomniac.com/en/docs" />
   </url>
   <url>
-    <loc>https://localhost/ru/docs</loc>
-    <lastmod>2026-05-29</lastmod>
+    <loc>https://testomniac.com/sv/docs</loc>
+    <lastmod>2026-06-01</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
-    <xhtml:link rel="alternate" hreflang="en" href="https://localhost/en/docs" />
-    <xhtml:link rel="alternate" hreflang="ar" href="https://localhost/ar/docs" />
-    <xhtml:link rel="alternate" hreflang="de" href="https://localhost/de/docs" />
-    <xhtml:link rel="alternate" hreflang="es" href="https://localhost/es/docs" />
-    <xhtml:link rel="alternate" hreflang="fr" href="https://localhost/fr/docs" />
-    <xhtml:link rel="alternate" hreflang="it" href="https://localhost/it/docs" />
-    <xhtml:link rel="alternate" hreflang="ja" href="https://localhost/ja/docs" />
-    <xhtml:link rel="alternate" hreflang="ko" href="https://localhost/ko/docs" />
-    <xhtml:link rel="alternate" hreflang="pt" href="https://localhost/pt/docs" />
-    <xhtml:link rel="alternate" hreflang="ru" href="https://localhost/ru/docs" />
-    <xhtml:link rel="alternate" hreflang="sv" href="https://localhost/sv/docs" />
-    <xhtml:link rel="alternate" hreflang="th" href="https://localhost/th/docs" />
-    <xhtml:link rel="alternate" hreflang="uk" href="https://localhost/uk/docs" />
-    <xhtml:link rel="alternate" hreflang="vi" href="https://localhost/vi/docs" />
-    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://localhost/zh/docs" />
-    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://localhost/zh-hant/docs" />
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://localhost/en/docs" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://testomniac.com/en/docs" />
+    <xhtml:link rel="alternate" hreflang="de" href="https://testomniac.com/de/docs" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://testomniac.com/es/docs" />
+    <xhtml:link rel="alternate" hreflang="fr" href="https://testomniac.com/fr/docs" />
+    <xhtml:link rel="alternate" hreflang="it" href="https://testomniac.com/it/docs" />
+    <xhtml:link rel="alternate" hreflang="ja" href="https://testomniac.com/ja/docs" />
+    <xhtml:link rel="alternate" hreflang="ko" href="https://testomniac.com/ko/docs" />
+    <xhtml:link rel="alternate" hreflang="pt" href="https://testomniac.com/pt/docs" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://testomniac.com/ru/docs" />
+    <xhtml:link rel="alternate" hreflang="sv" href="https://testomniac.com/sv/docs" />
+    <xhtml:link rel="alternate" hreflang="th" href="https://testomniac.com/th/docs" />
+    <xhtml:link rel="alternate" hreflang="uk" href="https://testomniac.com/uk/docs" />
+    <xhtml:link rel="alternate" hreflang="vi" href="https://testomniac.com/vi/docs" />
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://testomniac.com/zh/docs" />
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://testomniac.com/zh-hant/docs" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://testomniac.com/en/docs" />
   </url>
   <url>
-    <loc>https://localhost/sv/docs</loc>
-    <lastmod>2026-05-29</lastmod>
+    <loc>https://testomniac.com/th/docs</loc>
+    <lastmod>2026-06-01</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
-    <xhtml:link rel="alternate" hreflang="en" href="https://localhost/en/docs" />
-    <xhtml:link rel="alternate" hreflang="ar" href="https://localhost/ar/docs" />
-    <xhtml:link rel="alternate" hreflang="de" href="https://localhost/de/docs" />
-    <xhtml:link rel="alternate" hreflang="es" href="https://localhost/es/docs" />
-    <xhtml:link rel="alternate" hreflang="fr" href="https://localhost/fr/docs" />
-    <xhtml:link rel="alternate" hreflang="it" href="https://localhost/it/docs" />
-    <xhtml:link rel="alternate" hreflang="ja" href="https://localhost/ja/docs" />
-    <xhtml:link rel="alternate" hreflang="ko" href="https://localhost/ko/docs" />
-    <xhtml:link rel="alternate" hreflang="pt" href="https://localhost/pt/docs" />
-    <xhtml:link rel="alternate" hreflang="ru" href="https://localhost/ru/docs" />
-    <xhtml:link rel="alternate" hreflang="sv" href="https://localhost/sv/docs" />
-    <xhtml:link rel="alternate" hreflang="th" href="https://localhost/th/docs" />
-    <xhtml:link rel="alternate" hreflang="uk" href="https://localhost/uk/docs" />
-    <xhtml:link rel="alternate" hreflang="vi" href="https://localhost/vi/docs" />
-    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://localhost/zh/docs" />
-    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://localhost/zh-hant/docs" />
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://localhost/en/docs" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://testomniac.com/en/docs" />
+    <xhtml:link rel="alternate" hreflang="de" href="https://testomniac.com/de/docs" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://testomniac.com/es/docs" />
+    <xhtml:link rel="alternate" hreflang="fr" href="https://testomniac.com/fr/docs" />
+    <xhtml:link rel="alternate" hreflang="it" href="https://testomniac.com/it/docs" />
+    <xhtml:link rel="alternate" hreflang="ja" href="https://testomniac.com/ja/docs" />
+    <xhtml:link rel="alternate" hreflang="ko" href="https://testomniac.com/ko/docs" />
+    <xhtml:link rel="alternate" hreflang="pt" href="https://testomniac.com/pt/docs" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://testomniac.com/ru/docs" />
+    <xhtml:link rel="alternate" hreflang="sv" href="https://testomniac.com/sv/docs" />
+    <xhtml:link rel="alternate" hreflang="th" href="https://testomniac.com/th/docs" />
+    <xhtml:link rel="alternate" hreflang="uk" href="https://testomniac.com/uk/docs" />
+    <xhtml:link rel="alternate" hreflang="vi" href="https://testomniac.com/vi/docs" />
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://testomniac.com/zh/docs" />
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://testomniac.com/zh-hant/docs" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://testomniac.com/en/docs" />
   </url>
   <url>
-    <loc>https://localhost/th/docs</loc>
-    <lastmod>2026-05-29</lastmod>
+    <loc>https://testomniac.com/uk/docs</loc>
+    <lastmod>2026-06-01</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
-    <xhtml:link rel="alternate" hreflang="en" href="https://localhost/en/docs" />
-    <xhtml:link rel="alternate" hreflang="ar" href="https://localhost/ar/docs" />
-    <xhtml:link rel="alternate" hreflang="de" href="https://localhost/de/docs" />
-    <xhtml:link rel="alternate" hreflang="es" href="https://localhost/es/docs" />
-    <xhtml:link rel="alternate" hreflang="fr" href="https://localhost/fr/docs" />
-    <xhtml:link rel="alternate" hreflang="it" href="https://localhost/it/docs" />
-    <xhtml:link rel="alternate" hreflang="ja" href="https://localhost/ja/docs" />
-    <xhtml:link rel="alternate" hreflang="ko" href="https://localhost/ko/docs" />
-    <xhtml:link rel="alternate" hreflang="pt" href="https://localhost/pt/docs" />
-    <xhtml:link rel="alternate" hreflang="ru" href="https://localhost/ru/docs" />
-    <xhtml:link rel="alternate" hreflang="sv" href="https://localhost/sv/docs" />
-    <xhtml:link rel="alternate" hreflang="th" href="https://localhost/th/docs" />
-    <xhtml:link rel="alternate" hreflang="uk" href="https://localhost/uk/docs" />
-    <xhtml:link rel="alternate" hreflang="vi" href="https://localhost/vi/docs" />
-    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://localhost/zh/docs" />
-    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://localhost/zh-hant/docs" />
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://localhost/en/docs" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://testomniac.com/en/docs" />
+    <xhtml:link rel="alternate" hreflang="de" href="https://testomniac.com/de/docs" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://testomniac.com/es/docs" />
+    <xhtml:link rel="alternate" hreflang="fr" href="https://testomniac.com/fr/docs" />
+    <xhtml:link rel="alternate" hreflang="it" href="https://testomniac.com/it/docs" />
+    <xhtml:link rel="alternate" hreflang="ja" href="https://testomniac.com/ja/docs" />
+    <xhtml:link rel="alternate" hreflang="ko" href="https://testomniac.com/ko/docs" />
+    <xhtml:link rel="alternate" hreflang="pt" href="https://testomniac.com/pt/docs" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://testomniac.com/ru/docs" />
+    <xhtml:link rel="alternate" hreflang="sv" href="https://testomniac.com/sv/docs" />
+    <xhtml:link rel="alternate" hreflang="th" href="https://testomniac.com/th/docs" />
+    <xhtml:link rel="alternate" hreflang="uk" href="https://testomniac.com/uk/docs" />
+    <xhtml:link rel="alternate" hreflang="vi" href="https://testomniac.com/vi/docs" />
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://testomniac.com/zh/docs" />
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://testomniac.com/zh-hant/docs" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://testomniac.com/en/docs" />
   </url>
   <url>
-    <loc>https://localhost/uk/docs</loc>
-    <lastmod>2026-05-29</lastmod>
+    <loc>https://testomniac.com/vi/docs</loc>
+    <lastmod>2026-06-01</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
-    <xhtml:link rel="alternate" hreflang="en" href="https://localhost/en/docs" />
-    <xhtml:link rel="alternate" hreflang="ar" href="https://localhost/ar/docs" />
-    <xhtml:link rel="alternate" hreflang="de" href="https://localhost/de/docs" />
-    <xhtml:link rel="alternate" hreflang="es" href="https://localhost/es/docs" />
-    <xhtml:link rel="alternate" hreflang="fr" href="https://localhost/fr/docs" />
-    <xhtml:link rel="alternate" hreflang="it" href="https://localhost/it/docs" />
-    <xhtml:link rel="alternate" hreflang="ja" href="https://localhost/ja/docs" />
-    <xhtml:link rel="alternate" hreflang="ko" href="https://localhost/ko/docs" />
-    <xhtml:link rel="alternate" hreflang="pt" href="https://localhost/pt/docs" />
-    <xhtml:link rel="alternate" hreflang="ru" href="https://localhost/ru/docs" />
-    <xhtml:link rel="alternate" hreflang="sv" href="https://localhost/sv/docs" />
-    <xhtml:link rel="alternate" hreflang="th" href="https://localhost/th/docs" />
-    <xhtml:link rel="alternate" hreflang="uk" href="https://localhost/uk/docs" />
-    <xhtml:link rel="alternate" hreflang="vi" href="https://localhost/vi/docs" />
-    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://localhost/zh/docs" />
-    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://localhost/zh-hant/docs" />
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://localhost/en/docs" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://testomniac.com/en/docs" />
+    <xhtml:link rel="alternate" hreflang="de" href="https://testomniac.com/de/docs" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://testomniac.com/es/docs" />
+    <xhtml:link rel="alternate" hreflang="fr" href="https://testomniac.com/fr/docs" />
+    <xhtml:link rel="alternate" hreflang="it" href="https://testomniac.com/it/docs" />
+    <xhtml:link rel="alternate" hreflang="ja" href="https://testomniac.com/ja/docs" />
+    <xhtml:link rel="alternate" hreflang="ko" href="https://testomniac.com/ko/docs" />
+    <xhtml:link rel="alternate" hreflang="pt" href="https://testomniac.com/pt/docs" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://testomniac.com/ru/docs" />
+    <xhtml:link rel="alternate" hreflang="sv" href="https://testomniac.com/sv/docs" />
+    <xhtml:link rel="alternate" hreflang="th" href="https://testomniac.com/th/docs" />
+    <xhtml:link rel="alternate" hreflang="uk" href="https://testomniac.com/uk/docs" />
+    <xhtml:link rel="alternate" hreflang="vi" href="https://testomniac.com/vi/docs" />
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://testomniac.com/zh/docs" />
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://testomniac.com/zh-hant/docs" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://testomniac.com/en/docs" />
   </url>
   <url>
-    <loc>https://localhost/vi/docs</loc>
-    <lastmod>2026-05-29</lastmod>
+    <loc>https://testomniac.com/zh/docs</loc>
+    <lastmod>2026-06-01</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
-    <xhtml:link rel="alternate" hreflang="en" href="https://localhost/en/docs" />
-    <xhtml:link rel="alternate" hreflang="ar" href="https://localhost/ar/docs" />
-    <xhtml:link rel="alternate" hreflang="de" href="https://localhost/de/docs" />
-    <xhtml:link rel="alternate" hreflang="es" href="https://localhost/es/docs" />
-    <xhtml:link rel="alternate" hreflang="fr" href="https://localhost/fr/docs" />
-    <xhtml:link rel="alternate" hreflang="it" href="https://localhost/it/docs" />
-    <xhtml:link rel="alternate" hreflang="ja" href="https://localhost/ja/docs" />
-    <xhtml:link rel="alternate" hreflang="ko" href="https://localhost/ko/docs" />
-    <xhtml:link rel="alternate" hreflang="pt" href="https://localhost/pt/docs" />
-    <xhtml:link rel="alternate" hreflang="ru" href="https://localhost/ru/docs" />
-    <xhtml:link rel="alternate" hreflang="sv" href="https://localhost/sv/docs" />
-    <xhtml:link rel="alternate" hreflang="th" href="https://localhost/th/docs" />
-    <xhtml:link rel="alternate" hreflang="uk" href="https://localhost/uk/docs" />
-    <xhtml:link rel="alternate" hreflang="vi" href="https://localhost/vi/docs" />
-    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://localhost/zh/docs" />
-    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://localhost/zh-hant/docs" />
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://localhost/en/docs" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://testomniac.com/en/docs" />
+    <xhtml:link rel="alternate" hreflang="de" href="https://testomniac.com/de/docs" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://testomniac.com/es/docs" />
+    <xhtml:link rel="alternate" hreflang="fr" href="https://testomniac.com/fr/docs" />
+    <xhtml:link rel="alternate" hreflang="it" href="https://testomniac.com/it/docs" />
+    <xhtml:link rel="alternate" hreflang="ja" href="https://testomniac.com/ja/docs" />
+    <xhtml:link rel="alternate" hreflang="ko" href="https://testomniac.com/ko/docs" />
+    <xhtml:link rel="alternate" hreflang="pt" href="https://testomniac.com/pt/docs" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://testomniac.com/ru/docs" />
+    <xhtml:link rel="alternate" hreflang="sv" href="https://testomniac.com/sv/docs" />
+    <xhtml:link rel="alternate" hreflang="th" href="https://testomniac.com/th/docs" />
+    <xhtml:link rel="alternate" hreflang="uk" href="https://testomniac.com/uk/docs" />
+    <xhtml:link rel="alternate" hreflang="vi" href="https://testomniac.com/vi/docs" />
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://testomniac.com/zh/docs" />
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://testomniac.com/zh-hant/docs" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://testomniac.com/en/docs" />
   </url>
   <url>
-    <loc>https://localhost/zh/docs</loc>
-    <lastmod>2026-05-29</lastmod>
+    <loc>https://testomniac.com/zh-hant/docs</loc>
+    <lastmod>2026-06-01</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
-    <xhtml:link rel="alternate" hreflang="en" href="https://localhost/en/docs" />
-    <xhtml:link rel="alternate" hreflang="ar" href="https://localhost/ar/docs" />
-    <xhtml:link rel="alternate" hreflang="de" href="https://localhost/de/docs" />
-    <xhtml:link rel="alternate" hreflang="es" href="https://localhost/es/docs" />
-    <xhtml:link rel="alternate" hreflang="fr" href="https://localhost/fr/docs" />
-    <xhtml:link rel="alternate" hreflang="it" href="https://localhost/it/docs" />
-    <xhtml:link rel="alternate" hreflang="ja" href="https://localhost/ja/docs" />
-    <xhtml:link rel="alternate" hreflang="ko" href="https://localhost/ko/docs" />
-    <xhtml:link rel="alternate" hreflang="pt" href="https://localhost/pt/docs" />
-    <xhtml:link rel="alternate" hreflang="ru" href="https://localhost/ru/docs" />
-    <xhtml:link rel="alternate" hreflang="sv" href="https://localhost/sv/docs" />
-    <xhtml:link rel="alternate" hreflang="th" href="https://localhost/th/docs" />
-    <xhtml:link rel="alternate" hreflang="uk" href="https://localhost/uk/docs" />
-    <xhtml:link rel="alternate" hreflang="vi" href="https://localhost/vi/docs" />
-    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://localhost/zh/docs" />
-    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://localhost/zh-hant/docs" />
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://localhost/en/docs" />
-  </url>
-  <url>
-    <loc>https://localhost/zh-hant/docs</loc>
-    <lastmod>2026-05-29</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-    <xhtml:link rel="alternate" hreflang="en" href="https://localhost/en/docs" />
-    <xhtml:link rel="alternate" hreflang="ar" href="https://localhost/ar/docs" />
-    <xhtml:link rel="alternate" hreflang="de" href="https://localhost/de/docs" />
-    <xhtml:link rel="alternate" hreflang="es" href="https://localhost/es/docs" />
-    <xhtml:link rel="alternate" hreflang="fr" href="https://localhost/fr/docs" />
-    <xhtml:link rel="alternate" hreflang="it" href="https://localhost/it/docs" />
-    <xhtml:link rel="alternate" hreflang="ja" href="https://localhost/ja/docs" />
-    <xhtml:link rel="alternate" hreflang="ko" href="https://localhost/ko/docs" />
-    <xhtml:link rel="alternate" hreflang="pt" href="https://localhost/pt/docs" />
-    <xhtml:link rel="alternate" hreflang="ru" href="https://localhost/ru/docs" />
-    <xhtml:link rel="alternate" hreflang="sv" href="https://localhost/sv/docs" />
-    <xhtml:link rel="alternate" hreflang="th" href="https://localhost/th/docs" />
-    <xhtml:link rel="alternate" hreflang="uk" href="https://localhost/uk/docs" />
-    <xhtml:link rel="alternate" hreflang="vi" href="https://localhost/vi/docs" />
-    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://localhost/zh/docs" />
-    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://localhost/zh-hant/docs" />
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://localhost/en/docs" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://testomniac.com/en/docs" />
+    <xhtml:link rel="alternate" hreflang="de" href="https://testomniac.com/de/docs" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://testomniac.com/es/docs" />
+    <xhtml:link rel="alternate" hreflang="fr" href="https://testomniac.com/fr/docs" />
+    <xhtml:link rel="alternate" hreflang="it" href="https://testomniac.com/it/docs" />
+    <xhtml:link rel="alternate" hreflang="ja" href="https://testomniac.com/ja/docs" />
+    <xhtml:link rel="alternate" hreflang="ko" href="https://testomniac.com/ko/docs" />
+    <xhtml:link rel="alternate" hreflang="pt" href="https://testomniac.com/pt/docs" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://testomniac.com/ru/docs" />
+    <xhtml:link rel="alternate" hreflang="sv" href="https://testomniac.com/sv/docs" />
+    <xhtml:link rel="alternate" hreflang="th" href="https://testomniac.com/th/docs" />
+    <xhtml:link rel="alternate" hreflang="uk" href="https://testomniac.com/uk/docs" />
+    <xhtml:link rel="alternate" hreflang="vi" href="https://testomniac.com/vi/docs" />
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://testomniac.com/zh/docs" />
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://testomniac.com/zh-hant/docs" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://testomniac.com/en/docs" />
   </url>
 </urlset>

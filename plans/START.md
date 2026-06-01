@@ -515,7 +515,7 @@ testomniac_app/
 
 ### i18n (17 languages)
 
-Same language set as shapeshyft_app: `en, ar, de, es, fr, it, ja, ko, pt, ru, sv, th, uk, vi, zh, zh-hant`
+Same language set as shapeshyft_app: `en, de, es, fr, it, ja, ko, pt, ru, sv, th, uk, vi, zh, zh-hant`
 
 Translation files at `public/locales/{lang}/common.json` with keys for:
 

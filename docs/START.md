@@ -1089,7 +1089,6 @@ export default App;
 // src/config/constants.ts
 export const SUPPORTED_LANGUAGES = [
   'en',
-  'ar',
   'de',
   'es',
   'fr',
@@ -1599,7 +1598,7 @@ Every web app should include:
 
 ## Localization
 
-All apps support 16 languages using i18next with URL path-based routing.
+All apps support 15 languages using i18next with URL path-based routing.
 
 See the detailed [Localization Guide](../../../0xmail/building_blocks/docs/LOCALIZATION.md) for full setup instructions.
 
@@ -1616,7 +1615,7 @@ See the detailed [Localization Guide](../../../0xmail/building_blocks/docs/LOCAL
 ### Supported Languages
 
 ```
-en, ar, de, es, fr, it, ja, ko, pt, ru, sv, th, uk, vi, zh, zh-hant
+en, de, es, fr, it, ja, ko, pt, ru, sv, th, uk, vi, zh, zh-hant
 ```
 
 ---
@@ -1676,7 +1675,7 @@ Use this checklist when starting a new project:
 
 ### Features
 
-- [ ] Set up i18n with 16 languages
+- [ ] Set up i18n with 15 languages
 - [ ] Configure RevenueCat for subscriptions
 - [ ] Add rate limiting on API endpoints
 - [ ] Set up entity-based multi-tenancy

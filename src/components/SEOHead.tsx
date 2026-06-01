@@ -69,10 +69,11 @@ export default function SEOHead({
       ? structuredData
       : [structuredData]
     : [];
+  const pageSchemasKey = JSON.stringify(pageSchemas);
   const schemas = useMemo(
     () => [webAppSchema, ...pageSchemas],
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [webAppSchema, JSON.stringify(pageSchemas)]
+    [webAppSchema, pageSchemasKey]
   );
 
   // Single hook handles all DOM manipulation

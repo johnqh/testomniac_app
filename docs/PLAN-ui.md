@@ -228,4 +228,4 @@ The app depends on `testomniac_types`, `testomniac_client`, and `testomniac_lib`
 - Findings: toggle filter between All and Errors only
 - Breadcrumbs work for suite drill-down navigation
 - All field names show `title` not `name`
-- Language-prefixed routes work for all 16 languages
+- Language-prefixed routes work for all 15 languages

@@ -19,22 +19,8 @@ interface ImportMetaEnv {
   readonly VITE_COMPANY_NAME: string;
   readonly VITE_SUPPORT_EMAIL: string;
 
-  // Social Media
+  // SEO
   readonly VITE_TWITTER_HANDLE: string;
-  readonly VITE_DISCORD_INVITE: string;
-  readonly VITE_LINKEDIN_COMPANY: string;
-  readonly VITE_GITHUB_ORG: string;
-  readonly VITE_TWITTER_URL: string;
-  readonly VITE_REDDIT_URL: string;
-  readonly VITE_DISCORD_URL: string;
-  readonly VITE_LINKEDIN_URL: string;
-  readonly VITE_FARCASTER_URL: string;
-  readonly VITE_TELEGRAM_URL: string;
-  readonly VITE_GITHUB_URL: string;
-
-  // External Pages
-  readonly VITE_STATUS_PAGE_URL: string;
-  readonly VITE_MEET_FOUNDER_URL: string;
 
   // Feature Flags
   readonly VITE_DEV_MODE: string;
