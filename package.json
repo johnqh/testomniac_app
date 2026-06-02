@@ -3,7 +3,7 @@
   "description": "Testomniac web application - React + Vite",
   "private": true,
   "license": "BUSL-1.1",
-  "version": "1.0.182",
+  "version": "1.0.183",
   "type": "module",
   "scripts": {
     "dev": "bun run process:static && vite",
@@ -23,6 +23,7 @@
   },
   "dependencies": {
     "@heroicons/react": "^2.2.0",
+    "@radix-ui/react-select": "^2.2.6",
     "@sudobility/auth-components": "^1.0.10",
     "@sudobility/auth_lib": "^0.0.76",
     "@sudobility/building_blocks": "^0.0.241",
