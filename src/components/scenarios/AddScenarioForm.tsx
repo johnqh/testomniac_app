@@ -97,7 +97,7 @@ export function AddScenarioForm({
           </label>
           <Select
             value={personaId !== undefined ? String(personaId) : ''}
-            onValueChange={value => setPersonaId(value ? Number(value) : undefined)}
+            onValueChange={(value: string) => setPersonaId(value ? Number(value) : undefined)}
           >
             <SelectTrigger>
               <SelectValue placeholder="None (optional)" />
