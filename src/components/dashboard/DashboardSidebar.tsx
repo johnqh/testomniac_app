@@ -1,4 +1,4 @@
-import { useEffect, useMemo } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useLocation, useParams } from 'react-router-dom';
 import { useApi } from '@sudobility/building_blocks/firebase';
 import {
@@ -213,10 +213,17 @@ export function DashboardSidebar({ entitySlug }: DashboardSidebarProps) {
     enabled: !!token,
   });
 
+  // Tracks explicit user selection; null means "no manual choice yet"
+  const [userSelectedProductId, setUserSelectedProductId] = useState<string | null>(null);
+
+  // Effective selection: user's choice if still valid, otherwise auto-select single product
   const selectedProductId = useMemo(() => {
+    if (userSelectedProductId && products.some(p => String(p.id) === userSelectedProductId)) {
+      return userSelectedProductId;
+    }
     if (products.length === 1) return String(products[0].id);
     return null;
-  }, [products]);
+  }, [products, userSelectedProductId]);
 
   const { environments, isLoading: environmentsLoading } = useProductEnvironments({
     networkClient,
@@ -236,7 +243,9 @@ export function DashboardSidebar({ entitySlug }: DashboardSidebarProps) {
   const handleProductChange = (value: string) => {
     if (value === 'new') {
       navigate(`/dashboard/${entitySlug}/products/new`);
+      return;
     }
+    setUserSelectedProductId(value);
   };
 
   const handleEnvironmentChange = (value: string) => {
