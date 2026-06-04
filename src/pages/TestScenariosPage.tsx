@@ -4,6 +4,7 @@ import {
   useRunnerTestScenarios,
   useDeleteTestScenario,
   useProductPersonas,
+  useDetectTestScenarios,
 } from '@sudobility/testomniac_client';
 import type { TestScenarioResponse } from '@sudobility/testomniac_types';
 import SEOHead from '@/components/SEOHead';
@@ -49,11 +50,30 @@ export default function TestScenariosPage() {
     token,
   });
 
+  const { detectTestScenarios, isDetecting } = useDetectTestScenarios({
+    networkClient,
+    baseUrl: CONSTANTS.API_URL,
+    token,
+  });
+
+  // Detect state
+  const [detectError, setDetectError] = useState<string | null>(null);
+
   const basePath = `/dashboard/${entitySlug}/environments/${envId}`;
 
   const handleDelete = async (scenarioId: number) => {
     await deleteTestScenario(scenarioId);
     refetch();
+  };
+
+  const handleDetect = async () => {
+    setDetectError(null);
+    try {
+      await detectTestScenarios({ productId: productId! });
+      refetch();
+    } catch (err) {
+      setDetectError(err instanceof Error ? err.message : 'Detection failed');
+    }
   };
 
   if (contextError || error) {
@@ -71,13 +91,28 @@ export default function TestScenariosPage() {
       <SEOHead title="Test Scenarios" description="" noIndex />
       <div className="flex items-center justify-between mb-6">
         <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">Test Scenarios</h1>
-        <button
-          onClick={() => setShowForm(!showForm)}
-          className="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition-colors"
-        >
-          {showForm ? 'Cancel' : 'New Scenario'}
-        </button>
+        <div className="flex items-center gap-2">
+          <button
+            onClick={handleDetect}
+            disabled={isDetecting || !productId}
+            className="px-4 py-2 text-sm font-medium text-white bg-purple-600 rounded-lg hover:bg-purple-700 disabled:opacity-50 transition-colors"
+          >
+            {isDetecting ? 'Detecting...' : 'Detect Scenarios'}
+          </button>
+          <button
+            onClick={() => setShowForm(!showForm)}
+            className="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition-colors"
+          >
+            {showForm ? 'Cancel' : 'New Scenario'}
+          </button>
+        </div>
       </div>
+
+      {detectError && (
+        <div className="mb-4 p-3 rounded-lg border border-red-300 dark:border-red-600 bg-red-50 dark:bg-red-900/20">
+          <p className="text-sm text-red-700 dark:text-red-300">{detectError}</p>
+        </div>
+      )}
 
       {showForm && primaryRunner && (
         <div className="mb-6">
