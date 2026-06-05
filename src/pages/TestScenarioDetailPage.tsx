@@ -2,17 +2,116 @@ import { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import {
   useRunnerTestScenarios,
+  useRunnerTestInteractions,
   useTestScenarioSequences,
+  useTestScenarioSequenceTestInteractions,
   useProductPersonas,
 } from '@sudobility/testomniac_client';
-import { useSequenceGenerator } from '@sudobility/testomniac_lib';
-import type { TestScenarioSequenceResponse } from '@sudobility/testomniac_types';
+import { useSequenceGenerator, describeInteraction } from '@sudobility/testomniac_lib';
+import type {
+  TestScenarioSequenceResponse,
+  TestInteractionResponse,
+} from '@sudobility/testomniac_types';
+import type { NetworkClient } from '@sudobility/types';
 import SEOHead from '@/components/SEOHead';
 import BackLink from '../components/navigation/BackLink';
 import { useLocalizedNavigate } from '../hooks/useLocalizedNavigate';
 import { CONSTANTS } from '../config/constants';
 import { useDashboardEnvironmentContext } from '../hooks/useDashboardEnvironmentContext';
 import { AddToBundleButton } from '../components/bundles/AddToBundleButton';
+
+function SequenceCard({
+  sequence,
+  isExpanded,
+  onToggle,
+  networkClient,
+  token,
+  basePath,
+  navigate,
+  interactions,
+}: {
+  sequence: TestScenarioSequenceResponse;
+  isExpanded: boolean;
+  onToggle: () => void;
+  networkClient: NetworkClient;
+  token: string;
+  basePath: string;
+  navigate: (path: string) => void;
+  interactions: TestInteractionResponse[];
+}) {
+  const { testInteractionLinks, isLoading } = useTestScenarioSequenceTestInteractions({
+    networkClient,
+    baseUrl: CONSTANTS.API_URL,
+    testScenarioSequenceId: sequence.id,
+    token,
+    enabled: isExpanded,
+  });
+
+  const sorted = [...testInteractionLinks].sort((a, b) => (a.stepOrder ?? 0) - (b.stepOrder ?? 0));
+
+  const interactionById = new Map(interactions.map(i => [i.id, i]));
+
+  return (
+    <div className="rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 overflow-hidden">
+      <button
+        onClick={onToggle}
+        className="flex items-center gap-3 w-full px-4 py-3 text-left hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors"
+      >
+        <span className="text-xs text-gray-400">{isExpanded ? '▼' : '▶'}</span>
+        <div className="flex-1 min-w-0">
+          <div className="text-sm font-medium text-gray-900 dark:text-gray-100">
+            Sequence #{sequence.id}
+          </div>
+          <div className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
+            Environment ID: {sequence.testEnvironmentId}
+            {sequence.createdAt &&
+              ` — Created: ${new Date(sequence.createdAt).toLocaleDateString()}`}
+          </div>
+        </div>
+      </button>
+
+      {isExpanded && (
+        <div className="border-t border-gray-100 dark:border-gray-700 px-4 py-3">
+          {isLoading && <div className="text-xs text-gray-400 py-2">Loading interactions...</div>}
+          {!isLoading && sorted.length === 0 && (
+            <div className="text-xs text-gray-400 py-2">No interactions in this sequence.</div>
+          )}
+          {!isLoading && sorted.length > 0 && (
+            <div className="space-y-1">
+              {sorted.map(link => {
+                const interaction = interactionById.get(link.testInteractionId);
+                const description = interaction ? describeInteraction(interaction) : null;
+                return (
+                  <button
+                    key={link.id}
+                    onClick={() =>
+                      navigate(`${basePath}/test-interactions/${link.testInteractionId}`)
+                    }
+                    className="flex items-start gap-2 w-full px-3 py-2 rounded text-left text-sm hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors"
+                  >
+                    <span className="text-xs font-mono text-gray-400 w-6 text-right shrink-0 mt-0.5">
+                      {link.stepOrder}.
+                    </span>
+                    <div className="min-w-0">
+                      <div className="text-gray-900 dark:text-gray-100 font-medium truncate">
+                        {interaction?.title ?? `Interaction #${link.testInteractionId}`}
+                      </div>
+                      {description && (
+                        <div className="text-xs text-gray-500 dark:text-gray-400 mt-0.5 line-clamp-2">
+                          {description}
+                        </div>
+                      )}
+                    </div>
+                  </button>
+                );
+              })}
+            </div>
+          )}
+        </div>
+      )}
+    </div>
+  );
+}
 
 export default function TestScenarioDetailPage() {
   const { entitySlug, envId, scenarioId } = useParams<{
@@ -51,6 +150,14 @@ export default function TestScenarioDetailPage() {
     enabled: !!productId && !!token,
   });
 
+  const { testInteractions } = useRunnerTestInteractions({
+    networkClient,
+    baseUrl: CONSTANTS.API_URL,
+    runnerId: primaryRunner?.id ?? 0,
+    token,
+    enabled: !!primaryRunner && !!token,
+  });
+
   const personaName = scenario?.personaId
     ? personas.find(p => p.id === scenario.personaId)?.title
     : null;
@@ -79,6 +186,7 @@ export default function TestScenarioDetailPage() {
   });
 
   const [generateErrorMsg, setGenerateErrorMsg] = useState<string | null>(null);
+  const [expandedSequenceId, setExpandedSequenceId] = useState<number | null>(null);
 
   const handleGenerateSequence = async () => {
     setGenerateErrorMsg(null);
@@ -179,20 +287,17 @@ export default function TestScenarioDetailPage() {
       {sequences.length > 0 && (
         <div className="space-y-2">
           {sequences.map((seq: TestScenarioSequenceResponse) => (
-            <div
+            <SequenceCard
               key={seq.id}
-              className="flex items-center gap-3 px-4 py-3 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800"
-            >
-              <div className="flex-1 min-w-0">
-                <div className="text-sm font-medium text-gray-900 dark:text-gray-100">
-                  Sequence #{seq.id}
-                </div>
-                <div className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
-                  Environment ID: {seq.testEnvironmentId}
-                  {seq.createdAt && ` — Created: ${new Date(seq.createdAt).toLocaleDateString()}`}
-                </div>
-              </div>
-            </div>
+              sequence={seq}
+              isExpanded={expandedSequenceId === seq.id}
+              onToggle={() => setExpandedSequenceId(expandedSequenceId === seq.id ? null : seq.id)}
+              networkClient={networkClient}
+              token={token ?? ''}
+              basePath={basePath}
+              navigate={navigate}
+              interactions={testInteractions}
+            />
           ))}
         </div>
       )}

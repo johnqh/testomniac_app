@@ -3,7 +3,7 @@
   "description": "Testomniac web application - React + Vite",
   "private": true,
   "license": "BUSL-1.1",
-  "version": "1.0.187",
+  "version": "1.0.188",
   "type": "module",
   "scripts": {
     "dev": "bun run process:static && vite",
@@ -45,7 +45,7 @@
     "@sudobility/subscription-components": "^1.0.31",
     "@sudobility/subscription_lib": "^0.0.44",
     "@sudobility/testomniac_client": "^0.0.89",
-    "@sudobility/testomniac_lib": "^0.0.94",
+    "@sudobility/testomniac_lib": "^0.0.95",
     "@sudobility/testomniac_types": "^0.0.70",
     "@sudobility/types": "^1.9.62",
     "@tanstack/react-query": "^5.90.5",
