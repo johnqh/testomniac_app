@@ -1,4 +1,27 @@
+# Search engine crawlers
+User-agent: Googlebot
+Allow: /
+Disallow: /*/dashboard/
+Disallow: /*/login
+Disallow: /*/profile/
+Disallow: /api/
+Crawl-delay: 2
+
+User-agent: Bingbot
+Allow: /
+Disallow: /*/dashboard/
+Disallow: /*/login
+Disallow: /*/profile/
+Disallow: /api/
+Crawl-delay: 3
+
+# All other crawlers
 User-agent: *
 Allow: /
+Disallow: /*/dashboard/
+Disallow: /*/login
+Disallow: /*/profile/
+Disallow: /api/
+Crawl-delay: 5
 
 Sitemap: https://{{VITE_APP_DOMAIN}}/sitemap.xml

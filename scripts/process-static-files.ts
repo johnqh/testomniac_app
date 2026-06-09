@@ -16,7 +16,7 @@ if (fs.existsSync(envLocalPath)) {
 }
 
 // Required environment variables with fallbacks
-const APP_DOMAIN = process.env.VITE_APP_DOMAIN || 'localhost';
+const APP_DOMAIN = process.env.VITE_APP_DOMAIN || 'testomniac.com';
 const APP_NAME = process.env.VITE_APP_NAME || 'Starter';
 const COMPANY_NAME = process.env.VITE_COMPANY_NAME || 'Sudobility';
 const SUPPORT_EMAIL = process.env.VITE_SUPPORT_EMAIL || `support@${APP_DOMAIN}`;

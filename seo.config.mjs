@@ -9,7 +9,7 @@ import { config } from 'dotenv';
 config();
 
 const APP_NAME = process.env.VITE_APP_NAME || 'Testomniac';
-const APP_DOMAIN = process.env.VITE_APP_DOMAIN || 'localhost';
+const APP_DOMAIN = process.env.VITE_APP_DOMAIN || 'testomniac.com';
 
 export default {
   supportedLanguages: [
@@ -97,9 +97,9 @@ export default {
       key: 'sitemap',
       path: '/sitemap',
       namespace: 'common',
-      priority: '0.1',
+      priority: '0.3',
       changefreq: 'monthly',
-      indexable: false,
+      indexable: true,
       meta: locale => ({
         title: locale.common.seo.sitemap.title,
         description: locale.common.seo.sitemap.description,
