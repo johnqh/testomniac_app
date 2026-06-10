@@ -26,12 +26,17 @@ src/
 ├── config/
 │   ├── constants.ts                      # App constants, supported languages
 │   ├── auth-config.ts                    # Firebase auth configuration
+│   ├── analytics.ts                      # Analytics configuration
+│   ├── entityClient.ts                   # Entity API client setup
+│   ├── seo.ts                            # SEO configuration
 │   └── initialize.ts                     # App initialization (DI + Firebase + i18n)
 ├── context/
-│   └── ThemeContext.tsx                   # Theme provider (light/dark)
+│   ├── ThemeContext.tsx                   # Theme provider (light/dark)
+│   └── PageConfigProvider.tsx            # Page configuration context provider
 ├── components/
 │   ├── ErrorBoundary.tsx                 # Error boundary with retry + analytics
 │   ├── SEOHead.tsx                       # Helmet wrapper for SEO meta tags
+│   ├── buildHowToSchema.ts              # Structured data for how-to schema
 │   ├── layout/
 │   │   ├── TopBar.tsx                    # Navigation bar
 │   │   ├── Footer.tsx                    # Page footer
@@ -46,31 +51,57 @@ src/
 │   │   ├── EventLog.tsx                  # Real-time event stream (SSE)
 │   │   ├── LiveCounters.tsx, PhaseIndicator.tsx, StatusBadge.tsx
 │   │   ├── RunSummaryCard.tsx, ScanProgressPanel.tsx
-│   └── data/
-│       ├── DataTable.tsx                 # TanStack Table (sorting, pagination, filtering)
-│       └── JsonViewer.tsx                # Collapsible JSON display
+│   ├── bundles/
+│   │   └── AddToBundleButton.tsx         # Add test surface to bundle
+│   ├── dashboard/
+│   │   └── DashboardSidebar.tsx          # Dashboard navigation sidebar
+│   ├── data/
+│   │   ├── DataTable.tsx                 # TanStack Table (sorting, pagination, filtering)
+│   │   └── JsonViewer.tsx                # Collapsible JSON display
+│   ├── navigation/
+│   │   └── BackLink.tsx                  # Back navigation link
+│   ├── pages/
+│   │   ├── PagesListView.tsx             # Pages list display
+│   │   └── PagesMapView.tsx              # Pages map visualization
+│   ├── profile/
+│   │   └── ProfileSidebar.tsx            # Profile navigation sidebar
+│   └── scenarios/
+│       └── AddScenarioForm.tsx           # Add test scenario form
 ├── hooks/
 │   ├── useLocalizedNavigate.ts           # Navigate with lang prefix + switchLanguage()
 │   ├── useDocumentLanguage.ts            # Sync HTML lang + RTL dir attribute
+│   ├── useAuthCleanup.ts                 # Auth state cleanup on logout
 │   ├── useBreadcrumbs.ts                 # Breadcrumb navigation
+│   ├── useBuildingBlocksAnalytics.ts     # Analytics integration for building blocks
+│   ├── useDashboardEnvironmentContext.ts # Dashboard environment context hook
+│   ├── useEntityApiKeys.ts               # Entity API key management
 │   ├── useEventSource.ts                 # SSE event stream hook
 │   └── usePageConfig.ts                  # Page title/meta configuration
 ├── utils/
-│   └── formatDateTime.ts                 # Locale-aware date/time formatting
-└── pages/                                # 52 lazy-loaded pages
+│   ├── formatDateTime.ts                 # Locale-aware date/time formatting
+│   ├── languageRouting.ts                # Language routing utilities
+│   └── BreadcrumbBuilder.ts              # Breadcrumb path builder
+└── pages/                                # 52 page files (46 lazy-loaded in routes)
     ├── HomePage.tsx                      # Landing page with ScanForm
     ├── LoginPage.tsx                     # Authentication page
+    ├── DocsPage.tsx                      # Documentation page
+    ├── SitemapPage.tsx                   # Sitemap page
     ├── DashboardPage.tsx                 # Dashboard layout (master-detail sidebar)
     ├── DashboardOverview.tsx             # Stats + product/environment cards
     ├── StartScanPage.tsx                 # New scan submission
     ├── ScanProgressPage.tsx              # Authenticated scan progress (SSE)
     ├── PublicScanProgressPage.tsx         # Public scan progress (no auth)
+    ├── RunRedirect.tsx                   # Legacy run URL redirect
     ├── TestSurfacesListPage.tsx          # Test surfaces list
     ├── TestSurfaceDetailPage.tsx         # Test surface detail
     ├── TestInteractionsPage.tsx          # Test interactions list
     ├── TestInteractionDetailPage.tsx     # Interaction detail
     ├── TestRunsListPage.tsx              # Test execution results
     ├── TestRunDetailPage.tsx             # Test run detail
+    ├── RunSurfaceRunsPage.tsx            # Surface runs within a test run
+    ├── RunSurfaceRunDetailPage.tsx        # Surface run detail
+    ├── RunTestInteractionRunsPage.tsx    # Interaction runs within a surface run
+    ├── RunTestInteractionRunDetailPage.tsx # Interaction run detail
     ├── BundlesPage.tsx                   # Test bundles list
     ├── BundleDetailPage.tsx              # Bundle detail
     ├── FindingsListPage.tsx              # Findings/issues list
@@ -91,10 +122,19 @@ src/
     ├── WorkspacesPage.tsx                # Workspace management
     ├── MembersPage.tsx                   # Team members
     ├── InvitationsPage.tsx               # Pending invitations
+    ├── ProfilePage.tsx                   # Profile layout with sidebar
+    ├── IssuesPage.tsx                    # Issues page (reserved)
+    ├── MapPage.tsx                       # Map page (reserved)
+    ├── RunDetailsPage.tsx                # Run details (reserved)
+    ├── RunnerConsolePage.tsx             # Runner console (reserved)
+    ├── ScansPage.tsx                     # Scans list (reserved)
+    ├── TestRunsPage.tsx                  # Test runs (reserved)
     └── profile/                          # Profile sub-pages
-        ├── AccountPage.tsx, ApiKeysPage.tsx
-        ├── ProfileWorkspacesPage.tsx, ProfileMembersPage.tsx
-        └── ProfileInvitationsPage.tsx
+        ├── AccountPage.tsx               # Account settings
+        ├── ApiKeysPage.tsx               # API key management
+        ├── ProfileWorkspacesPage.tsx     # User workspaces
+        ├── ProfileMembersPage.tsx        # User team members
+        └── ProfileInvitationsPage.tsx    # User invitations
 ```
 
 ## Commands
@@ -120,37 +160,74 @@ Pages are lazy-loaded with React Suspense.
 
 ### Route Structure
 
+**Public routes:**
+
 - `/:lang/` — Home
 - `/:lang/login` — Login
+- `/:lang/docs` — Documentation
+- `/:lang/sitemap` — Sitemap
 - `/:lang/scan/:runId/progress` — Public scan progress (no auth)
+
+**Dashboard routes (authenticated):**
+
 - `/:lang/dashboard` — Redirects to default entity
 - `/:lang/dashboard/:entitySlug/` — Dashboard overview
 - `/:lang/dashboard/:entitySlug/scan/new` — Start new scan
-- `/:lang/dashboard/:entitySlug/runs/:runId` — Run details
-- `/:lang/dashboard/:entitySlug/runs/:runId/progress` — Scan progress
-- `/:lang/dashboard/:entitySlug/runs/:runId/test-surfaces` — Test surfaces
-- `/:lang/dashboard/:entitySlug/runs/:runId/test-surfaces/:surfaceId` — Surface detail
-- `/:lang/dashboard/:entitySlug/runs/:runId/test-interactions` — Test interactions
-- `/:lang/dashboard/:entitySlug/runs/:runId/test-interactions/:interactionId` — Interaction detail
-- `/:lang/dashboard/:entitySlug/runs/:runId/test-runs` — Test runs
-- `/:lang/dashboard/:entitySlug/runs/:runId/test-runs/:testRunId` — Test run detail
-- `/:lang/dashboard/:entitySlug/runs/:runId/bundles` — Bundles
-- `/:lang/dashboard/:entitySlug/runs/:runId/bundles/:bundleId` — Bundle detail
-- `/:lang/dashboard/:entitySlug/runs/:runId/findings` — Findings
-- `/:lang/dashboard/:entitySlug/runs/:runId/pages` — Pages
-- `/:lang/dashboard/:entitySlug/runs/:runId/pages/:pageId` — Page detail
-- `/:lang/dashboard/:entitySlug/runs/:runId/map` — Site map graph
-- `/:lang/dashboard/:entitySlug/runners/:runnerId/scaffolds` — Scaffolds
-- `/:lang/dashboard/:entitySlug/runners/:runnerId/patterns` — Patterns
-- `/:lang/dashboard/:entitySlug/runs/:runId/personas` — Personas
-- `/:lang/dashboard/:entitySlug/runners/:runnerId/scenarios` — Scenarios
-- `/:lang/dashboard/:entitySlug/runners/:runnerId/schedules` — Schedules
-- `/:lang/dashboard/:entitySlug/runners/:runnerId/settings` — Runner settings
+
+**Environment-scoped routes** (`/:lang/dashboard/:entitySlug/environments/:envId/...`):
+
+- `.../bundles` — Bundles list
+- `.../bundles/:bundleId` — Bundle detail
+- `.../test-surfaces` — Test surfaces list
+- `.../test-surfaces/:surfaceId` — Surface detail
+- `.../test-interactions` — Test interactions list
+- `.../test-interactions/:elementId` — Interaction detail
+- `.../runs` — Test runs list
+- `.../runs/:runId` — Test run detail
+- `.../runs/:runId/surface-runs` — Surface runs
+- `.../runs/:runId/surface-runs/:surfaceRunId` — Surface run detail
+- `.../runs/:runId/surface-runs/:surfaceRunId/test-interactions/:elementId` — Interaction runs within surface run
+- `.../runs/:runId/surface-runs/:surfaceRunId/test-interactions/:elementId/element-runs/:elementRunId` — Interaction run detail
+- `.../runs/:runId/pages` — Pages for a run
+- `.../runs/:runId/issues` — Issues/findings for a run
+- `.../runs/:runId/pages/:pageId` — Page detail
+- `.../runs/:runId/pages/:pageId/states/:pageStateId` — Page state detail
+- `.../runs/:runId/progress` — Scan progress (SSE)
+- `.../test-scenarios` — Test scenarios
+- `.../test-scenarios/:scenarioId` — Scenario detail
+- `.../issues` — Issues/findings
+- `.../schedules` — Test schedules
+- `.../settings` — Environment/runner settings
+- `.../pages` — Discovered pages
+- `.../pages/:pageId` — Page detail
+- `.../pages/:pageId/states/:pageStateId` — Page state detail
+- `.../graph` — Site map graph (ReactFlow)
+- `.../pages/:pageId/graph` — Page state graph
+- `.../scaffolds` — Detected scaffolds
+- `.../scaffolds/:scaffoldId` — Scaffold detail
+- `.../patterns` — UI patterns
+- `.../personas` — AI-generated personas
+
+**Legacy run routes** (redirect to environment-scoped):
+
+- `/:lang/dashboard/:entitySlug/runs/:runId` — Run redirect
+- `/:lang/dashboard/:entitySlug/runs/:runId/*` — Run redirect (catch-all)
+
+**Entity management routes:**
+
 - `/:lang/dashboard/:entitySlug/settings` — Entity settings
 - `/:lang/dashboard/:entitySlug/workspaces` — Workspaces
 - `/:lang/dashboard/:entitySlug/members` — Members
 - `/:lang/dashboard/:entitySlug/invitations` — Invitations
-- `/:lang/profile/*` — Profile sub-routes (account, API keys, workspaces, members, invitations)
+
+**Profile routes (authenticated):**
+
+- `/:lang/profile` — Redirects to account
+- `/:lang/profile/account` — Account settings
+- `/:lang/profile/workspaces` — User workspaces
+- `/:lang/profile/members` — User team members
+- `/:lang/profile/invitations` — User invitations
+- `/:lang/profile/api-keys` — API key management
 
 ## Shared Components
 
@@ -164,14 +241,23 @@ Uses `@sudobility/components` for:
 
 ## Environment Variables
 
-| Variable                    | Description          | Default                 |
-| --------------------------- | -------------------- | ----------------------- |
-| `VITE_API_URL`              | Backend API URL      | `http://localhost:8027` |
-| `VITE_FIREBASE_API_KEY`     | Firebase API key     | required                |
-| `VITE_FIREBASE_AUTH_DOMAIN` | Firebase auth domain | required                |
-| `VITE_FIREBASE_PROJECT_ID`  | Firebase project ID  | required                |
-| `VITE_APP_NAME`             | Application name     | `Testomniac`            |
-| `VITE_APP_DOMAIN`           | Application domain   | `localhost`             |
+| Variable                          | Description                          | Default                 |
+| --------------------------------- | ------------------------------------ | ----------------------- |
+| `VITE_API_URL`                    | Backend API URL                      | `http://localhost:8027` |
+| `VITE_FIREBASE_API_KEY`           | Firebase API key                     | required                |
+| `VITE_FIREBASE_AUTH_DOMAIN`       | Firebase auth domain                 | required                |
+| `VITE_FIREBASE_PROJECT_ID`        | Firebase project ID                  | required                |
+| `VITE_FIREBASE_STORAGE_BUCKET`    | Firebase Storage bucket              | optional                |
+| `VITE_FIREBASE_MESSAGING_SENDER_ID` | Firebase Cloud Messaging sender ID | optional                |
+| `VITE_FIREBASE_APP_ID`            | Firebase app ID                      | optional                |
+| `VITE_FIREBASE_MEASUREMENT_ID`    | Firebase Analytics measurement ID    | optional                |
+| `VITE_APP_NAME`                   | Application name                     | `Testomniac`            |
+| `VITE_APP_DOMAIN`                 | Application domain                   | `localhost`             |
+| `VITE_COMPANY_NAME`               | Company name for footer/SEO          | optional                |
+| `VITE_SUPPORT_EMAIL`              | Support email for SEO config         | optional                |
+| `VITE_TWITTER_HANDLE`             | Twitter/X handle for SEO (without @) | optional                |
+| `VITE_DEV_MODE`                   | Enable test/dev mode                 | `false`                 |
+| `VITE_SHOW_PERFORMANCE_MONITOR`   | Show performance monitor panel       | `false`                 |
 
 **Note**: The default API URL in constants is `http://localhost:8027`, matching the API server's default port.
 
